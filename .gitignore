@@ -1,0 +1,6 @@
+.vs/
+.idea/
+node_modules/
+bin/
+obj/
+*.docx

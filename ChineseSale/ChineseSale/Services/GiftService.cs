@@ -1,0 +1,199 @@
+﻿using ChineseSale.Dtos;
+using ChineseSale.Models;
+using ChineseSale.Repositories;
+
+namespace ChineseSale.Services
+{
+    public class GiftService : IGiftService
+    {
+        private readonly IGiftRepository _giftRepository;
+        private readonly ICategoryRepository _categoryRepository;
+        private readonly IDonorRepository _donorRepository;
+        public GiftService(IGiftRepository giftRepository,ICategoryRepository categoryRepository,IDonorRepository donorRepository)
+        {
+            _giftRepository = giftRepository;
+            _categoryRepository = categoryRepository;
+            _donorRepository = donorRepository;
+        }
+        public async Task<IEnumerable<GetGiftDto>> GetAllGiftAsync()
+        {
+            IEnumerable<Gift> gifts = await _giftRepository.GetAllGiftAsync();
+            List<GetGiftDto> giftDtos = new List<GetGiftDto>();
+            foreach (var gift in gifts)
+            {
+                GetGiftDto giftDto = new GetGiftDto()
+                {
+                    Id = gift.Id,
+                    Name = gift.Name,
+                    PriceCard = gift.PriceCard,
+                    Description = gift.Description,
+                    Image = gift.Image,
+                    Value = gift.Value,
+                    Category = new GetCategoryDto() { Id = gift.Category.Id, Name = gift.Category.Name },
+                    Donor = new GetDonorDto() { Id = gift.Donor.Id, Name = gift.Donor.Name, Email = gift.Donor.Email, Phone = gift.Donor.Phone },
+                    TypeCard = gift.TypeCard,
+                    SumCustomers = gift.SumCustomers
+                };
+                giftDtos.Add(giftDto);
+            }
+            return giftDtos;
+
+        }
+        public async Task<GetGiftDto?> GetByIdGiftAsync(int Id)
+        {
+            Gift gift= await _giftRepository.GetByIdGiftAsync(Id);
+            if (gift != null)
+            {
+                GetGiftDto giftDto = new GetGiftDto()
+                {
+                    Id = gift.Id,
+                    Name = gift.Name,
+                    PriceCard = gift.PriceCard,
+                    Description = gift.Description,
+                    Image = gift.Image,
+                    Value = gift.Value,
+                    Category = new GetCategoryDto() { Id = gift.Category.Id, Name = gift.Category.Name },
+                    Donor = new GetDonorDto() { Id=gift.Donor.Id,Name=gift.Donor.Name,Email=gift.Donor.Email,Phone=gift.Donor.Phone},
+                    TypeCard = gift.TypeCard,
+                    SumCustomers = gift.SumCustomers
+                };
+                return giftDto;
+            }
+            else
+                throw new ArgumentException("not found");
+        }
+        public async Task<GetGiftDto> CreateGiftAsync(CreateGiftDto giftDto)
+        {
+            if (giftDto.Value <= 0 || giftDto.PriceCard<=0) 
+            {
+                throw new ArgumentException("Value and PriceCard must be greater than 0");
+            }
+            Gift gift= new Gift()
+            { 
+                Name = giftDto.Name,
+                PriceCard = giftDto.PriceCard,
+                Description = giftDto.Description,
+                Image = giftDto.Image,
+                Value = giftDto.Value,
+                CategoryId = giftDto.CategoryId,
+                DonorId = giftDto.DonorId,
+                TypeCard = giftDto.TypeCard
+            };
+            Gift gift1= await _giftRepository.CreateGiftAsync(gift);
+            Gift gift2 = await _giftRepository.GetByIdGiftAsync(gift1.Id);
+            await _categoryRepository.AddGiftToCategory(gift2, gift2.Category);
+            await _donorRepository.AddGiftToDonor(gift2, gift2.Donor);
+            GetGiftDto giftDto1= new GetGiftDto() 
+            {
+                Id = gift2.Id,
+                Name = gift2.Name,
+                PriceCard = gift2.PriceCard,
+                Description = gift2.Description,
+                Image = gift2.Image,
+                Value = gift2.Value,
+                Category= new GetCategoryDto() { Id = gift2.Category.Id, Name = gift2.Category.Name },
+                Donor = new GetDonorDto() { Id = gift2.Donor.Id, Name = gift2.Donor.Name, Email = gift2.Donor.Email, Phone = gift2.Donor.Phone },
+                TypeCard = gift2.TypeCard,
+                SumCustomers = gift2.SumCustomers               
+            };
+            return giftDto1;
+        }
+
+        public async Task<bool> DeleteGiftAsync(int Id)
+        {
+            Gift gift = await _giftRepository.GetByIdGiftAsync(Id);
+            if(gift == null)
+                return false;
+            await _giftRepository.DeleteGiftAsync(gift);
+            await _categoryRepository.DeleteGiftFromCategory(gift, gift.Category);
+            await _donorRepository.DeleteGiftFromDonor(gift, gift.Donor);
+            return true;
+        }
+
+        public async Task<IEnumerable<GetGiftDto?>> ExistsGiftAsync(string Name)
+        {
+
+            IEnumerable<Gift> gifts = await _giftRepository.ExistsGiftAsync(Name);
+            List<GetGiftDto> giftDtos = new List<GetGiftDto>();
+            foreach (var gift in gifts)
+            {
+                GetGiftDto giftDto = new GetGiftDto()
+                {
+                    Id = gift.Id,
+                    Name = gift.Name,
+                    PriceCard = gift.PriceCard,
+                    Description = gift.Description,
+                    Image = gift.Image,
+                    Value = gift.Value,
+                    Category = new GetCategoryDto() { Id=gift.Category.Id,Name=gift.Category.Name},
+                    Donor = new GetDonorDto() { Id = gift.Donor.Id, Name = gift.Donor.Name, Email = gift.Donor.Email, Phone = gift.Donor.Phone },
+                    TypeCard = gift.TypeCard,
+                    SumCustomers = gift.SumCustomers
+                };
+                giftDtos.Add(giftDto);
+            }
+            return giftDtos;
+
+        }
+
+
+
+        public async Task<GetGiftDto> UpdateGiftAsync(UpdateGiftDto giftDto)
+        {
+            Gift gift = await _giftRepository.GetByIdGiftAsync(giftDto.Id);
+            if (gift == null)
+                throw new ArgumentException("not found gift");
+
+            Category oldCategory = gift.Category;
+            Donor oldDonor = gift.Donor;
+
+            if (gift == null)
+            {
+                throw new ArgumentException("not found gift");
+            }
+            if (giftDto.Value <= 0 || giftDto.PriceCard <= 0)
+            {
+                throw new ArgumentException("Value and PriceCard must be greater than 0");
+            }
+            gift.Name = giftDto.Name;          
+            gift.PriceCard = giftDto.PriceCard;
+            gift.Description = giftDto.Description;
+            gift.Value = giftDto.Value;
+            gift.DonorId = giftDto.DonorId;
+            gift.CategoryId = giftDto.CategoryId;
+            gift.TypeCard = giftDto.TypeCard;
+            gift.Image= giftDto.Image;
+
+            await _giftRepository.UpdateGiftAsync(gift);
+
+            Gift gift1 = await _giftRepository.GetByIdGiftAsync(gift.Id);
+
+
+            GetGiftDto giftDto1 = new GetGiftDto()
+            {
+                Id = gift.Id,
+                Name = gift1.Name,
+                PriceCard = gift1.PriceCard,
+                Description = gift1.Description,
+                Image = gift1.Image,
+                Value = gift1.Value,
+                Category = new GetCategoryDto() { Id = gift1.Category.Id, Name = gift1.Category.Name },
+                Donor = new GetDonorDto() { Id = gift1.Donor.Id, Name = gift1.Donor.Name, Email = gift1.Donor.Email, Phone = gift1.Donor.Phone },
+                TypeCard = gift1.TypeCard,
+                SumCustomers = gift1.SumCustomers
+
+            };
+            if(oldCategory.Id != gift1.CategoryId)
+            {
+                await _categoryRepository.DeleteGiftFromCategory(gift, oldCategory);
+                await _categoryRepository.AddGiftToCategory(gift1, gift1.Category);
+            }
+            if(oldDonor.Id != gift1.DonorId)
+            {
+                await _donorRepository.DeleteGiftFromDonor(gift, oldDonor);
+                await _donorRepository.AddGiftToDonor(gift1, gift1.Donor);
+            }
+            return giftDto1;
+        }
+    }
+}
