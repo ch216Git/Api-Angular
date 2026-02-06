@@ -16,6 +16,7 @@ namespace ChineseSale.Dtos
         public DateTime OrderDate { get; set; }
         public int UserId { get; set; }
         public List<GetGiftDto> gifts { get; set; } = new List<GetGiftDto>();
+        public List<GetPackageDto> packages { get; set; }= new List<GetPackageDto>();
         public double Sum { get; set; }
     }
     public class CreatOrdeDto
@@ -24,6 +25,7 @@ namespace ChineseSale.Dtos
         [Required]
         public int UserId { get; set; }
         public List<int> GiftsId { get; set; } = new List<int>();
+        public List<int> PackagesId { get; set; }= new List<int>();
         public double Sum { get; set; }
     }
 }

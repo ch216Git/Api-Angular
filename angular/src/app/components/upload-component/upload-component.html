@@ -1,0 +1,15 @@
+<input
+  type="file"
+  accept="image/*"
+  (change)="onFileSelected($event)"
+  #fileInput
+  hidden
+/>
+
+<button type="button" (click)="fileInput.click()">
+  בחר תמונה
+</button>
+
+<div *ngIf="imagePreview" class="preview">
+  <img [src]="imagePreview" />
+</div>

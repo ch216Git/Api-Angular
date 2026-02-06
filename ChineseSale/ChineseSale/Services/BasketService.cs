@@ -1,20 +1,32 @@
-﻿using ChineseSale.Dtos;
+﻿
+using ChineseSale.Dtos;
 using ChineseSale.Models;
 using ChineseSale.Repositories;
 
 namespace ChineseSale.Services
 {
-    public class BasketService: IBasketService
+    public class BasketService : IBasketService
     {
         private readonly IBasketRepository _basketRepository;
         private readonly IGiftService _giftService;
         private readonly IGiftRepository _giftRepository;
-        public BasketService(IBasketRepository basketRepository,IGiftService giftService, IGiftRepository giftRepository)
+        private readonly IPackageRepository _packageRepository;
+        private readonly IPackageService _packageService;
+
+        public BasketService(
+            IBasketRepository basketRepository,
+            IGiftService giftService,
+            IGiftRepository giftRepository,
+            IPackageRepository packageRepository,
+            IPackageService packageService)
         {
             _basketRepository = basketRepository;
             _giftService = giftService;
             _giftRepository = giftRepository;
+            _packageRepository = packageRepository;
+            _packageService = packageService;
         }
+
         public async Task<IEnumerable<GetBasketDto>> GetAllBasketAsync()
         {
             IEnumerable<Basket> baskets = await _basketRepository.GetAllBasketAsync();
@@ -31,47 +43,37 @@ namespace ChineseSale.Services
             }
             return basketDtos;
         }
+
         public async Task<GetBasketByUserIdDto?> GetBasketByIdAsync(int Id)
         {
             Basket basket = await _basketRepository.GetBasketByIdAsync(Id);
-         
-            if (basket != null)
-            {
-               List<GetGiftDto> giftsDto = new List<GetGiftDto>();
-                for (int i = 0; i < basket.GiftsId.Count(); i++)
-                {
-                    GetGiftDto giftDto = await _giftService.GetByIdGiftAsync(basket.GiftsId[i]);
-                    giftsDto.Add(giftDto);
-                }
-                GetBasketByUserIdDto basketByIdDto = new GetBasketByUserIdDto()
-                {
-                    Id = basket.Id,
-                    UserId = basket.UserId,
-                    gifts = giftsDto,
-                    Sum= basket.Sum
-                };
-                return basketByIdDto;
-            }
-            else
-                throw new ArgumentException("basket not found");
-        }
-        public async Task<GetBasketByUserIdDto?> GetBasketByUserIdAsync(int UserId)
-        {
-            Basket basket = await _basketRepository.GetBasketByUserIdAsync(UserId);
 
             if (basket != null)
             {
                 List<GetGiftDto> giftsDto = new List<GetGiftDto>();
-                for (int i = 0; i < basket.GiftsId.Count(); i++)
+                for (int i = 0; i < (basket.GiftsId?.Count ?? 0); i++)
                 {
                     GetGiftDto giftDto = await _giftService.GetByIdGiftAsync(basket.GiftsId[i]);
                     giftsDto.Add(giftDto);
                 }
+
+                List<GetPackageDto> packagesDto = new List<GetPackageDto>();
+                if (basket.PackagesId != null && basket.PackagesId.Count > 0)
+                {
+                    foreach (var packageId in basket.PackagesId)
+                    {
+                        var packageDto = await _packageService.GetPackageByIdAsync(packageId);
+                        if (packageDto != null)
+                            packagesDto.Add(packageDto);
+                    }
+                }
+
                 GetBasketByUserIdDto basketByIdDto = new GetBasketByUserIdDto()
                 {
                     Id = basket.Id,
                     UserId = basket.UserId,
                     gifts = giftsDto,
+                    packages = packagesDto,
                     Sum = basket.Sum
                 };
                 return basketByIdDto;
@@ -79,13 +81,52 @@ namespace ChineseSale.Services
             else
                 throw new ArgumentException("basket not found");
         }
+
+        public async Task<GetBasketByUserIdDto?> GetBasketByUserIdAsync(int UserId)
+        {
+            Basket basket = await _basketRepository.GetBasketByUserIdAsync(UserId);
+
+            if (basket != null)
+            {
+                List<GetGiftDto> giftsDto = new List<GetGiftDto>();
+                for (int i = 0; i < (basket.GiftsId?.Count ?? 0); i++)
+                {
+                    GetGiftDto giftDto = await _giftService.GetByIdGiftAsync(basket.GiftsId[i]);
+                    giftsDto.Add(giftDto);
+                }
+
+                List<GetPackageDto> packagesDto = new List<GetPackageDto>();
+                if (basket.PackagesId != null && basket.PackagesId.Count > 0)
+                {
+                    foreach (var packageId in basket.PackagesId)
+                    {
+                        var packageDto = await _packageService.GetPackageByIdAsync(packageId);
+                        if (packageDto != null)
+                            packagesDto.Add(packageDto);
+                    }
+                }
+
+                GetBasketByUserIdDto basketByIdDto = new GetBasketByUserIdDto()
+                {
+                    Id = basket.Id,
+                    UserId = basket.UserId,
+                    gifts = giftsDto,
+                    packages = packagesDto,
+                    Sum = basket.Sum
+                };
+                return basketByIdDto;
+            }
+            else
+                throw new ArgumentException("basket not found");
+        }
+
         public async Task<GetBasketDto> CreateBasketAsync(CreateBasketDto basketDto)
         {
             Basket? existsBasket = await _basketRepository.GetBasketByUserIdAsync(basketDto.UserId);
             if (existsBasket != null)
-                {
+            {
                 throw new ArgumentException("basket for this user already exists");
-                }
+            }
 
             Basket basket = new Basket()
             {
@@ -97,8 +138,8 @@ namespace ChineseSale.Services
             return new GetBasketDto
             {
                 Id = basket.Id,
-                UserId= basket.UserId,
-                Sum= basket.Sum
+                UserId = basket.UserId,
+                Sum = basket.Sum
             };
         }
 
@@ -113,21 +154,48 @@ namespace ChineseSale.Services
 
         public async Task<GetBasketByUserIdDto> AddGiftToBasket(AddGiftToBasketDto giftToBasketDto)
         {
-            Basket basket=await _basketRepository.GetBasketByIdAsync(giftToBasketDto.BasketId);
+            Basket basket = await _basketRepository.GetBasketByIdAsync(giftToBasketDto.BasketId);
             if (basket == null)
                 throw new ArgumentException("basket not found");
-            Gift gift= await _giftRepository.GetByIdGiftAsync(giftToBasketDto.giftId);
-            await _basketRepository.AddGiftToBasket(basket,gift);
+            Gift gift = await _giftRepository.GetByIdGiftAsync(giftToBasketDto.giftId);
+            await _basketRepository.AddGiftToBasket(basket, gift);
             return await GetBasketByIdAsync(basket.Id);
         }
+
         public async Task<GetBasketByUserIdDto> DeleteGiftFromBasket(DeleteGiftFromBasketDto giftToBasketDto)
         {
             Basket basket = await _basketRepository.GetBasketByIdAsync(giftToBasketDto.BasketId);
             if (basket == null)
                 throw new ArgumentException("basket not found");
             Gift gift = await _giftRepository.GetByIdGiftAsync(giftToBasketDto.giftId);
-            basket.GiftsId.Remove(giftToBasketDto.giftId);
+            //basket.GiftsId.Remove(giftToBasketDto.giftId);
             await _basketRepository.DeleteGiftFromBasket(basket, gift);
+            return await GetBasketByIdAsync(basket.Id);
+        }
+
+        public async Task<GetBasketByUserIdDto> AddPackageToBasket(AddPackageToBasketDto packageToBasketDto)
+        {
+            Basket basket = await _basketRepository.GetBasketByIdAsync(packageToBasketDto.BasketId);
+            if (basket == null)
+                throw new ArgumentException("Basket not found");
+            Package package = await _packageRepository.GetPackageByIdAsync(packageToBasketDto.packageId);
+            if (package == null)
+                throw new ArgumentException("Package not found");
+            basket.PackagesId ??= new List<int>();
+
+            //basket.PackagesId.Add(package.Id);
+            await _basketRepository.AddPackageToBasket(basket, package);
+            return await GetBasketByIdAsync(basket.Id);
+        }
+
+        public async Task<GetBasketByUserIdDto> DeletePackageFromBasket(DeletePackageFromBasketDto packageFromBasketDto)
+        {
+            Basket basket = await _basketRepository.GetBasketByIdAsync(packageFromBasketDto.BasketId);
+            if (basket == null)
+                throw new ArgumentException("basket not found");
+            Package package = await _packageRepository.GetPackageByIdAsync(packageFromBasketDto.packageId);
+            //basket.PackagesId?.Remove(packageFromBasketDto.packageId);
+            await _basketRepository.DeletePackageFromBasket(basket, package);
             return await GetBasketByIdAsync(basket.Id);
         }
     }

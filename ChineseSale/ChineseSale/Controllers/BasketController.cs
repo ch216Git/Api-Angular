@@ -74,7 +74,7 @@ namespace ChineseSale.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost("AddToBasket")]
+        [HttpPost("AddGiftToBasket")]
         public async Task<ActionResult<GetBasketDto>> AddToBasketAsync(AddGiftToBasketDto addToBasketDto)
         {
             try
@@ -87,7 +87,7 @@ namespace ChineseSale.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost("RemoveFromBasket")]
+        [HttpPost("RemoveGiftFromBasket")]
         public async Task<ActionResult<GetBasketDto>> RemoveFromBasketAsync(DeleteGiftFromBasketDto removeFromBasketDto)
         {
             try
@@ -100,6 +100,31 @@ namespace ChineseSale.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
+        [HttpPost("AddPackageToBasket")]
+        public async Task<ActionResult<GetBasketDto>> AddPaלageToBasket(AddPackageToBasketDto addPackageToBasketDto)
+        {
+            try
+            {
+                var basket = await _basketService.AddPackageToBasket(addPackageToBasketDto);
+                return Ok(basket);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost("RemovePackageFromBasket")]
+        public async Task<ActionResult<GetBasketDto>> RemovePackageFromBasketAsync(DeletePackageFromBasketDto removePackageFromBasketDto)
+        {
+            try
+            {
+                var basket = await _basketService.DeletePackageFromBasket(removePackageFromBasketDto);
+                return Ok(basket);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

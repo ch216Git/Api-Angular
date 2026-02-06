@@ -2,11 +2,11 @@
 
 namespace ChineseSale.Models
 {
-    public enum TypeCard
-    {
-        Special,
-        Normal
-    }
+    //public enum TypeCard
+    //{
+    //    Special,
+    //    Normal
+    //}
     public class Gift
     {
 
@@ -18,9 +18,9 @@ namespace ChineseSale.Models
         public string Image { get; set; }
         public int Value { get; set; }
 
-        [Required]
-        public int PriceCard { get; set; }
-        public TypeCard TypeCard { get; set; } = TypeCard.Normal;
+        //[Required]
+        //public int PriceCard { get; set; }
+        //public TypeCard TypeCard { get; set; } = TypeCard.Normal;
 
         [Required]
         public int CategoryId { get; set; }

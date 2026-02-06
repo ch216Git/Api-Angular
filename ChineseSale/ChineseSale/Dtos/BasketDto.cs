@@ -14,6 +14,7 @@ namespace ChineseSale.Dtos
         public int Id { get; set; }
         public int UserId { get; set; }
         public List<GetGiftDto> gifts { get; set; }
+        public List<GetPackageDto> packages { get; set; }
         public double Sum { get; set; }
     }
     public class CreateBasketDto
@@ -30,5 +31,15 @@ namespace ChineseSale.Dtos
     {
         public int BasketId { get; set; }
         public int giftId { get; set; }
+    }
+    public class AddPackageToBasketDto
+    {
+        public int BasketId { get; set; }
+        public int packageId { get; set; }
+    }
+    public class DeletePackageFromBasketDto
+    {
+        public int BasketId { get; set; }
+        public int packageId { get; set; }
     }
 }

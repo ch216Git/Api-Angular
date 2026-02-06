@@ -45,7 +45,6 @@ namespace ChineseSale.Services
                     {
                         Id = gift.Id,
                         Name = gift.Name,
-                        PriceCard = gift.PriceCard,
                         Description = gift.Description,
                         Image = gift.Image,
                         Value = gift.Value,

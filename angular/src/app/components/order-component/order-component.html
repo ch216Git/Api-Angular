@@ -1,0 +1,6 @@
+<h3>Users who bought gifts:</h3>
+<ul>
+  <li *ngFor="let user of buyers$ | async">
+    User {{ user.name }}
+  </li>
+</ul>

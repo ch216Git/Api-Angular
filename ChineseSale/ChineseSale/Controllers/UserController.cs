@@ -92,8 +92,15 @@ namespace ChineseSale.Controllers
                 Subject = new ClaimsIdentity(new[]
                 {
                     new Claim("id", user.Id.ToString()),
-                    new Claim(ClaimTypes.Role, user.Role.ToString())
+                    new Claim(ClaimTypes.Role, user.Role.ToString()),
+                    new Claim("username", user.UserName),
+                    new Claim(ClaimTypes.Name, user.Name.ToString()),
+                    new Claim(ClaimTypes.StreetAddress, user.Address.ToString()),
+                    new Claim(ClaimTypes.HomePhone, user.Phone.ToString()),
+                    new Claim(ClaimTypes.Email, user.Email.ToString()),
+
                 }),
+
                 Expires = DateTime.UtcNow.AddHours(2),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };

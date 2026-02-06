@@ -1,6 +1,7 @@
 ﻿using ChineseSale.Dtos;
 using ChineseSale.Models;
 using ChineseSale.Repositories;
+using Org.BouncyCastle.Bcpg;
 
 namespace ChineseSale.Services
 {
@@ -9,15 +10,18 @@ namespace ChineseSale.Services
         private readonly IOrderRepository _orderRepository;
         private readonly IGiftService _giftService;
         private readonly IUserService _userService;
+        private readonly IPackageService _packageService;
         private readonly IEmailService _emailService;
         private readonly IUserRepository _userRepository;
-        public OrderService(IOrderRepository orderRepository , IGiftService giftService, IUserService userService, IEmailService emailService, IUserRepository userRepository)
+        public OrderService(IOrderRepository orderRepository , IGiftService giftService, IUserService userService, IEmailService emailService, IUserRepository userRepository, IPackageService packageService)
         {
             _orderRepository = orderRepository;
             _giftService = giftService;
             _userService = userService;
             _emailService = emailService;
             _userRepository = userRepository;
+            _packageService = packageService;
+
         }
         public async Task<IEnumerable<GetOrderDto>> GetAllOrderAsync()
         {
@@ -48,11 +52,19 @@ namespace ChineseSale.Services
                     GetGiftDto giftDto = await _giftService.GetByIdGiftAsync(order.GiftsId[i]);
                     giftsDto.Add(giftDto);
                 }
+                List<GetPackageDto> packagesDto = new List<GetPackageDto>();
+                for (int i = 0; i < order.PackagesId.Count(); i++)
+                {
+                    GetPackageDto packageDto = await _packageService.GetPackageByIdAsync(order.PackagesId[i]);
+                    packagesDto.Add(packageDto);
+                }
                 GetOrderByIdDto orderByIdDto = new GetOrderByIdDto()
                 {
                     Id = order.Id,
                     UserId = order.UserId,
+                    OrderDate = order.OrderDate,
                     gifts = giftsDto,
+                    packages= packagesDto,
                     Sum = order.Sum
                 };
                 return orderByIdDto;
@@ -72,8 +84,15 @@ namespace ChineseSale.Services
                     GetGiftDto giftDto = await _giftService.GetByIdGiftAsync(order.GiftsId[i]);
                     giftsDto.Add(giftDto);
                 }
+                List<GetPackageDto> packagesDto = new List<GetPackageDto>();
+                for (int i = 0; i < order.PackagesId.Count(); i++)
+                {
+                    GetPackageDto packageDto = await _packageService.GetPackageByIdAsync(order.PackagesId[i]);
+                    packagesDto.Add(packageDto);
+                }
                 GetOrderByIdDto orderByIdDto = new GetOrderByIdDto()
                 {
+                    packages = packagesDto,
                     Id = order.Id,
                     UserId = order.UserId,
                     gifts = giftsDto,
@@ -94,7 +113,8 @@ namespace ChineseSale.Services
                 UserId = orderDto.UserId,
                 OrderDate = orderDto.OrderDate,
                 Sum = orderDto.Sum,
-                GiftsId = orderDto.GiftsId
+                GiftsId = orderDto.GiftsId,
+                PackagesId= orderDto.PackagesId
             };
 
             await _orderRepository.CreateOrderAsync(order);

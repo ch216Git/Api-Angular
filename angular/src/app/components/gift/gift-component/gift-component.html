@@ -1,0 +1,40 @@
+<div class="gifts-grid" *ngIf="isLoaded">
+  <div class="gift-card" *ngFor="let gift of listGifts; let i = index">
+    
+    <div class="image-container">
+      <img class="gift-image" [src]="gift.image" [routerLink]="['/gift', gift.id]">
+      <div class="winner-badge" *ngIf="prize && gift.winner">
+        הזוכה: {{ gift.winner.name }}
+      </div>
+      <div class="winner-badge no-winner" *ngIf="prize && !gift.winner">
+        אין זוכה
+      </div>
+    </div>
+
+    <div class="gift-content">
+      <h3 class="gift-name">{{ gift.name }}</h3>
+      <p class="gift-description">{{ gift.description || 'אין תיאור' }}</p>
+
+      <div class="gift-details">
+        <span><strong>שווי:</strong> {{ gift.value }} ₪</span>
+        <app-order-component [giftId]="gift.id"></app-order-component>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="edit-button" (click)="editGift(gift.id)">ערוך מתנה</button>
+        
+        <div class="add-to-cart-area">
+          <p-inputnumber
+            *ngIf="listValue[i] !== undefined"
+            [(ngModel)]="listValue[i]"
+            [showButtons]="true"
+            buttonLayout="horizontal"
+            [min]="1"
+            [inputStyle]="{ width: '2rem', height: '2rem' }">
+          </p-inputnumber>
+          <span class="counter-label" (click)="addGiftToBasket(gift.id, i)">להוספת מתנה</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -23,8 +23,8 @@ namespace ChineseSale.Services
                     Name = package.Name,
                     Price = package.Price,
                     Description = package.Description,
-                    CountSpecialCard = package.CountSpecialCard,
-                    CountNormalCard = package.CountNormalCard
+                    CountCard = package.CountCard,
+                    //CountNormalCard = package.CountNormalCard
                 };
                 packageDtos.Add(packageDto);
             }
@@ -43,6 +43,8 @@ namespace ChineseSale.Services
                     Id = package.Id,
                     Name = package.Name,
                     Price = package.Price,
+                    Description = package.Description,
+                    CountCard = package.CountCard,
                 };
                 return packageDto;
             }
@@ -60,8 +62,8 @@ namespace ChineseSale.Services
                 Name = packageDto.Name,
                 Price = packageDto.Price,
                 Description = packageDto.Description,
-                CountSpecialCard = packageDto.CountSpecialCard,
-                CountNormalCard = packageDto.CountNormalCard
+                CountCard = packageDto.CountCard,
+                //CountNormalCard = packageDto.CountNormalCard
             };
 
             await _packageRepository.CreatePackageAsync(package);
@@ -73,8 +75,8 @@ namespace ChineseSale.Services
                 Name = package1.Name,
                 Price = package1.Price,
                 Description = package1.Description,
-                CountSpecialCard = package1.CountSpecialCard,
-                CountNormalCard = package1.CountNormalCard
+                CountCard = package1.CountCard,
+                //CountNormalCard = package1.CountNormalCard
             };
         }
         public async Task<GetPackageDto> UpdatePackageAsync(UpdatePackageDto packageDto)
@@ -91,8 +93,8 @@ namespace ChineseSale.Services
             package.Name = packageDto.Name;
             package.Price = packageDto.Price;
             package.Description = packageDto.Description;
-            package.CountSpecialCard = packageDto.CountSpecialCard;
-            package.CountNormalCard = packageDto.CountNormalCard;
+            package.CountCard = packageDto.CountCard;
+            //package.CountNormalCard = packageDto.CountNormalCard;
 
 
             Package package1 = await _packageRepository.UpdatePackageAsync(package);

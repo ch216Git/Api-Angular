@@ -12,10 +12,10 @@ namespace ChineseSale.Dtos
         public string Description { get; set; }
         public string Image { get; set; }
         public int Value { get; set; }
-        public int PriceCard { get; set; }
+        //public int PriceCard { get; set; }
         public GetCategoryDto Category { get; set; }
         public GetDonorDto Donor { get; set; }
-        public TypeCard TypeCard { get; set; }
+        //public TypeCard TypeCard { get; set; }
         public int SumCustomers { get; set; }
     }
     public class CreateGiftDto
@@ -25,13 +25,13 @@ namespace ChineseSale.Dtos
         public string Description { get; set; }
         public string Image { get; set; }
         public int Value { get; set; }
-        [Required]
-        public int PriceCard { get; set; }
+        //[Required]
+        //public int PriceCard { get; set; }
         [Required]
         public int CategoryId { get; set; }
         [Required]
         public int DonorId { get; set; }
-        public TypeCard TypeCard { get; set; }
+        //public TypeCard TypeCard { get; set; }
 
     }
     public class UpdateGiftDto
@@ -44,9 +44,9 @@ namespace ChineseSale.Dtos
         public string Image { get; set; }
         public int Value { get; set; }
 
-        [Required]
-        public int PriceCard { get; set; }
-        public TypeCard TypeCard { get; set; }
+        //[Required]
+        //public int PriceCard { get; set; }
+        //public TypeCard TypeCard { get; set; }
 
         [Required]
         public int CategoryId { get; set; }

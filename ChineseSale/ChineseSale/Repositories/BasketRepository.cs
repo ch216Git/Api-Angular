@@ -44,7 +44,6 @@ namespace ChineseSale.Repositories
         public async Task<Basket?> AddGiftToBasket(Basket basket,Gift gift)
         {
             basket.GiftsId.Add(gift.Id);
-            basket.Sum += gift.PriceCard;
             _context.Baskets.Update(basket);
             gift.SumCustomers += 1;
             _context.Gifts.Update(gift);
@@ -55,9 +54,24 @@ namespace ChineseSale.Repositories
         public async Task<Basket?> DeleteGiftFromBasket(Basket basket, Gift gift)
         {
             basket.GiftsId.Remove(gift.Id);
-            basket.Sum-=gift.PriceCard;
             gift.SumCustomers -= 1;
             _context.Gifts.Update(gift);
+            _context.Baskets.Update(basket);
+            await _context.SaveChangesAsync();
+            return basket;
+        }
+        public async Task<Basket?> AddPackageToBasket(Basket basket, Package package)
+        {
+            basket.PackagesId.Add(package.Id);
+            basket.Sum += package.Price;
+            _context.Baskets.Update(basket);
+            await _context.SaveChangesAsync();
+            return basket;
+        }
+        public async Task<Basket?> DeletePackageFromBasket(Basket basket, Package package)
+        {
+            basket.PackagesId.Remove(package.Id);
+            basket.Sum -= package.Price;
             _context.Baskets.Update(basket);
             await _context.SaveChangesAsync();
             return basket;

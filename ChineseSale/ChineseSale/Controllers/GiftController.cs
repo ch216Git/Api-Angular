@@ -62,7 +62,7 @@ namespace ChineseSale.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpDelete("{id}")]
+        [HttpDelete("id")]
         public async Task<IActionResult> Delete(int Id)
         {
            try

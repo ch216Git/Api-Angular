@@ -1,0 +1,74 @@
+<!-- <form [formGroup]="fromDonor">
+    <legend>
+       הוספת תורם:
+        <div class="form-group">
+            <div>
+                <input placeholder="name" type="text" class="form-control" formControlName="name" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                <input placeholder="email" type="text" class="form-control" formControlName="email" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                <input placeholder="phone" type="text" class="form-control" formControlName="phone" />
+            </div>
+        </div>
+        <button class="btn btn-primary" [disabled]="fromDonor.invalid" (click)="addDonor()">הוסף</button>
+    </legend>
+</form> -->
+
+<div style="direction: rtl;" class="mb-4 p-8" *ngFor="let donor of allDonorWithGift">
+    <p-card>
+      <div style="display: flex; flex-direction: row; justify-content: space-around; align-items: center;">
+        <button *ngIf="donor.gifts!.length==0"  class="pi pi-times" (click)="deleteDonor(donor.id)"></button>
+        <p class="m-0">שם: {{donor.name}}</p>
+        <p class="m-0">מייל: {{donor.email}}</p>
+        <p class="m-0">מספר פלאפון: {{donor.phone}}</p>
+
+      <!-- <p-button (click)="editDonor(donor); showDialog()" label="עדכון"></p-button> -->
+      <!-- <p-dialog header="עדכון תורם" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }" *ngIf="selectedDonor">
+        <div class="flex items-center gap-4 mb-4">
+          <label for="username" class="font-semibold w-24" >שם</label>
+          <input pInputText id="username" class="flex-auto" autocomplete="off" [(ngModel)]="selectedDonor.name" />
+        </div>
+        <div class="flex items-center gap-4 mb-8">
+          <label for="email" class="font-semibold w-24">מייל</label>
+          <input pInputText id="email" class="flex-auto" autocomplete="off" [(ngModel)]="selectedDonor.email" />
+        </div>
+        <div class="flex items-center gap-4 mb-8">
+            <label for="email" class="font-semibold w-24">מספר פלאפון</label>
+            <input pInputText id="email" class="flex-auto" autocomplete="off" [(ngModel)]="selectedDonor.phone" />
+          </div>
+        <div class="flex justify-end gap-2">
+          <p-button label="Cancel" severity="secondary" (click)="visible = false"></p-button>
+          <p-button label="Save" (click)="visible = false" (click)="editDonor(donor)"></p-button>
+        </div>
+      </p-dialog> -->
+    <p-button (click)="editDonor(donor)" label="עדכון"></p-button>
+<p-dialog header="עדכון תורם" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
+  <div class="flex items-center gap-4 mb-4">
+    <label for="username" class="font-semibold w-24">שם</label>
+    <input pInputText id="username" class="flex-auto" autocomplete="off" [(ngModel)]="selectedDonor.name" />
+  </div>
+  <div class="flex items-center gap-4 mb-8">
+    <label for="email" class="font-semibold w-24">מייל</label>
+    <input pInputText id="email" class="flex-auto" autocomplete="off" [(ngModel)]="selectedDonor.email" />
+  </div>
+  <div class="flex items-center gap-4 mb-8">
+    <label for="phone" class="font-semibold w-24">מספר פלאפון</label>
+    <input pInputText id="phone" class="flex-auto" autocomplete="off" [(ngModel)]="selectedDonor.phone" />
+  </div>
+  <div class="flex justify-end gap-2">
+    <p-button label="Cancel" severity="secondary" (click)="visible = false"></p-button>
+    <p-button label="Save" (click)="saveDonor(selectedDonor.id)"></p-button>
+  </div>
+</p-dialog>
+
+</div>
+    </p-card>
+
+  
+</div>

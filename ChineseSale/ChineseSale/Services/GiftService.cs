@@ -25,13 +25,12 @@ namespace ChineseSale.Services
                 {
                     Id = gift.Id,
                     Name = gift.Name,
-                    PriceCard = gift.PriceCard,
                     Description = gift.Description,
                     Image = gift.Image,
                     Value = gift.Value,
                     Category = new GetCategoryDto() { Id = gift.Category.Id, Name = gift.Category.Name },
                     Donor = new GetDonorDto() { Id = gift.Donor.Id, Name = gift.Donor.Name, Email = gift.Donor.Email, Phone = gift.Donor.Phone },
-                    TypeCard = gift.TypeCard,
+                    //TypeCard = gift.TypeCard,
                     SumCustomers = gift.SumCustomers
                 };
                 giftDtos.Add(giftDto);
@@ -48,13 +47,12 @@ namespace ChineseSale.Services
                 {
                     Id = gift.Id,
                     Name = gift.Name,
-                    PriceCard = gift.PriceCard,
                     Description = gift.Description,
                     Image = gift.Image,
                     Value = gift.Value,
                     Category = new GetCategoryDto() { Id = gift.Category.Id, Name = gift.Category.Name },
                     Donor = new GetDonorDto() { Id=gift.Donor.Id,Name=gift.Donor.Name,Email=gift.Donor.Email,Phone=gift.Donor.Phone},
-                    TypeCard = gift.TypeCard,
+                    //TypeCard = gift.TypeCard,
                     SumCustomers = gift.SumCustomers
                 };
                 return giftDto;
@@ -64,20 +62,19 @@ namespace ChineseSale.Services
         }
         public async Task<GetGiftDto> CreateGiftAsync(CreateGiftDto giftDto)
         {
-            if (giftDto.Value <= 0 || giftDto.PriceCard<=0) 
+            if (giftDto.Value <= 0) 
             {
-                throw new ArgumentException("Value and PriceCard must be greater than 0");
+                throw new ArgumentException("Value must be greater than 0");
             }
             Gift gift= new Gift()
             { 
                 Name = giftDto.Name,
-                PriceCard = giftDto.PriceCard,
                 Description = giftDto.Description,
                 Image = giftDto.Image,
                 Value = giftDto.Value,
                 CategoryId = giftDto.CategoryId,
                 DonorId = giftDto.DonorId,
-                TypeCard = giftDto.TypeCard
+                //TypeCard = giftDto.TypeCard
             };
             Gift gift1= await _giftRepository.CreateGiftAsync(gift);
             Gift gift2 = await _giftRepository.GetByIdGiftAsync(gift1.Id);
@@ -87,13 +84,12 @@ namespace ChineseSale.Services
             {
                 Id = gift2.Id,
                 Name = gift2.Name,
-                PriceCard = gift2.PriceCard,
                 Description = gift2.Description,
                 Image = gift2.Image,
                 Value = gift2.Value,
                 Category= new GetCategoryDto() { Id = gift2.Category.Id, Name = gift2.Category.Name },
                 Donor = new GetDonorDto() { Id = gift2.Donor.Id, Name = gift2.Donor.Name, Email = gift2.Donor.Email, Phone = gift2.Donor.Phone },
-                TypeCard = gift2.TypeCard,
+                //TypeCard = gift2.TypeCard,
                 SumCustomers = gift2.SumCustomers               
             };
             return giftDto1;
@@ -121,13 +117,12 @@ namespace ChineseSale.Services
                 {
                     Id = gift.Id,
                     Name = gift.Name,
-                    PriceCard = gift.PriceCard,
                     Description = gift.Description,
                     Image = gift.Image,
                     Value = gift.Value,
                     Category = new GetCategoryDto() { Id=gift.Category.Id,Name=gift.Category.Name},
                     Donor = new GetDonorDto() { Id = gift.Donor.Id, Name = gift.Donor.Name, Email = gift.Donor.Email, Phone = gift.Donor.Phone },
-                    TypeCard = gift.TypeCard,
+                    //TypeCard = gift.TypeCard,
                     SumCustomers = gift.SumCustomers
                 };
                 giftDtos.Add(giftDto);
@@ -151,17 +146,16 @@ namespace ChineseSale.Services
             {
                 throw new ArgumentException("not found gift");
             }
-            if (giftDto.Value <= 0 || giftDto.PriceCard <= 0)
+            if (giftDto.Value <= 0)
             {
-                throw new ArgumentException("Value and PriceCard must be greater than 0");
+                throw new ArgumentException("Value must be greater than 0");
             }
             gift.Name = giftDto.Name;          
-            gift.PriceCard = giftDto.PriceCard;
             gift.Description = giftDto.Description;
             gift.Value = giftDto.Value;
             gift.DonorId = giftDto.DonorId;
             gift.CategoryId = giftDto.CategoryId;
-            gift.TypeCard = giftDto.TypeCard;
+            //gift.TypeCard = giftDto.TypeCard;
             gift.Image= giftDto.Image;
 
             await _giftRepository.UpdateGiftAsync(gift);
@@ -173,13 +167,12 @@ namespace ChineseSale.Services
             {
                 Id = gift.Id,
                 Name = gift1.Name,
-                PriceCard = gift1.PriceCard,
                 Description = gift1.Description,
                 Image = gift1.Image,
                 Value = gift1.Value,
                 Category = new GetCategoryDto() { Id = gift1.Category.Id, Name = gift1.Category.Name },
                 Donor = new GetDonorDto() { Id = gift1.Donor.Id, Name = gift1.Donor.Name, Email = gift1.Donor.Email, Phone = gift1.Donor.Phone },
-                TypeCard = gift1.TypeCard,
+                //TypeCard = gift1.TypeCard,
                 SumCustomers = gift1.SumCustomers
 
             };

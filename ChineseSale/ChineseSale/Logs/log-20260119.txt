@@ -1,0 +1,155 @@
+2026-01-19 00:17:36.397 +02:00 [ERR] Failed executing DbCommand (10ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [b].[Id], [b].[GiftsId], [b].[PackagesId], [b].[Sum], [b].[UserId], [u].[Id], [u].[Address], [u].[Email], [u].[Name], [u].[Password], [u].[Phone], [u].[Role], [u].[UserName]
+FROM [Baskets] AS [b]
+INNER JOIN [Users] AS [u] ON [b].[UserId] = [u].[Id] {"EventId":{"Id":20102,"Name":"Microsoft.EntityFrameworkCore.Database.Command.CommandError"},"SourceContext":"Microsoft.EntityFrameworkCore.Database.Command","ActionId":"9b1a19fa-cac2-4cde-805f-dfda60bf945a","ActionName":"ChineseSale.Controllers.BasketController.GetAllBasketsAsync (ChineseSale)","RequestId":"0HNIMRRQAQ4R5:00000013","RequestPath":"/api/Basket","ConnectionId":"0HNIMRRQAQ4R5"}
+2026-01-19 00:17:36.464 +02:00 [ERR] An exception occurred while iterating over the results of a query for context type 'ChineseSale.Data.ChineseSaleContextDB'.
+Microsoft.Data.SqlClient.SqlException (0x80131904): Invalid column name 'PackagesId'.
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__211_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+ClientConnectionId:eabf67c2-03e2-4959-866b-40937d82181a
+Error Number:207,State:1,Class:16 {"EventId":{"Id":10100,"Name":"Microsoft.EntityFrameworkCore.Query.QueryIterationFailed"},"SourceContext":"Microsoft.EntityFrameworkCore.Query","ActionId":"9b1a19fa-cac2-4cde-805f-dfda60bf945a","ActionName":"ChineseSale.Controllers.BasketController.GetAllBasketsAsync (ChineseSale)","RequestId":"0HNIMRRQAQ4R5:00000013","RequestPath":"/api/Basket","ConnectionId":"0HNIMRRQAQ4R5"}
+Microsoft.Data.SqlClient.SqlException (0x80131904): Invalid column name 'PackagesId'.
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__211_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+ClientConnectionId:eabf67c2-03e2-4959-866b-40937d82181a
+Error Number:207,State:1,Class:16
+2026-01-19 00:17:36.475 +02:00 [ERR] An unhandled exception has occurred while executing the request. {"EventId":{"Id":1,"Name":"UnhandledException"},"SourceContext":"Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware","RequestId":"0HNIMRRQAQ4R5:00000013","RequestPath":"/api/Basket","ConnectionId":"0HNIMRRQAQ4R5"}
+Microsoft.Data.SqlClient.SqlException (0x80131904): Invalid column name 'PackagesId'.
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<ExecuteDbDataReaderAsync>b__211_0(Task`1 result)
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReaderAsync(RelationalCommandParameterObject parameterObject, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.InitializeReaderAsync(AsyncEnumerator enumerator, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.AsyncEnumerator.MoveNextAsync()
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.ToListAsync[TSource](IQueryable`1 source, CancellationToken cancellationToken)
+   at ChineseSale.Repositories.BasketRepository.GetAllBasketAsync() in C:\Users\user\Desktop\project\ChineseSale\ChineseSale\Repositories\BasketRepository.cs:line 16
+   at ChineseSale.Services.BasketService.GetAllBasketAsync() in C:\Users\user\Desktop\project\ChineseSale\ChineseSale\Services\BasketService.cs:line 24
+   at ChineseSale.Controllers.BasketController.GetAllBasketsAsync() in C:\Users\user\Desktop\project\ChineseSale\ChineseSale\Controllers\BasketController.cs:line 19
+   at lambda_method125(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddlewareImpl.Invoke(HttpContext context)
+ClientConnectionId:eabf67c2-03e2-4959-866b-40937d82181a
+Error Number:207,State:1,Class:16
+2026-01-19 01:06:02.958 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"aef432cb-84b2-48a1-8b30-d48dd33db4b1","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNIMSOGR714S:0000000B","RequestPath":"/api/Gift","ConnectionId":"0HNIMSOGR714S"}
+2026-01-19 02:01:31.776 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"bf541026-ba2d-4c68-b435-f55a136521d4","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNIMTLHUT1JF:0000000D","RequestPath":"/api/Gift","ConnectionId":"0HNIMTLHUT1JF"}
+2026-01-19 02:01:58.145 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"bf541026-ba2d-4c68-b435-f55a136521d4","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNIMTLHUT1JH:00000001","RequestPath":"/api/Gift","ConnectionId":"0HNIMTLHUT1JH"}
+2026-01-19 15:30:06.781 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"bf541026-ba2d-4c68-b435-f55a136521d4","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNIMTLHUT1JI:00000001","RequestPath":"/api/Gift","ConnectionId":"0HNIMTLHUT1JI"}
+2026-01-19 19:31:54.103 +02:00 [ERR] An unhandled exception has occurred while executing the request. {"EventId":{"Id":1,"Name":"UnhandledException"},"SourceContext":"Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware","RequestId":"0HNINENBF64IS:00000041","RequestPath":"/api/User/register","ConnectionId":"0HNINENBF64IS"}
+System.ArgumentException: username already exists
+   at ChineseSale.Services.UserService.CreateUserAsync(CreateUserDto userDto) in C:\Users\user\Desktop\project\ChineseSale\ChineseSale\Services\UserService.cs:line 89
+   at ChineseSale.Controllers.UserController.Register(CreateUserDto dto) in C:\Users\user\Desktop\project\ChineseSale\ChineseSale\Controllers\UserController.cs:line 29
+   at lambda_method350(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddlewareImpl.Invoke(HttpContext context)
+2026-01-19 20:13:59.019 +02:00 [ERR] An unhandled exception has occurred while executing the request. {"EventId":{"Id":1,"Name":"UnhandledException"},"SourceContext":"Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware","RequestId":"0HNINENBF64J3:0000003D","RequestPath":"/api/User/login","ConnectionId":"0HNINENBF64J3"}
+System.UnauthorizedAccessException: Invalid credentials
+   at ChineseSale.Services.UserService.LoginAsync(LoginDto dto) in C:\Users\user\Desktop\project\ChineseSale\ChineseSale\Services\UserService.cs:line 156
+   at ChineseSale.Controllers.UserController.Login(LoginDto dto) in C:\Users\user\Desktop\project\ChineseSale\ChineseSale\Controllers\UserController.cs:line 36
+   at lambda_method385(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddlewareImpl.Invoke(HttpContext context)
+2026-01-19 20:14:38.726 +02:00 [ERR] An unhandled exception has occurred while executing the request. {"EventId":{"Id":1,"Name":"UnhandledException"},"SourceContext":"Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware","RequestId":"0HNINENBF64J3:00000041","RequestPath":"/api/User/register","ConnectionId":"0HNINENBF64J3"}
+System.ArgumentException: username already exists
+   at ChineseSale.Services.UserService.CreateUserAsync(CreateUserDto userDto) in C:\Users\user\Desktop\project\ChineseSale\ChineseSale\Services\UserService.cs:line 89
+   at ChineseSale.Controllers.UserController.Register(CreateUserDto dto) in C:\Users\user\Desktop\project\ChineseSale\ChineseSale\Controllers\UserController.cs:line 29
+   at lambda_method350(Closure, Object)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeInnerFilterAsync>g__Awaited|13_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddlewareImpl.Invoke(HttpContext context)
+2026-01-19 21:22:04.218 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"4174f246-eb03-4e3b-b403-9cf1a3878f05","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNINENBF64J7:00000003","RequestPath":"/api/Gift","ConnectionId":"0HNINENBF64J7"}
+2026-01-19 21:27:59.880 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"5dff52fa-320b-4d84-af3b-889fab781b0e","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNINI34S94RB:00000011","RequestPath":"/api/Gift","ConnectionId":"0HNINI34S94RB"}
+2026-01-19 21:31:22.530 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"5dff52fa-320b-4d84-af3b-889fab781b0e","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNINI34S94RC:00000003","RequestPath":"/api/Gift","ConnectionId":"0HNINI34S94RC"}
+2026-01-19 21:31:31.092 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"5dff52fa-320b-4d84-af3b-889fab781b0e","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNINI34S94RD:00000001","RequestPath":"/api/Gift","ConnectionId":"0HNINI34S94RD"}
+2026-01-19 21:31:38.089 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"5dff52fa-320b-4d84-af3b-889fab781b0e","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNINI34S94RD:00000005","RequestPath":"/api/Gift","ConnectionId":"0HNINI34S94RD"}
+2026-01-19 21:32:59.412 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"5dff52fa-320b-4d84-af3b-889fab781b0e","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNINI34S94RD:00000009","RequestPath":"/api/Gift","ConnectionId":"0HNINI34S94RD"}
+2026-01-19 21:33:03.085 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"5dff52fa-320b-4d84-af3b-889fab781b0e","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNINI34S94RD:0000000D","RequestPath":"/api/Gift","ConnectionId":"0HNINI34S94RD"}
+2026-01-19 21:33:53.423 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"5dff52fa-320b-4d84-af3b-889fab781b0e","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNINI34S94RD:00000011","RequestPath":"/api/Gift","ConnectionId":"0HNINI34S94RD"}
+2026-01-19 21:34:07.331 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"5dff52fa-320b-4d84-af3b-889fab781b0e","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNINI34S94RD:00000015","RequestPath":"/api/Gift","ConnectionId":"0HNINI34S94RD"}
+2026-01-19 21:34:45.499 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"5dff52fa-320b-4d84-af3b-889fab781b0e","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNINI34S94RD:00000025","RequestPath":"/api/Gift","ConnectionId":"0HNINI34S94RD"}
+2026-01-19 21:35:23.588 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"5dff52fa-320b-4d84-af3b-889fab781b0e","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNINI34S94RD:0000002B","RequestPath":"/api/Gift","ConnectionId":"0HNINI34S94RD"}
+2026-01-19 21:36:52.385 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"5dff52fa-320b-4d84-af3b-889fab781b0e","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNINI34S94RD:0000002F","RequestPath":"/api/Gift","ConnectionId":"0HNINI34S94RD"}
+2026-01-19 21:37:15.369 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"5dff52fa-320b-4d84-af3b-889fab781b0e","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNINI34S94RD:00000031","RequestPath":"/api/Gift","ConnectionId":"0HNINI34S94RD"}
+2026-01-19 21:37:24.682 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"5dff52fa-320b-4d84-af3b-889fab781b0e","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNINI34S94RD:00000033","RequestPath":"/api/Gift","ConnectionId":"0HNINI34S94RD"}
+2026-01-19 21:38:00.547 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"5dff52fa-320b-4d84-af3b-889fab781b0e","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNINI34S94RD:00000035","RequestPath":"/api/Gift","ConnectionId":"0HNINI34S94RD"}
+2026-01-19 21:43:08.594 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"5dff52fa-320b-4d84-af3b-889fab781b0e","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNINI34S94RE:00000001","RequestPath":"/api/Gift","ConnectionId":"0HNINI34S94RE"}
+2026-01-19 21:43:18.457 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"5dff52fa-320b-4d84-af3b-889fab781b0e","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNINI34S94RE:00000003","RequestPath":"/api/Gift","ConnectionId":"0HNINI34S94RE"}
+2026-01-19 21:43:24.265 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"5dff52fa-320b-4d84-af3b-889fab781b0e","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNINI34S94RE:00000005","RequestPath":"/api/Gift","ConnectionId":"0HNINI34S94RE"}
+2026-01-19 21:43:52.994 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"5dff52fa-320b-4d84-af3b-889fab781b0e","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNINI34S94RE:00000007","RequestPath":"/api/Gift","ConnectionId":"0HNINI34S94RE"}
+2026-01-19 21:44:37.861 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"5dff52fa-320b-4d84-af3b-889fab781b0e","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNINI34S94RE:00000017","RequestPath":"/api/Gift","ConnectionId":"0HNINI34S94RE"}
+2026-01-19 21:44:50.307 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"5dff52fa-320b-4d84-af3b-889fab781b0e","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNINI34S94RE:0000001B","RequestPath":"/api/Gift","ConnectionId":"0HNINI34S94RE"}
+2026-01-19 21:45:14.161 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"5dff52fa-320b-4d84-af3b-889fab781b0e","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNINI34S94RE:0000001D","RequestPath":"/api/Gift","ConnectionId":"0HNINI34S94RE"}
+2026-01-19 21:45:34.471 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"5dff52fa-320b-4d84-af3b-889fab781b0e","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNINI34S94RF:00000001","RequestPath":"/api/Gift","ConnectionId":"0HNINI34S94RF"}

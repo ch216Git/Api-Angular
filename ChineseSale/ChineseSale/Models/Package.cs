@@ -10,7 +10,9 @@ namespace ChineseSale.Models
         [Required]
         public int Price { get; set; }
         public string Description { get; set; }
-        public int CountSpecialCard { get; set; } = 0;
-        public int CountNormalCard { get; set; } = 0;
+
+        [Required]
+        public int CountCard { get; set; }
+        //public int CountNormalCard { get; set; } = 0;
     }
 }

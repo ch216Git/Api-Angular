@@ -34,6 +34,10 @@ namespace ChineseSale.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.PrimitiveCollection<string>("PackagesId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<double>("Sum")
                         .HasColumnType("float");
 
@@ -115,13 +119,7 @@ namespace ChineseSale.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PriceCard")
-                        .HasColumnType("int");
-
                     b.Property<int>("SumCustomers")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TypeCard")
                         .HasColumnType("int");
 
                     b.Property<int>("Value")
@@ -151,6 +149,10 @@ namespace ChineseSale.Migrations
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
+                    b.PrimitiveCollection<string>("PackagesId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<double>("Sum")
                         .HasColumnType("float");
 
@@ -172,10 +174,7 @@ namespace ChineseSale.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CountNormalCard")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CountSpecialCard")
+                    b.Property<int>("CountCard")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")

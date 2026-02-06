@@ -1,0 +1,85 @@
+<div *ngIf="(basket$ | async) as basket; else emptyCart" class="basket-container">
+
+  <div *ngIf="packagesWithCount.length">
+    <h3 class="section-title">החבילות שלך</h3>
+    <div class="basket-list">
+      <div *ngFor="let item of packagesWithCount" class="basket-row">
+        <span class="item-name">{{ item.package.name }}</span>
+        <span class="item-price">{{ item.package.price }} ₪</span>
+        
+        <div class="quantity-controls">
+          <button (click)="removePackage(item.package.id)" class="btn-qty">-</button>
+          <span class="qty-value">{{ item.count }}</span>
+         <button (click)="addPackage(item.package.id)" class="btn-qty">+</button>
+        </div>
+
+        <span class="total-item-price">סה"כ: {{ item.package.price * item.count }} ₪</span>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="giftsWithCount.length">
+    <h3 class="section-title">המתנות שלך</h3>
+    <div class="basket-list">
+      <div *ngFor="let item of giftsWithCount" class="basket-row">
+        <span class="item-name">{{ item.gift.name }}</span>
+        <!-- <span class="item-price">{{ item.gift.price }} ₪</span> -->
+
+        <div class="quantity-controls">
+          <button (click)="removeGift(item.gift.id)" class="btn-qty">-</button>
+          <span class="qty-value">{{ item.count }}</span>
+          <button (click)="addGift(item.gift.id)" class="btn-qty">+</button>
+        </div>
+
+        <!-- <span class="total-item-price">סה"כ: {{ item.gift.price * item.count }} ₪</span> -->
+      </div>
+    </div>
+  </div>
+  
+  <div class="basket-footer" *ngIf="packagesWithCount.length || giftsWithCount.length">
+      <p><b>סה"כ לתשלום: {{basket.sum}} ₪</b></p>
+      <p-button label="לקנייה" (click)="showDialog()"></p-button>
+  </div>
+</div>
+
+<ng-template #emptyCart>
+  <div class="empty-cart-wrapper">
+    <b>העגלה ריקה</b>
+    <p>בחר אחת מהחבילות בעמוד</p>
+    <img
+      src="https://localhost:7081/uploads/emptyCart.WEBP"
+      alt="emptyCart"
+      class="emptyCart"
+    />
+  </div>
+</ng-template>
+
+<p-dialog header="פרטי תשלום" [(visible)]="visible" [modal]="true" [style]="{ width: '300px' }">
+  <form #cardForm="ngForm" class="flex flex-column gap-3">
+    
+    <div class="field">
+      <!-- <label class="block">מספר כרטיס</label> -->
+      <input pInputText placeholder="מספר כרטיס" name="card" ngModel required minlength="16" class="w-full" />
+    </div>
+
+    <div class="flex gap-2">
+      <div class="field">
+        <!-- <label class="block">תוקף</label> -->
+        <input pInputText name="exp" placeholder="תוקף" ngModel required class="w-full" placeholder="MM/YY" />
+      </div>
+      <div class="field">
+        <!-- <label class="block">CVV</label> -->
+        <input pInputText name="cvv" placeholder="CVV" ngModel required minlength="3" class="w-full" />
+      </div>
+    </div>
+
+    <div class="flex justify-content-end mt-3">
+      <p-button 
+        label="אישור" 
+        [disabled]="cardForm.invalid" 
+        (onClick)="saveProfile()">
+      </p-button>
+    </div>
+
+  </form>
+</p-dialog>

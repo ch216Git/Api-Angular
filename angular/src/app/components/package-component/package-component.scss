@@ -1,0 +1,259 @@
+.spicalCard {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+
+  width: 100%;        /* ✔ במקום 100vw */
+  max-width: 100%;
+  justify-content: center;
+
+  box-sizing: border-box;
+}
+
+.hero-video {
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+.hero-video video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+  /* ✨ כאן הקסם */
+  object-position: left center;
+}
+.bottom-image {
+  width: 100%;
+  height: 100vh;              /* גובה מסך מלא */
+  
+  background-image: url("https://localhost:7081/uploads/bottom.png");
+  background-size: cover;     /* ממלא את המסך */
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* תוכן מעל הסרטון */
+.hero-content {
+  position: relative;
+  z-index: 1; /* כדי להיות מעל הסרטון */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items:center;
+  margin-right: 70px;
+  height: 100%;
+  color: white;
+  text-align: center;
+}
+
+  /* כל כרטיס */
+  .card {
+    flex: 0 0 40%;
+    max-width: 40%;
+    border-radius: 20px;
+    gap: 10px;
+    padding: 30px;
+    padding-bottom: 0;
+    padding-left: 0;
+    margin: 15px;
+    color: white;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    transition: transform 0.2s;
+  }
+  
+  .card:hover {
+    transform: scale(1.05);
+  }
+  
+
+  .up {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; 
+    align-items: flex-end;     
+    gap: 15px;              /* קטן אבל נראה */
+    margin-bottom: 8px;     
+}
+
+.up > * {
+    margin: 0;             /* ביטול margin פנימי */
+    line-height: 1;        /* מצמצם רווח בין השורות */
+}
+
+  
+  .card-title {
+    font-size: 18px;
+    margin: 0; /* הסרת מרווח מיותר מעל ומתחת */
+  }
+  
+  .card-count {
+    font-size: xx-large;
+    margin: 0; /* צמצום רווח */
+  }
+  
+  .card-price {
+    font-size: 16px;
+    margin: 0; /* צמצום רווח */
+  }
+  /* לשורה עם input + הכיתוב */
+  .counter-row {
+    padding-left: 30px;
+    flex-direction: row-reverse;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start; /* להתחיל קצת משמאל */
+    gap: 15px;
+    // margin-top: 10px;
+  }
+  
+  .counter-label {
+    margin-bottom: 7px;
+    font-size: 15px;
+    cursor: pointer;
+    text-decoration: none !important;
+    color: white;
+    margin-left: 5px; /* להזיז מעט ימינה כדי להיות קרוב יותר למרכז */
+  }
+  .gift{
+    width: 30%;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 15px;
+    padding-right: 30px;
+    // margin-bottom: 15px;
+  }
+  .altColorsCart_500 {
+    background: linear-gradient(225deg, #0e5bff, #5291ff);
+  }
+  
+  .altColorsCart_300 {
+    background: linear-gradient(225deg, #db0000, #ff696c);
+  }
+  
+  .altColorsCart_100 {
+    background: linear-gradient(225deg, #ff7159, #ffb8b0);
+  }
+  
+  .altColorsCart_30 {
+    background: linear-gradient(225deg, #143996, #495dde);
+  }
+  
+  .altColorsCart_10 {
+    background: linear-gradient(225deg, #187cba, #00b8c7);
+  }
+  
+  .altColorsCart_3 {
+    background: linear-gradient(225deg, #00ba7f, #9df5c5);
+  }
+  
+  .altColorsCart_1 {
+    background: linear-gradient(225deg, #f88b37, #f8d2a6);
+  }  
+  .input-with-label {
+    position: relative;
+    top: 50px;
+  }
+  
+  
+  
+  /* עיצוב ה-input */
+  .clean-input-number {
+    border-radius: 999px; /* אליפסה */
+    overflow: hidden;
+    
+  }
+  
+  .clean-input-number .p-inputnumber {
+    border-radius: 999px;
+    background-color: white !important;
+    border: none !important;
+  }
+  
+  .clean-input-number .p-inputnumber-input {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background-color: white !important;
+    text-align: center;
+    font-size: 14px;
+    // padding: 0;
+  }
+/* ביטול מסגרת ירוקה מה-input עצמו */
+.p-inputnumber-input {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* כשה-inputnumber במצב פוקוס (PrimeNG מוסיף p-focus) */
+.p-inputnumber.p-focus .p-inputnumber-input {
+    outline: none !important;
+    box-shadow: none !important;
+    border-color: transparent !important;
+}
+
+/* ביטול פוקוס מכפתורי פלוס / מינוס */
+.p-inputnumber .p-button {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.p-inputnumber .p-button:focus,
+.p-inputnumber .p-button:active {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* פתרון חזק – מבטל כל focus פנימי */
+.p-inputnumber *:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+// .giftinimage{
+//   background-image:;
+// }
+.image{
+
+  // background-image: url("https://localhost:7081/uploads/gift1.png");
+  background-size: cover;   /* או cover */
+  background-repeat: no-repeat;
+  background-position: center;
+  // background-color: red; 
+   border-radius: 20px; 
+   margin-bottom: 0; 
+   margin-left: 0;
+    z-index: 1000;
+     width: 100px; 
+     height: 100px;
+}
+  /* כפתורי פלוס ומינוס */
+  .clean-input-number .p-button {
+    background-color: white !important;
+    border: none !important;
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    // padding: 0;
+  }
+  
+  .clean-input-number .p-button:focus,
+  .clean-input-number .p-button:active {
+    box-shadow: none !important;
+  }
+
+  /* רספונסיביות */
+  @media (max-width: 500px) {
+    .spicalCard {
+      justify-content: center;
+    }
+  
+    .card {
+      flex: 0 0 100%;
+      max-width: 100%;
+      margin: 10px 0;   /* רווח אנכי בלבד */
+    }  
+  }
+  

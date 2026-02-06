@@ -1,0 +1,24 @@
+
+.upload-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 300px;
+  
+    input {
+      margin-bottom: 10px;
+    }
+  
+    .preview img {
+      width: 100%;
+      height: auto;
+      border: 1px solid #ccc;
+    }
+  }
+  .preview img {
+    max-width: 200px;
+    max-height: 200px;
+    object-fit: contain;
+  }
+  
+  

@@ -8,8 +8,8 @@ namespace ChineseSale.Dtos
         public string Name { get; set; }
         public int Price { get; set; }
         public string Description { get; set; }
-        public int CountSpecialCard { get; set; }
-        public int CountNormalCard { get; set; }
+        public int CountCard { get; set; }
+        //public int CountNormalCard { get; set; }
     }
     public class CreatePackageDto
     {
@@ -18,8 +18,9 @@ namespace ChineseSale.Dtos
         [Required]
         public int Price { get; set; }
         public string Description { get; set; }
-        public int CountSpecialCard { get; set; }
-        public int CountNormalCard { get; set; }
+        [Required]
+        public int CountCard { get; set; }
+        //public int CountNormalCard { get; set; }
     }
     public class UpdatePackageDto
     {
@@ -28,7 +29,7 @@ namespace ChineseSale.Dtos
         public string Name { get; set; }
         public int Price { get; set; }
         public string Description { get; set; }
-        public int CountSpecialCard { get; set; }
-        public int CountNormalCard { get; set; }
+        public int CountCard { get; set; }
+        //public int CountNormalCard { get; set; }
     }
 }

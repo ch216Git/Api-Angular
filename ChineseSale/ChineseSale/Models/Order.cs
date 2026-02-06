@@ -12,6 +12,7 @@ namespace ChineseSale.Models
         public User User { get; set; }
 
         public List<int> GiftsId { get; set; } = new List<int>();
+        public List<int> PackagesId { get; set; } = new List<int>();
 
         public double Sum { get; set; }
     }
