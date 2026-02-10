@@ -1,11 +1,11 @@
-import { Component, Input, inject, input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { GiftService } from '../../../services/gift-service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CreateGift, GetGift, UpdateGift } from '../../../models/gift.model';
 import { CommonModule } from '@angular/common';
 import { UploadComponent } from '../../upload-component/upload-component';
 import { GiftComponent } from '../gift-component/gift-component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CreateCategory, GetCategory } from '../../../models/category.model';
 import { CategoryService } from '../../../services/category-service';
 import { AvatarModule } from 'primeng/avatar';
@@ -20,17 +20,17 @@ import { email } from '@angular/forms/signals';
 @Component({
   selector: 'app-add-gift-component',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule,UploadComponent,AvatarModule,ButtonModule,DialogModule,InputTextModule],
+  imports: [ReactiveFormsModule, CommonModule, UploadComponent, AvatarModule, ButtonModule, DialogModule, InputTextModule],
   templateUrl: './add-gift-component.html',
   styleUrl: './add-gift-component.scss',
 })
 export class AddGiftComponent {
   giftService: GiftService = inject(GiftService);
   categoryService: CategoryService = inject(CategoryService);
-  donorService:DonorService = inject(DonorService);
-  listCategory:GetCategory[]=[];
-  listDonor:GetDonor[]=[];
-  constructor(private route: ActivatedRoute){}
+  donorService: DonorService = inject(DonorService);
+  listCategory: GetCategory[] = [];
+  listDonor: GetDonor[] = [];
+  constructor(private route: ActivatedRoute, private router: Router) { }
 
   fromAddGift: FormGroup = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -46,12 +46,12 @@ export class AddGiftComponent {
   visible1 = false;
   newCategoryName = new FormControl('', Validators.required);
   fromDonor: FormGroup = new FormGroup({
-    name: new FormControl('',Validators.required),
+    name: new FormControl('', Validators.required),
     email: new FormControl('', Validators.email),
     phone: new FormControl('', Validators.pattern('^\\+?[0-9]{10,12}$')),
-  
+
   })
-  ngOnInit(){
+  ngOnInit() {
     const giftId = this.route.snapshot.paramMap.get('id');
     if (giftId) {
       this.giftService.getGiftById(+giftId).subscribe({
@@ -68,8 +68,8 @@ export class AddGiftComponent {
             // typeCard: Object.keys(this.typeCardMap).find(
             //   key => this.typeCardMap[key as keyof typeof this.typeCardMap] === Number(gift.typeCard)
             // ) || 'Normal'
-            
-            
+
+
           });
         },
         error: (error) => console.error('Error fetching gift:', error)
@@ -79,8 +79,8 @@ export class AddGiftComponent {
       this.listCategory = data;
       console.log(this.listCategory);
     });
-    this.donorService.getAllDonor().subscribe(data=>{
-      this.listDonor=data;
+    this.donorService.getAllDonor().subscribe(data => {
+      this.listDonor = data;
       console.log(this.listDonor);
     })
   }
@@ -91,169 +91,187 @@ export class AddGiftComponent {
   // };
   selectedFile: File | null = null;
 
-  addOrEditGift(){
-    
-    if(this.gift){
+  addOrEditGift() {
+
+    if (this.gift) {
       this.updateGift();
       console.log("update");
-      
-    }else{
+
+    } else {
       this.addGift();
       console.log("add");
-      
+
     }
   }
-onFileSelected(file: File) {
-  this.selectedFile = file;
-}
+  onFileSelected(file: File) {
+    this.selectedFile = file;
 
-addGift() {
-  const createGiftWithImage = (imageUrl: string) => {
-    const newGift: CreateGift = {
-      ...this.fromAddGift.value,
-      image: imageUrl,
-      value: Number(this.fromAddGift.value.value),
-      // priceCard: Number(this.fromAddGift.value.priceCard),
-      categoryId: Number(this.fromAddGift.value.categoryId),
-      donorId: Number(this.fromAddGift.value.donorId),
-      // typeCard: this.typeCardMap[this.fromAddGift.value.typeCard as keyof typeof this.typeCardMap]
+    // const reader = new FileReader();
+    // reader.onload = (e: any) => {
+    //   const dataUrl = e.target.result;
+    //   this.fromAddGift.get('image')?.setValue(dataUrl);
+    //   if (this.gift) {
+    //     this.gift.image = dataUrl;
+    //   }
+    // };
+    // reader.readAsDataURL(file);
+  }
+
+  addGift() {
+    const createGiftWithImage = (imageUrl: string) => {
+      const newGift: CreateGift = {
+        ...this.fromAddGift.value,
+        image: imageUrl,
+        value: Number(this.fromAddGift.value.value),
+        // priceCard: Number(this.fromAddGift.value.priceCard),
+        categoryId: Number(this.fromAddGift.value.categoryId),
+        donorId: Number(this.fromAddGift.value.donorId),
+        // typeCard: this.typeCardMap[this.fromAddGift.value.typeCard as keyof typeof this.typeCardMap]
+      };
+
+      this.giftService.createGift(newGift).subscribe({
+        next: (gift) => {
+          console.log('Add gift successfully:', gift);
+          this.fromAddGift.reset();
+          this.selectedFile = null;
+          this.router.navigate(['/gifts']);
+        },
+        error: (error: any) =>
+          console.error('Error add gift:', error),
+      });
     };
 
-    this.giftService.createGift(newGift).subscribe({
-      next: (gift) => {
-        console.log('Add gift successfully:', gift);
-        this.fromAddGift.reset();
-        this.selectedFile = null;
+    if (!this.selectedFile) {
+      createGiftWithImage('');
+      return;
+    }
+    this.giftService.uploadImage(this.selectedFile).subscribe({
+      next: (res: any) => {
+        const fileUrl = `https://localhost:7081${res.fileUrl}`;
+        if (this.gift) {
+          this.gift.image = fileUrl;
+        }
+        createGiftWithImage(fileUrl);
       },
-      error: (error: any) =>
-        console.error('Error add gift:', error),
+      error: (err: any) =>
+        console.error('Error upload image:', err),
     });
-  };
-
-  if (!this.selectedFile) {
-    createGiftWithImage('');
-    return;
   }
-  this.giftService.uploadImage(this.selectedFile).subscribe({
-    next: (res: any) => {
-      const fileUrl = `https://localhost:7081${res.fileUrl}`;
-      createGiftWithImage(fileUrl);
-    },
-    error: (err: any) =>
-      console.error('Error upload image:', err),
-  });
-}
 
-updateGift() {
-  const updateGiftWithImage = (imageUrl: string) => {
-    const newGift: UpdateGift = {
-      ...this.fromAddGift.value,
-      id: this.gift?.id,
-      image: imageUrl,
-      value: Number(this.fromAddGift.value.value),
-      // priceCard: Number(this.fromAddGift.value.priceCard),
-      categoryId: Number(this.fromAddGift.value.categoryId),
-      // typeCard: this.typeCardMap[this.fromAddGift.value.typeCard as keyof typeof this.typeCardMap]
+  updateGift() {
+    const updateGiftWithImage = (imageUrl: string) => {
+      const newGift: UpdateGift = {
+        ...this.fromAddGift.value,
+        id: this.gift?.id,
+        image: imageUrl,
+        value: Number(this.fromAddGift.value.value),
+        // priceCard: Number(this.fromAddGift.value.priceCard),
+        categoryId: Number(this.fromAddGift.value.categoryId),
+        // typeCard: this.typeCardMap[this.fromAddGift.value.typeCard as keyof typeof this.typeCardMap]
+      };
+
+      this.giftService.updateGift(newGift).subscribe({
+        next: (gift) => {
+          console.log('Update gift successfully:', gift);
+          this.fromAddGift.reset();
+          this.selectedFile = null;
+          this.router.navigate(['/gifts']);
+        },
+        error: (error: any) =>
+          console.error('Error update gift:', error),
+      });
     };
 
-    this.giftService.updateGift(newGift).subscribe({
-      next: (gift) => {
-        console.log('Update gift successfully:', gift);
-        this.fromAddGift.reset();
-        this.selectedFile = null;
+    if (!this.selectedFile) {
+      updateGiftWithImage(this.gift?.image ?? '');
+      return;
+    }
+    this.giftService.uploadImage(this.selectedFile).subscribe({
+      next: (res: any) => {
+        const fileUrl = `https://localhost:7081${res.fileUrl}`;
+        if (this.gift) {
+          this.gift.image = fileUrl;
+        }
+        updateGiftWithImage(fileUrl);
       },
-      error: (error: any) =>
-        console.error('Error update gift:', error),
+      error: (err: any) =>
+        console.error('Error upload image:', err),
     });
-  };
-
-  if (!this.selectedFile) {
-    updateGiftWithImage(this.gift?.image ?? '');
-    return;
   }
-  this.giftService.uploadImage(this.selectedFile).subscribe({
-    next: (res: any) => {
-      const fileUrl = `https://localhost:7081${res.fileUrl}`;
-      updateGiftWithImage(fileUrl);
-    },
-    error: (err: any) =>
-      console.error('Error upload image:', err),
-  });
-}
 
 
-onCategoryChange(event: Event) {
-  const value = (event.target as HTMLSelectElement).value;
+  onCategoryChange(event: Event) {
+    const value = (event.target as HTMLSelectElement).value;
 
-  if (value === 'add') {
-    this.visible = true;
-    this.fromAddGift.get('categoryId')?.setValue(null);
-  }
-}
-
-addCategory() {
-  console.log('נבחר: הוספת קטגוריה');
-}
-
-closeDialog() {
-  this.visible = false;
-}
-
-save() {
-  const name = this.newCategoryName.value;
-
-  if (!name) {
-    return;
-  }
-  const c:CreateCategory={name:name};
-this.categoryService.createCategory(c).subscribe({
-    next: (category) => {
-      console.log('קטגוריה נוספה בהצלחה:', category);
-      this.listCategory.push(category);
-      this.fromAddGift.get('categoryId')?.setValue(category.id);
-      this.newCategoryName.reset();
-    },
-    error: (error) => {
-      console.error('שגיאה בהוספת קטגוריה:', error);
+    if (value === 'add') {
+      this.visible = true;
+      this.fromAddGift.get('categoryId')?.setValue(null);
     }
-  });
-  console.log('שם הקטגוריה:', name);
-
-  this.closeDialog();
-}
-onDonorChange(event: Event) {
-  const value = (event.target as HTMLSelectElement).value;
-
-  if (value === 'add') {
-    this.visible1 = true;
-    this.fromAddGift.get('donorId')?.setValue(null);
   }
-}
 
-closeDialog1() {
-  this.visible1 = false;
-}
-
-saveDonor() {
-  const d = this.fromDonor.value;
-
-  if (!this.fromDonor.valid) {
-    return;
+  addCategory() {
+    console.log('נבחר: הוספת קטגוריה');
   }
-  const donorData = this.fromDonor.value;
-  this.donorService.createDonor(donorData).subscribe({
-    next: (donor) => {
-      console.log('Donor added successfully:', donor);
-      this.listDonor.push(donor);
-      this.fromAddGift.get('donorId')?.setValue(donor.id);
-      this.fromDonor.reset();
-    },
-    error: (error) => {
-      console.error('Error adding donor:', error);
+
+  closeDialog() {
+    this.visible = false;
+  }
+
+  save() {
+    const name = this.newCategoryName.value;
+
+    if (!name) {
+      return;
     }
-  });
-  this.closeDialog1();
-}
+    const c: CreateCategory = { name: name };
+    this.categoryService.createCategory(c).subscribe({
+      next: (category) => {
+        console.log('קטגוריה נוספה בהצלחה:', category);
+        this.listCategory.push(category);
+        this.fromAddGift.get('categoryId')?.setValue(category.id);
+        this.newCategoryName.reset();
+      },
+      error: (error) => {
+        console.error('שגיאה בהוספת קטגוריה:', error);
+      }
+    });
+    console.log('שם הקטגוריה:', name);
+
+    this.closeDialog();
+  }
+  onDonorChange(event: Event) {
+    const value = (event.target as HTMLSelectElement).value;
+
+    if (value === 'add') {
+      this.visible1 = true;
+      this.fromAddGift.get('donorId')?.setValue(null);
+    }
+  }
+
+  closeDialog1() {
+    this.visible1 = false;
+  }
+
+  saveDonor() {
+    const d = this.fromDonor.value;
+
+    if (!this.fromDonor.valid) {
+      return;
+    }
+    const donorData = this.fromDonor.value;
+    this.donorService.createDonor(donorData).subscribe({
+      next: (donor) => {
+        console.log('Donor added successfully:', donor);
+        this.listDonor.push(donor);
+        this.fromAddGift.get('donorId')?.setValue(donor.id);
+        this.fromDonor.reset();
+      },
+      error: (error) => {
+        console.error('Error adding donor:', error);
+      }
+    });
+    this.closeDialog1();
+  }
   // updateGift(id: number) {
   //   const newGift: UpdateGift = {
   //     ...this.fromAddGift.value,

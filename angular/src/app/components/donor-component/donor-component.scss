@@ -1,0 +1,114 @@
+.donor-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 6px;
+  border-bottom: 1px solid #e6e0db;
+}
+
+.donor-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.donor-name {
+  font-weight: 600;
+  color: #333;
+}
+
+.donor-meta {
+  font-size: 0.85rem;
+  color: #777;
+  display: flex;
+  gap: 12px;
+}
+
+/* 🔹 אייקונים */
+.donor-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.action-icon {
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 50%;
+  transition: 0.2s ease;
+}
+
+.action-icon.edit {
+  color: #888;
+
+  &:hover {
+    background: #f1ece8;
+    color: #6b4f3f;
+  }
+}
+
+.action-icon.delete {
+  color: #bbb;
+
+  &:hover {
+    background: #f7eaea;
+    color: #c0392b;
+  }
+}
+.dialog-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem 0;
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  label {
+    width: 6rem;
+    font-weight: 600;
+    color: #444;
+  }
+
+  input {
+    flex: 1;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    transition: border 0.2s ease;
+
+    &:focus {
+      border-color: #d4a373; // צבע עדין שמתאים לסל
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(212, 163, 115, 0.2);
+    }
+  }
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+
+  ::ng-deep .p-button {
+    border-radius: 8px;
+    padding: 0.5rem 1.25rem;
+    font-weight: 600;
+  }
+
+  ::ng-deep .p-button[severity="secondary"] {
+    background-color: #f7f1ed;
+    color: #6b4f3f;
+    border: 1px solid #ddd;
+
+    &:hover {
+      background-color: #e6dbd0;
+      color: #5a4032;
+    }
+  }
+}

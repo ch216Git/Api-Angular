@@ -1,29 +1,44 @@
 <div *ngIf="(basket$ | async) as basket; else emptyCart" class="basket-container">
 
+  <!-- חבילות -->
   <div *ngIf="packagesWithCount.length">
     <h3 class="section-title">החבילות שלך</h3>
+
     <div class="basket-list">
       <div *ngFor="let item of packagesWithCount" class="basket-row">
-        <span class="item-name">{{ item.package.name }}</span>
-        <span class="item-price">{{ item.package.price }} ₪</span>
-        
-        <div class="quantity-controls">
-          <button (click)="removePackage(item.package.id)" class="btn-qty">-</button>
-          <span class="qty-value">{{ item.count }}</span>
-         <button (click)="addPackage(item.package.id)" class="btn-qty">+</button>
+
+        <div class="item-main">
+          <span class="item-name">{{ item.package.name }}</span>
+          <span class="item-price">{{ item.package.price }} ₪</span>
         </div>
 
-        <span class="total-item-price">סה"כ: {{ item.package.price * item.count }} ₪</span>
+        <div class="quantity-controls">
+          <button class="btn-qty" (click)="removePackage(item.package.id)">−</button>
+          <span class="qty-value">{{ item.count }}</span>
+          <button class="btn-qty" (click)="addPackage(item.package.id)">+</button>
+        </div>
+
+        <div class="item-total">
+          {{ item.package.price * item.count }} ₪
+        </div>
+
+        <i class="pi pi-trash delete-icon" (click)="removeAllPackage(item.package.id)">
+        </i>
+
       </div>
     </div>
   </div>
 
+  <!-- מתנות -->
   <div *ngIf="giftsWithCount.length">
     <h3 class="section-title">המתנות שלך</h3>
+
     <div class="basket-list">
       <div *ngFor="let item of giftsWithCount" class="basket-row">
+
+        <img class="item-image" [src]="item.gift.image" alt="{{ item.gift.name }}" />
+
         <span class="item-name">{{ item.gift.name }}</span>
-        <!-- <span class="item-price">{{ item.gift.price }} ₪</span> -->
 
         <div class="quantity-controls">
           <button (click)="removeGift(item.gift.id)" class="btn-qty">-</button>
@@ -31,55 +46,45 @@
           <button (click)="addGift(item.gift.id)" class="btn-qty">+</button>
         </div>
 
-        <!-- <span class="total-item-price">סה"כ: {{ item.gift.price * item.count }} ₪</span> -->
+        <i class="pi pi-trash delete-icon" (click)="removeAllGift(item.gift.id)"></i>
       </div>
     </div>
   </div>
-  
+
+  <!-- סיכום -->
   <div class="basket-footer" *ngIf="packagesWithCount.length || giftsWithCount.length">
-      <p><b>סה"כ לתשלום: {{basket.sum}} ₪</b></p>
-      <p-button label="לקנייה" (click)="showDialog()"></p-button>
+    <div class="basket-sum">
+      סה"כ לתשלום: <b>{{ basket.sum }} ₪</b>
+    </div>
+    <button class="checkout-btn" (click)="showDialog()">
+      המשך לתשלום
+    </button>
+
   </div>
+
 </div>
 
+<!-- סל ריק -->
 <ng-template #emptyCart>
   <div class="empty-cart-wrapper">
     <b>העגלה ריקה</b>
     <p>בחר אחת מהחבילות בעמוד</p>
-    <img
-      src="https://localhost:7081/uploads/emptyCart.WEBP"
-      alt="emptyCart"
-      class="emptyCart"
-    />
+    <img src="https://localhost:7081/uploads/emptyCart.WEBP" alt="emptyCart" class="emptyCart" />
   </div>
 </ng-template>
 
-<p-dialog header="פרטי תשלום" [(visible)]="visible" [modal]="true" [style]="{ width: '300px' }">
-  <form #cardForm="ngForm" class="flex flex-column gap-3">
-    
-    <div class="field">
-      <!-- <label class="block">מספר כרטיס</label> -->
-      <input pInputText placeholder="מספר כרטיס" name="card" ngModel required minlength="16" class="w-full" />
+<!-- דיאלוג תשלום -->
+<p-dialog header="פרטי תשלום" [(visible)]="visible" [modal]="true" [style]="{ width: '320px' }">
+  <form #cardForm="ngForm" class="payment-form">
+
+    <input pInputText placeholder="מספר כרטיס" name="card" ngModel required minlength="16" />
+    <div class="row">
+      <input pInputText placeholder="MM/YY" name="exp" ngModel required />
+      <input pInputText placeholder="CVV" name="cvv" ngModel required minlength="3" />
     </div>
 
-    <div class="flex gap-2">
-      <div class="field">
-        <!-- <label class="block">תוקף</label> -->
-        <input pInputText name="exp" placeholder="תוקף" ngModel required class="w-full" placeholder="MM/YY" />
-      </div>
-      <div class="field">
-        <!-- <label class="block">CVV</label> -->
-        <input pInputText name="cvv" placeholder="CVV" ngModel required minlength="3" class="w-full" />
-      </div>
-    </div>
-
-    <div class="flex justify-content-end mt-3">
-      <p-button 
-        label="אישור" 
-        [disabled]="cardForm.invalid" 
-        (onClick)="saveProfile()">
-      </p-button>
-    </div>
+    <p-button label="אישור" [disabled]="cardForm.invalid" (onClick)="saveProfile()">
+    </p-button>
 
   </form>
 </p-dialog>

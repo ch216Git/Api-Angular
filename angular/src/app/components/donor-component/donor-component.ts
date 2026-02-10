@@ -68,40 +68,39 @@ export class DonorComponent {
     this.selectedDonor = { ...donor }; // העתק כדי לא לשנות את המקורי מיד
     this.visible = true;
   }
-  saveDonor(idDonor: number) {
-    console.log(idDonor);
-    
-    const updateDonor = {
-      id: idDonor,
-      name: this.selectedDonor.name,
-      email: this.selectedDonor.email,
-      phone: this.selectedDonor.phone
-    }
+saveDonor(idDonor: number) {
+  const updateDonor = {
+    id: idDonor,
+    name: this.selectedDonor.name,
+    email: this.selectedDonor.email,
+    phone: this.selectedDonor.phone
+  };
 
-    this.donorService.updateDonor(updateDonor).subscribe({
-      next: (donor) => {
-        // עדכון התורם במערך
-        const index = this.allDonor.findIndex(d => d.id === idDonor);
-        if (index !== -1) {
-          this.allDonor[index] = { ...this.selectedDonor, id: idDonor };
-          const updatedDonor = { ...this.selectedDonor, id: idDonor, gifts: this.allDonorWithGift[index].gifts };
+  this.donorService.updateDonor(updateDonor).subscribe({
+    next: (donor) => {
+      // עדכון רשימת allDonor
+      const donorIndex = this.allDonor.findIndex(d => d.id === idDonor);
+      if (donorIndex !== -1) {
+        this.allDonor[donorIndex] = { ...this.allDonor[donorIndex], ...this.selectedDonor };
+      }
 
-          this.allDonorWithGift = [
-            ...this.allDonorWithGift.slice(0, index),
-            updatedDonor,
-            ...this.allDonorWithGift.slice(index + 1)
-          ];
+      // עדכון רשימת allDonorWithGift לפי ID ולא אינדקס
+      this.allDonorWithGift = this.allDonorWithGift.map(d => {
+        if (d.id === idDonor) {
+          return { ...d, ...this.selectedDonor }; // שומר את ה-gifts
         }
+        return d;
+      });
 
-        // איפוס וסגירת דיאלוג
-        this.selectedDonor = { name: '', email: '', phone: '' };
-        this.visible = false;
-        this.cd.markForCheck();
-      },
-      error: (error: any) => console.error('Error update donor:', error)
-    });
-    this.visible = false;
-  }
+      // איפוס וסגירת דיאלוג
+      this.selectedDonor = { name: '', email: '', phone: '' };
+      this.visible = false;
+      this.cd.markForCheck();
+    },
+    error: (error) => console.error('Error update donor:', error)
+  });
+}
+
   deleteDonor(idDonor:number){
     this.donorService.deleteDonor(idDonor).subscribe(
       {next: () => {

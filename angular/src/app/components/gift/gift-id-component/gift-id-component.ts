@@ -2,10 +2,12 @@ import { Component, inject } from '@angular/core';
 import { GiftService } from '../../../services/gift-service';
 import { GetGift } from '../../../models/gift.model';
 import { ActivatedRoute } from '@angular/router';
+import { OrderComponent } from '../../order-component/order-component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-gift-id-component',
-  imports: [],
+  imports: [OrderComponent,CommonModule],
   templateUrl: './gift-id-component.html',
   styleUrl: './gift-id-component.scss',
 })

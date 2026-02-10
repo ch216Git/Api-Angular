@@ -193,9 +193,55 @@ namespace ChineseSale.Services
             Basket basket = await _basketRepository.GetBasketByIdAsync(packageFromBasketDto.BasketId);
             if (basket == null)
                 throw new ArgumentException("basket not found");
+            int countGift= basket.GiftsId?.Count ?? 0;
             Package package = await _packageRepository.GetPackageByIdAsync(packageFromBasketDto.packageId);
+            int zoverCard = 0;
+            Boolean minus = false;
+            for (int i = 0; i < basket.PackagesId?.Count; i++) {
+                if (!minus&&basket.PackagesId[i]== packageFromBasketDto.packageId) {
+                    //zoverCard-=package.CountCard;
+                    minus = true;
+                 }
+                else
+                {
+                    Package package1 = await _packageRepository.GetPackageByIdAsync(basket.PackagesId[i]);
+                    zoverCard += package1.CountCard;
+                }                  
+            }
+            if (basket.GiftsId?.Count > zoverCard)
+            {
+                int countDelete = basket.GiftsId.Count-zoverCard;
+                for (int i = basket.GiftsId.Count-1;i >=zoverCard;i--) {
+                    DeleteGiftFromBasketDto deleteGiftFromBasketDto = new DeleteGiftFromBasketDto() { BasketId = basket.Id, giftId = basket.GiftsId[i] };
+                    await DeleteGiftFromBasket(deleteGiftFromBasketDto);
+                }
+              }
             //basket.PackagesId?.Remove(packageFromBasketDto.packageId);
             await _basketRepository.DeletePackageFromBasket(basket, package);
+            return await GetBasketByIdAsync(basket.Id);
+            }
+        public async Task<GetBasketByUserIdDto> DeleteAllPackageFromBasket(DeletePackageFromBasketDto packageFromBasketDto)
+        {
+            Basket basket = await _basketRepository.GetBasketByIdAsync(packageFromBasketDto.BasketId);
+            if (basket == null)
+                throw new ArgumentException("basket not found");
+            var instancesToDelete = basket.PackagesId.Where(x => x == packageFromBasketDto.packageId).ToList();
+            foreach (var item in instancesToDelete)
+            {
+                await DeletePackageFromBasket(packageFromBasketDto);
+            }
+            return await GetBasketByIdAsync(basket.Id);
+        }
+        public async Task<GetBasketByUserIdDto> DeleteAllGiftFromBasket(DeleteGiftFromBasketDto giftToBasketDto)
+        {
+            Basket basket = await _basketRepository.GetBasketByIdAsync(giftToBasketDto.BasketId);
+            if (basket == null)
+                throw new ArgumentException("basket not found");
+            var instancesToDelete = basket.GiftsId.Where(x => x == giftToBasketDto.giftId).ToList();
+            foreach (var item in instancesToDelete)
+            {
+                await DeleteGiftFromBasket(giftToBasketDto);
+            }
             return await GetBasketByIdAsync(basket.Id);
         }
     }

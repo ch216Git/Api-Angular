@@ -125,7 +125,17 @@ export class GiftComponent {
       }
     });
   }
-
+  deleteGift(id: number) {
+    this.giftService.deleteGift(id).subscribe({
+      next: () => {
+        this.listGifts = this.listGifts.filter(g => g.id !== id);
+        this.cd.markForCheck();   
+      },
+      error: err => {
+        console.error("Error deleting gift", err);
+      }
+    });
+  }
   deleteCategory(id: number) {
     this.categoryService.deleteCategory(id).subscribe({
       next: () => {
@@ -245,5 +255,15 @@ export class GiftComponent {
         }
       }
     });
+  }
+
+  increaseQty(index: number) {
+    this.listValue[index]++;
+  }
+
+  decreaseQty(index: number) {
+    if (this.listValue[index] > 1) {
+      this.listValue[index]--;
+    }
   }
 }

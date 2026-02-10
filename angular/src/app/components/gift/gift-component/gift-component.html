@@ -1,3 +1,20 @@
+<div class="categories-bar">
+  <button class="category-chip all"
+          (click)="getAllGifts()">
+    <i class="pi pi-briefcase"></i>
+    <span>כל המתנות</span>
+  </button>
+
+  <button
+    class="category-chip"
+    *ngFor="let category of listCategory"
+    (click)="getCategoryById(category.id)"
+  >
+    <i class="pi pi-tag"></i>
+    <span>{{ category.name }}</span>
+  </button>
+</div>
+
 <div class="gifts-grid" *ngIf="isLoaded">
   <div class="gift-card" *ngFor="let gift of listGifts; let i = index">
     
@@ -12,27 +29,36 @@
     </div>
 
     <div class="gift-content">
-      <h3 class="gift-name">{{ gift.name }}</h3>
-      <p class="gift-description">{{ gift.description || 'אין תיאור' }}</p>
 
-      <div class="gift-details">
-        <span><strong>שווי:</strong> {{ gift.value }} ₪</span>
-        <app-order-component [giftId]="gift.id"></app-order-component>
-      </div>
+<div class="gift-header">
+  <h3 class="gift-name">{{ gift.name }}</h3>
 
-      <div class="actions">
-        <button type="button" class="edit-button" (click)="editGift(gift.id)">ערוך מתנה</button>
-        
-        <div class="add-to-cart-area">
-          <p-inputnumber
-            *ngIf="listValue[i] !== undefined"
-            [(ngModel)]="listValue[i]"
-            [showButtons]="true"
-            buttonLayout="horizontal"
-            [min]="1"
-            [inputStyle]="{ width: '2rem', height: '2rem' }">
-          </p-inputnumber>
-          <span class="counter-label" (click)="addGiftToBasket(gift.id, i)">להוספת מתנה</span>
+  <div class="gift-icons">
+    <i class="pi pi-pencil edit-icon"
+       (click)="editGift(gift.id)"></i>
+
+    <i class="pi pi-trash delete-icon" (click)="deleteGift(gift.id)"></i>
+  </div>
+</div>
+
+<p class="gift-description" *ngIf="gift.description">
+  {{ gift.description }}
+</p>
+
+
+
+      <div class="gift-footer">
+        <div class="gift-info">
+          <span class="gift-value" *ngIf="gift.value">₪{{ gift.value }} שווי המתנה</span>
+        </div>
+
+        <div class="gift-actions">
+          <button class="qty-btn minus-btn" (click)="decreaseQty(i)">−</button>
+          <div class="quantity-box">
+            <input type="text" class="qty-input" [value]="listValue[i]" readonly>
+          </div>
+          <button class="qty-btn plus-btn" (click)="increaseQty(i)">+</button>
+          <button class="action-btn add-btn" (click)="addGiftToBasket(gift.id, i)">הוסף לסל</button>
         </div>
       </div>
     </div>

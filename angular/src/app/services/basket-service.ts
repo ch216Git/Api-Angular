@@ -61,4 +61,10 @@ export class BasketService {
   removePackageFromBasket(removePakage:RemovePackageFromBasket): Observable<GetBasketById>{
     return this.http.post<GetBasketById>(this.BASE_URL+'/RemovePackageFromBasket', removePakage);
   }
+  removeAllPackagesFromBasket(removePakage:RemovePackageFromBasket): Observable<GetBasketById>{
+    return this.http.post<GetBasketById>(this.BASE_URL+'/RemoveAllPackageFromBasket', removePakage);
+  }
+  removeAllGiftsFromBasket(removeGift: RemoveGiftFromBasket): Observable<GetBasketById>{
+    return this.http.post<GetBasketById>(this.BASE_URL+'/RemoveAllGiftFromBasket', removeGift);
+  }
 }

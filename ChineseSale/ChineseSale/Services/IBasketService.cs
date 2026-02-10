@@ -13,5 +13,7 @@ namespace ChineseSale.Services
         Task<bool> DeleteBasketAsync(int Id);
         Task<GetBasketByUserIdDto> AddPackageToBasket(AddPackageToBasketDto packageToBasketDto);
         Task<GetBasketByUserIdDto> DeletePackageFromBasket(DeletePackageFromBasketDto packageFromBasketDto);
+        Task<GetBasketByUserIdDto> DeleteAllPackageFromBasket(DeletePackageFromBasketDto packageFromBasketDto);
+        Task<GetBasketByUserIdDto> DeleteAllGiftFromBasket(DeleteGiftFromBasketDto giftToBasketDto);
     }
 }

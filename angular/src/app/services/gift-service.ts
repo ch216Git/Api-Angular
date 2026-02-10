@@ -27,7 +27,7 @@ export class GiftService {
     return this.http.post<GetGift>(this.BASE_URL+'/Update', gift);
   }
   deleteGift(id: number): Observable<any>{
-    return this.http.delete<any>(this.BASE_URL+'/'+id);
+    return this.http.delete<any>(`${this.BASE_URL}/Delete?Id=${id}`, { responseType: 'text' as 'json' });
   }
   existsGift(name: string): Observable<GetGift[]>{
     return this.http.get<GetGift[]>(this.BASE_URL+'/Exists'+'/'+name);

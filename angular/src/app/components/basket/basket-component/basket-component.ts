@@ -117,7 +117,7 @@ export class BasketComponent {
       if (!basket) return;
 
       const removePackage = {
-        basketId: basket.id,  // <-- כאן הגישה נכונה
+        basketId: basket.id,
         packageId: itemId
       };
       for (let i = 0; i < this.packagesWithCount.length; i++) { }
@@ -132,7 +132,6 @@ export class BasketComponent {
         }
       });
     })
-
   }
   //  deleteItemFromBasket(itemId: number) {
   //   const token: string | null = localStorage.getItem('token');
@@ -207,30 +206,47 @@ export class BasketComponent {
       });
     });
   }
-
+  removeAllPackage(packageId:number){
+ this.basket$.pipe(take(1)).subscribe(basket => {
+      if (!basket) return;
+      const removeData = { basketId: basket.id, packageId: packageId };
+        
+      this.basketService.removeAllPackagesFromBasket(removeData).subscribe({
+        next: (data) => {
+          setTimeout(() => {
+            this.basketService.getBasketByUserId(basket.userId).subscribe(updatedBasket => {
+              this.basketService.setBasket(updatedBasket);
+            });
+          }, 200);
+        }
+      });
+    });
+  }
+removeAllGift(giftId:number){
+ this.basket$.pipe(take(1)).subscribe(basket => {
+      if (!basket) return;
+      const removeData = { basketId: basket.id, giftId: giftId };
+        
+      this.basketService.removeAllGiftsFromBasket(removeData).subscribe({
+        next: (data) => {
+          setTimeout(() => {
+            this.basketService.getBasketByUserId(basket.userId).subscribe(updatedBasket => {
+              this.basketService.setBasket(updatedBasket);
+            });
+          }, 200);
+        }
+      });
+    });
+  }
   // הורדת חבילה (מינוס)
   removePackage(packageId: number) {
     this.basket$.pipe(take(1)).subscribe(basket => {
       if (!basket) return;
       const removeData = { basketId: basket.id, packageId: packageId };
-      let minus=false
-      let zoverPackage = 0;
-      if (basket.packages) {
-        for (let j = 0; j < basket.packages.length; j++) {
-          zoverPackage += basket.packages[j].countCard
-          if(!minus&&packageId == basket.packages[j].id){
-            zoverPackage-=basket.packages[j].countCard
-            minus=true
-          }
-        }
-      }
-      
+        
       this.basketService.removePackageFromBasket(removeData).subscribe({
         next: (data) => {
-          if(basket.gifts)
-          if(basket.gifts?.length>zoverPackage){
-            const deleteGift=basket.gifts?.length-zoverPackage;
-          }
+        
           setTimeout(() => {
             this.basketService.getBasketByUserId(basket.userId).subscribe(updatedBasket => {
               this.basketService.setBasket(updatedBasket);

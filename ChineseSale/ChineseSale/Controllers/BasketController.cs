@@ -6,7 +6,7 @@ namespace ChineseSale.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class BasketController: ControllerBase
+    public class BasketController : ControllerBase
     {
         private readonly IBasketService _basketService;
         public BasketController(IBasketService basketService)
@@ -125,6 +125,33 @@ namespace ChineseSale.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+        [HttpPost("RemoveAllPackageFromBasket")]
+        public async Task<ActionResult<GetBasketDto>> RemoveAllPackageFromBasketAsync(DeletePackageFromBasketDto removePackageFromBasketDto)
+        {
+            try
+            {
+                var basket = await _basketService.DeleteAllPackageFromBasket(removePackageFromBasketDto);
+                return Ok(basket);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPost("RemoveAllGiftFromBasket")]
+        public async Task<ActionResult<GetBasketDto>> RemoveAllGiftFromBasketAsync(DeleteGiftFromBasketDto removeGiftFromBasketDto)
+        {
+            try
+            {
+                var basket = await _basketService.DeleteAllGiftFromBasket(removeGiftFromBasketDto);
+                return Ok(basket);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
         }
     }
 }
