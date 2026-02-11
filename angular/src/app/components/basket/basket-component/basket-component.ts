@@ -14,17 +14,21 @@ import { CardModule } from 'primeng/card';
 import { GetPackage } from '../../../models/package.model';
 import { GetGift } from '../../../models/gift.model';
 import { FormsModule } from '@angular/forms';
+import { ToastModule } from 'primeng/toast';
 
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-basket-component',
-  imports: [CommonModule, DialogModule,FormsModule, ButtonModule, InputTextModule, CardModule],
+  imports: [ToastModule,CommonModule, DialogModule,FormsModule, ButtonModule, InputTextModule, CardModule],
   templateUrl: './basket-component.html',
   styleUrl: './basket-component.scss',
+  providers: [MessageService]
 })
 export class BasketComponent {
   basketService: BasketService = inject(BasketService);
   orderService: OrderServise = inject(OrderServise);
   cd: ChangeDetectorRef = inject(ChangeDetectorRef);
+  private messageService = inject(MessageService);
   // basket?: GetBasketById;
   // flag: boolean = false;
 
@@ -85,33 +89,14 @@ export class BasketComponent {
 
 
   showDialog() {
+
     this.visible = true;
   }
+  
+    show() {
+        this.messageService.add({ severity: 'success', summary: 'הצלחה', detail: 'הזמנה בוצעה בהצלחה!' });
+    }
 
-  // getBasketById() {
-  //   const token: string | null = localStorage.getItem('token');
-  //   if (!token) {
-  //     return;
-  //   }
-  //   const decoded = jwtDecode<MyDecodedToken>(token);
-  //   const userId = Number(decoded.id);
-  //   this.basketService.getBasketByUserId(userId).subscribe( {
-  //     next: basket => {
-  //       this.basket = basket;
-  //       console.log('Basket loaded', basket);
-  //     },
-  //       error: err => {
-  //         if (err.status === 400) {
-  //           // אין סל – זה מצב תקין
-  //           console.log('אין סל למשתמש');
-  //           this.basket = undefined!;
-  //         } else {
-  //           console.error('שגיאה אמיתית', err);
-  //         }
-
-  //       }
-  //   })
-  // }
   deletePackageFromBasket(itemId: number) {
     this.basket$.pipe(take(1)).subscribe(basket => {
       if (!basket) return;
@@ -133,31 +118,12 @@ export class BasketComponent {
       });
     })
   }
-  //  deleteItemFromBasket(itemId: number) {
-  //   const token: string | null = localStorage.getItem('token');
-  //   if (!token) {
-  //     return;
-  //   }
-  //   const decoded = jwtDecode<MyDecodedToken>(token);
-  //   const userId = Number(decoded.id);
-  //   this.basketService.getBasketByUserId(userId).subscribe( {
-  //     next: basket => {
-  //       this.basket = basket;
-  //       console.log('Basket loaded', basket);
-  //     },
-  //   });
-  //     this.basketService.removeGiftFromBasket(itemId).subscribe({
-  //       next: () => {
-  //         console.log('Item deleted from basket');
-  //         this.getBasketById(); // רענון הסל לאחר מחיקת פריט
-  //       },
-  //       error: err => {
-  //         console.error('Error deleting item from basket', err);
-  //       }
-  //     });
-  //   }
+  
   saveProfile() {
-    this.visible=false
+   
+    this.visible=false 
+    this.show();
+    this.show();
     this.basket$.pipe(take(1)).subscribe(basket => {
 
       if (!basket) {
@@ -312,90 +278,8 @@ removeAllGift(giftId:number){
     });
   }
 
-  // saveProfile() {
-  //   // this.getBasketById();
-  //   if (!this.basket) {
-  //     console.error('אין סל פעיל לשמירה');
-  //     return;
-  //   }
-  // const giftsId: number[] = this.basket.gifts?.map(g => g.id) ?? [];
-  // const packagesId: number[] = this.basket.packages?.map(p => p.id) ?? [];
-
-  // const order = {
-  //   userId: this.basket.userId,
-  //   giftsId: giftsId,
-  //   packagesId: packagesId,
-  //   orderDate: new Date(),
-  //   sum: this.basket.sum
-  // };
-
-  // this.orderService.createOrder(order).pipe(
-  //   concatMap(() => this.basketService.deleteBasket(this.basket!.id))
-  // ).subscribe({
-  //   next: () => {
-  //     console.log('Order created and basket deleted safely');
-  //     this.basketService.clearBasket(); // עדכון כל הקומפוננטות
-  //   },
-  //   error: err => {
-  //     console.error('Error creating order or deleting basket', err);
-  //   }
-  // });
-  //   }
-  // saveProfile() {
-  //   this.getBasketByIdAsync().subscribe({
-  //     next: basket => {
-  //       this.basket = basket; // מוודא שהbasket מעודכן
-  //       if (!this.basket) {
-  //         console.error('אין סל פעיל לשמירה');
-  //         return;
-  //       }
-
-  //       const giftsId: number[] = this.basket.gifts?.map(g => g.id) ?? [];
-  //       const packagesId: number[] = this.basket.packages?.map(p => p.id) ?? [];
-
-  //       const order = {
-  //         userId: this.basket.userId,
-  //         giftsId: giftsId,
-  //         packagesId: packagesId,
-  //         orderDate: new Date(),
-  //         sum: this.basket.sum
-  //       };
-
-  //       this.orderService.createOrder(order).subscribe({
-  //         next: () => {
-  //           console.log('Order created successfully');
-  //         },
-  //         error: err => {
-  //           console.error('Error creating order', err);
-  //         }
-  //       });
-
-  //       this.basketService.deleteBasket(this.basket.id).subscribe({
-  //         next: () => {
-  //           console.log('Basket deleted successfully');
-  //           this.getBasketById(); // רענון הסל לאחר מחיקה
-  //         },
-  //         error: err => {
-  //           console.error('Error deleting basket', err);
-  //         }
-  //       });
-  //     },
-  //     error: err => {
-  //       console.error('Error loading basket', err);
-  //     }
-  //   });
-  // }
-
-  // // צריך גם גרסה של getBasketById שמחזירה Observable
-  // getBasketByIdAsync(): Observable<GetBasketById | undefined> {
-  //   const token: string | null = localStorage.getItem('token');
-  //   if (!token) {
-  //     return new Observable(sub => sub.next(undefined));
-  //   }
-  //   const decoded = jwtDecode<MyDecodedToken>(token);
-  //   const userId = Number(decoded.id);
-  //   return this.basketService.getBasketByUserId(userId);
-  // }
+ 
+  
 
 }
 
