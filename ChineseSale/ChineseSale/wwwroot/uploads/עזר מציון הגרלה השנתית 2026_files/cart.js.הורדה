@@ -1,0 +1,375 @@
+﻿
+
+async function getCart(requestData) {
+
+    const data = await $.ajax({
+        url: '/raffle/GetCart',
+        type: 'GET',
+        contentType: 'application/json',
+        dataType: 'json',
+        success: function (response) {
+            console.log('AJAX Success: Server Response Received.', response);
+
+            if (typeof exe_gtm_add_shipping_info === 'function') {
+                exe_gtm_add_shipping_info();
+            }
+        },
+        error: function (xhr, status, error) {
+
+        }
+    });
+    return data;
+}
+
+async function c_addPackageToCart(id) {
+    
+    const data = await $.ajax({
+        url: '/raffle/AddPackage',
+        type: 'POST',        
+        contentType: 'application/json',
+        headers: {
+            'Content-Type': 'application/json',
+            // 4. Add the token to the request headers
+            'RequestVerificationToken': getToken()
+        },    
+        data: JSON.stringify(id),        
+        dataType: 'json'
+    });
+
+    return data;
+}
+
+async function c_removePackageFromCart(gid) {
+
+    const data = await $.ajax({
+        url: '/raffle/RemovePackage',
+        type: 'POST',
+        contentType: 'application/json',
+        headers: {
+            'Content-Type': 'application/json',
+            // 4. Add the token to the request headers
+            'RequestVerificationToken': getToken()
+        },    
+        data: JSON.stringify(gid),
+        dataType: 'json',
+        success: function (response) {
+            console.log('AJAX Success: Server Response Received.', response);
+
+
+        },
+        error: function (xhr, status, error) {
+
+        }
+    });
+    return data;
+}
+
+async function c_removePackagesFromCart(id) {
+
+    const data = await $.ajax({
+        url: '/raffle/RemovePackages',
+        type: 'POST',
+        contentType: 'application/json',
+        headers: {
+            'Content-Type': 'application/json',
+            // 4. Add the token to the request headers
+            'RequestVerificationToken': getToken()
+        },    
+        data: JSON.stringify(id),
+        dataType: 'json',
+        success: function (response) {
+            console.log('AJAX Success: Server Response Received.', response);
+
+
+        },
+        error: function (xhr, status, error) {
+
+        }
+    });
+    return data;
+}
+
+async function c_addGiftToPackage(gifts) {
+
+    const data = await $.ajax({
+        url: '/raffle/AddGift',
+        type: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            // 4. Add the token to the request headers
+            'RequestVerificationToken': getToken()
+        },    
+        contentType: 'application/json',
+        data: JSON.stringify(gifts),
+        dataType: 'json',
+        success: function (response) {
+            console.log('AJAX Success: Server Response Received.', response);
+
+
+        },
+        error: function (xhr, status, error) {
+
+        }
+    });
+    return data;
+}
+
+
+async function c_addNoGiftToPackage(gift) {
+
+    const data = await $.ajax({
+        url: '/raffle/AddNoGift',
+        type: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            // 4. Add the token to the request headers
+            'RequestVerificationToken': getToken()
+        },
+        contentType: 'application/json',
+        data: JSON.stringify(gift),
+        dataType: 'json',
+        success: function (response) {
+            console.log('AJAX Success: Server Response Received.', response);
+        },
+        error: function (xhr, status, error) {
+
+        }
+    });
+    return data;
+}
+function c_removeGiftFromPackage(pid, objid) {
+
+    $.ajax({
+        url: '/raffle/RemoveGift',
+        type: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            // 4. Add the token to the request headers
+            'RequestVerificationToken': getToken()
+        },    
+        contentType: 'application/json',
+        data: JSON.stringify({ "id": pid, "packageInstanceId": objid }),
+        dataType: 'json',
+        success: function (response) {
+            console.log('AJAX Success: Server Response Received.', response);
+
+
+        },
+        error: function (xhr, status, error) {
+
+        }
+    });
+}
+
+async function c_updatePrize(pid, count, add) {
+
+    const data = await $.ajax({
+        url: '/raffle/UpdatePrizeCards',
+        type: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            // 4. Add the token to the request headers
+            'RequestVerificationToken': getToken()
+        },    
+        contentType: 'application/json',
+        data: JSON.stringify({ "id": pid, "count": count, "add": add }),
+        dataType: 'json',
+        success: function (response) {
+            console.log('AJAX Success: Server Response Received.', response);
+
+
+        },
+        error: function (xhr, status, error) {
+            return cart;
+        }
+    });
+
+    return data;
+}
+
+async function c_deletePrize(pid) {
+
+    const data = await $.ajax({
+        url: '/raffle/DeletePrize',
+        type: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            // 4. Add the token to the request headers
+            'RequestVerificationToken': getToken()
+        },    
+        contentType: 'application/json',
+        data: pid,
+        dataType: 'json',
+        success: function (response) {
+            console.log('AJAX Success: Server Response Received.', response);
+
+
+        },
+        error: function (xhr, status, error) {
+
+        }
+    });
+
+    return data;
+}
+
+async function c_autoSelect() {
+
+    const data = await $.ajax({
+        url: '/raffle/RandomPrizeCards',
+        type: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            // 4. Add the token to the request headers
+            'RequestVerificationToken': getToken()
+        },    
+        contentType: 'application/json',
+        dataType: 'json',
+        success: function (response) {
+            console.log('AJAX Success: Server Response Received.', response);
+        },
+        error: function (xhr, status, error) {
+
+        }
+    });
+
+    return data;
+}
+
+async function c_addSafe() {
+
+    const data = await $.ajax({
+        url: '/raffle/AddSafe',
+        type: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            // 4. Add the token to the request headers
+            'RequestVerificationToken': getToken()
+        },    
+        contentType: 'application/json',
+        dataType: 'json',
+        success: function (response) {
+            console.log('AJAX Success: Server Response Received.', response);
+        },
+        error: function (xhr, status, error) {
+
+        }
+    });
+
+    return data;
+}
+
+async function c_addSafes(count) {
+
+    const data = await $.ajax({
+        url: '/raffle/AddSafes',
+        type: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            // 4. Add the token to the request headers
+            'RequestVerificationToken': getToken()
+        },
+        contentType: 'application/json',
+        data: JSON.stringify(count), 
+        dataType: 'json',
+        success: function (response) {
+            console.log('AJAX Success: Server Response Received.', response);
+        },
+        error: function (xhr, status, error) {
+
+        }
+    });
+
+    return data;
+}
+
+async function c_setSafes(count, msg) {
+
+    const data = await $.ajax({
+        url: '/raffle/SetSafes',
+        type: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            // 4. Add the token to the request headers
+            'RequestVerificationToken': getToken()
+        },
+        contentType: 'application/json',
+        data: JSON.stringify(count),
+        dataType: 'json',
+        success: function (response) {
+            console.log('AJAX Success: Server Response Received.', response);
+        },
+        error: function (xhr, status, error) {
+            msg = xhr.responseText;
+            $("#lotteryerr").text(msg);
+            $("#lotteryerr").show();
+            return null;
+        }
+    });
+
+    return data;
+}
+
+
+
+async function c_removeSafe() {
+
+    const data = await $.ajax({
+        url: '/raffle/RemoveSafe',
+        type: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            // 4. Add the token to the request headers
+            'RequestVerificationToken': getToken()
+        },    
+        contentType: 'application/json',
+        dataType: 'json',
+        success: function (response) {
+            console.log('AJAX Success: Server Response Received.', response);
+        },
+        error: function (xhr, status, error) {
+
+        }
+    });
+
+    return data;
+}
+
+async function c_emptySafe() {
+
+    const data = await $.ajax({
+        url: '/raffle/EmptySafe',
+        type: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            // 4. Add the token to the request headers
+            'RequestVerificationToken': getToken()
+        },    
+        contentType: 'application/json',
+        dataType: 'json',
+        headers: {
+            'Content-Type': 'application/json',
+            // 4. Add the token to the request headers
+            'RequestVerificationToken': getToken()
+        },
+        success: function (response) {
+            console.log('AJAX Success: Server Response Received.', response);
+        },
+        error: function (xhr, status, error) {
+
+        }
+    });
+
+    return data;
+}
+
+
+
+function getToken() {
+    var ret = "";
+    var t = document.querySelector('input[name="__RequestVerificationToken"]');
+    if (t) {
+        ret = t.value;
+    }
+    return document.querySelector('input[name="__RequestVerificationToken"]').value;
+}

@@ -248,3 +248,277 @@
 2026-02-11 13:52:59.018 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"e748b60d-cc3f-442d-88c8-238e178cbb1e","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9C5DA61BE:0000003F","RequestPath":"/api/Gift","ConnectionId":"0HNJ9C5DA61BE"}
 2026-02-11 13:54:04.188 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"e748b60d-cc3f-442d-88c8-238e178cbb1e","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9C5DA61BE:000000C9","RequestPath":"/api/Gift","ConnectionId":"0HNJ9C5DA61BE"}
 2026-02-11 14:04:28.256 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"e748b60d-cc3f-442d-88c8-238e178cbb1e","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9C5DA61BG:00000011","RequestPath":"/api/Gift","ConnectionId":"0HNJ9C5DA61BG"}
+2026-02-11 15:46:33.936 +02:00 [WRN] The ASP.NET Core developer certificate is not trusted. For information about trusting the ASP.NET Core developer certificate, see https://aka.ms/aspnet/https-trust-dev-cert. {"EventId":{"Id":8,"Name":"DeveloperCertificateNotTrusted"},"SourceContext":"Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServer"}
+2026-02-11 15:55:54.661 +02:00 [INF] A request to upload a image has been sent. {"SourceContext":"ChineseSale.Controllers.ImageController","ActionId":"2752655a-c81d-44cf-897c-24abad2f02cb","ActionName":"ChineseSale.Controllers.ImageController.Upload (ChineseSale)","RequestId":"0HNJ9EFS6HS70:00000021","RequestPath":"/api/Image/upload","ConnectionId":"0HNJ9EFS6HS70"}
+2026-02-11 15:55:54.667 +02:00 [INF] Saving uploaded image to C:\Users\ch323\OneDrive\מסמכים\project_api_angular\Api-Angular\ChineseSale\ChineseSale\wwwroot\uploads\6357e45f-67e2-4240-bf64-a609363442c3.jpg {"SourceContext":"ChineseSale.Controllers.ImageController","ActionId":"2752655a-c81d-44cf-897c-24abad2f02cb","ActionName":"ChineseSale.Controllers.ImageController.Upload (ChineseSale)","RequestId":"0HNJ9EFS6HS70:00000021","RequestPath":"/api/Image/upload","ConnectionId":"0HNJ9EFS6HS70"}
+2026-02-11 15:55:54.881 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"a9da4baf-c1e8-40e7-91db-f4ba6302bf63","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EFS6HS70:00000027","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EFS6HS70"}
+2026-02-11 15:58:20.341 +02:00 [ERR] An exception occurred in the database while saving changes for context type 'ChineseSale.Data.ChineseSaleContextDB'.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): The INSERT statement conflicted with the FOREIGN KEY constraint "FK_Baskets_Users_UserId". The conflict occurred in database "ChineseSaleDBB_329213227", table "dbo.Users", column 'Id'.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryHasMoreRows(Boolean& moreRows)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryReadInternal(Boolean setTimeout, Boolean& more)
+   at Microsoft.Data.SqlClient.SqlDataReader.ReadAsyncExecute(Task task, Object state)
+   at Microsoft.Data.SqlClient.SqlDataReader.InvokeAsyncCall[T](SqlDataReaderBaseAsyncCallContext`1 context)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+ClientConnectionId:8c89d63f-4ca7-4545-b841-4b183d61a16c
+Error Number:547,State:0,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Update.Internal.SqlServerModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken) {"EventId":{"Id":10000,"Name":"Microsoft.EntityFrameworkCore.Update.SaveChangesFailed"},"SourceContext":"Microsoft.EntityFrameworkCore.Update","ActionId":"ee8e179a-3b3c-4ff5-9ac2-f73652ee876c","ActionName":"ChineseSale.Controllers.BasketController.CreateBasketAsync (ChineseSale)","RequestId":"0HNJ9EFS6HS70:00000039","RequestPath":"/api/Basket/Add","ConnectionId":"0HNJ9EFS6HS70"}
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): The INSERT statement conflicted with the FOREIGN KEY constraint "FK_Baskets_Users_UserId". The conflict occurred in database "ChineseSaleDBB_329213227", table "dbo.Users", column 'Id'.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryHasMoreRows(Boolean& moreRows)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryReadInternal(Boolean setTimeout, Boolean& more)
+   at Microsoft.Data.SqlClient.SqlDataReader.ReadAsyncExecute(Task task, Object state)
+   at Microsoft.Data.SqlClient.SqlDataReader.InvokeAsyncCall[T](SqlDataReaderBaseAsyncCallContext`1 context)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+ClientConnectionId:8c89d63f-4ca7-4545-b841-4b183d61a16c
+Error Number:547,State:0,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Update.Internal.SqlServerModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2026-02-11 15:58:23.547 +02:00 [ERR] An exception occurred in the database while saving changes for context type 'ChineseSale.Data.ChineseSaleContextDB'.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): The INSERT statement conflicted with the FOREIGN KEY constraint "FK_Baskets_Users_UserId". The conflict occurred in database "ChineseSaleDBB_329213227", table "dbo.Users", column 'Id'.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryHasMoreRows(Boolean& moreRows)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryReadInternal(Boolean setTimeout, Boolean& more)
+   at Microsoft.Data.SqlClient.SqlDataReader.ReadAsyncExecute(Task task, Object state)
+   at Microsoft.Data.SqlClient.SqlDataReader.InvokeAsyncCall[T](SqlDataReaderBaseAsyncCallContext`1 context)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+ClientConnectionId:8c89d63f-4ca7-4545-b841-4b183d61a16c
+Error Number:547,State:0,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Update.Internal.SqlServerModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken) {"EventId":{"Id":10000,"Name":"Microsoft.EntityFrameworkCore.Update.SaveChangesFailed"},"SourceContext":"Microsoft.EntityFrameworkCore.Update","ActionId":"ee8e179a-3b3c-4ff5-9ac2-f73652ee876c","ActionName":"ChineseSale.Controllers.BasketController.CreateBasketAsync (ChineseSale)","RequestId":"0HNJ9EFS6HS70:0000003D","RequestPath":"/api/Basket/Add","ConnectionId":"0HNJ9EFS6HS70"}
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): The INSERT statement conflicted with the FOREIGN KEY constraint "FK_Baskets_Users_UserId". The conflict occurred in database "ChineseSaleDBB_329213227", table "dbo.Users", column 'Id'.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryHasMoreRows(Boolean& moreRows)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryReadInternal(Boolean setTimeout, Boolean& more)
+   at Microsoft.Data.SqlClient.SqlDataReader.ReadAsyncExecute(Task task, Object state)
+   at Microsoft.Data.SqlClient.SqlDataReader.InvokeAsyncCall[T](SqlDataReaderBaseAsyncCallContext`1 context)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+ClientConnectionId:8c89d63f-4ca7-4545-b841-4b183d61a16c
+Error Number:547,State:0,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Update.Internal.SqlServerModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2026-02-11 15:58:24.518 +02:00 [ERR] An exception occurred in the database while saving changes for context type 'ChineseSale.Data.ChineseSaleContextDB'.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): The INSERT statement conflicted with the FOREIGN KEY constraint "FK_Baskets_Users_UserId". The conflict occurred in database "ChineseSaleDBB_329213227", table "dbo.Users", column 'Id'.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryHasMoreRows(Boolean& moreRows)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryReadInternal(Boolean setTimeout, Boolean& more)
+   at Microsoft.Data.SqlClient.SqlDataReader.ReadAsyncExecute(Task task, Object state)
+   at Microsoft.Data.SqlClient.SqlDataReader.InvokeAsyncCall[T](SqlDataReaderBaseAsyncCallContext`1 context)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+ClientConnectionId:8c89d63f-4ca7-4545-b841-4b183d61a16c
+Error Number:547,State:0,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Update.Internal.SqlServerModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken) {"EventId":{"Id":10000,"Name":"Microsoft.EntityFrameworkCore.Update.SaveChangesFailed"},"SourceContext":"Microsoft.EntityFrameworkCore.Update","ActionId":"ee8e179a-3b3c-4ff5-9ac2-f73652ee876c","ActionName":"ChineseSale.Controllers.BasketController.CreateBasketAsync (ChineseSale)","RequestId":"0HNJ9EFS6HS70:00000041","RequestPath":"/api/Basket/Add","ConnectionId":"0HNJ9EFS6HS70"}
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): The INSERT statement conflicted with the FOREIGN KEY constraint "FK_Baskets_Users_UserId". The conflict occurred in database "ChineseSaleDBB_329213227", table "dbo.Users", column 'Id'.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryHasMoreRows(Boolean& moreRows)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryReadInternal(Boolean setTimeout, Boolean& more)
+   at Microsoft.Data.SqlClient.SqlDataReader.ReadAsyncExecute(Task task, Object state)
+   at Microsoft.Data.SqlClient.SqlDataReader.InvokeAsyncCall[T](SqlDataReaderBaseAsyncCallContext`1 context)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+ClientConnectionId:8c89d63f-4ca7-4545-b841-4b183d61a16c
+Error Number:547,State:0,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Update.Internal.SqlServerModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2026-02-11 15:58:24.729 +02:00 [ERR] An exception occurred in the database while saving changes for context type 'ChineseSale.Data.ChineseSaleContextDB'.
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): The INSERT statement conflicted with the FOREIGN KEY constraint "FK_Baskets_Users_UserId". The conflict occurred in database "ChineseSaleDBB_329213227", table "dbo.Users", column 'Id'.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryHasMoreRows(Boolean& moreRows)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryReadInternal(Boolean setTimeout, Boolean& more)
+   at Microsoft.Data.SqlClient.SqlDataReader.ReadAsyncExecute(Task task, Object state)
+   at Microsoft.Data.SqlClient.SqlDataReader.InvokeAsyncCall[T](SqlDataReaderBaseAsyncCallContext`1 context)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+ClientConnectionId:8c89d63f-4ca7-4545-b841-4b183d61a16c
+Error Number:547,State:0,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Update.Internal.SqlServerModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken) {"EventId":{"Id":10000,"Name":"Microsoft.EntityFrameworkCore.Update.SaveChangesFailed"},"SourceContext":"Microsoft.EntityFrameworkCore.Update","ActionId":"ee8e179a-3b3c-4ff5-9ac2-f73652ee876c","ActionName":"ChineseSale.Controllers.BasketController.CreateBasketAsync (ChineseSale)","RequestId":"0HNJ9EFS6HS70:00000045","RequestPath":"/api/Basket/Add","ConnectionId":"0HNJ9EFS6HS70"}
+Microsoft.EntityFrameworkCore.DbUpdateException: An error occurred while saving the entity changes. See the inner exception for details.
+ ---> Microsoft.Data.SqlClient.SqlException (0x80131904): The INSERT statement conflicted with the FOREIGN KEY constraint "FK_Baskets_Users_UserId". The conflict occurred in database "ChineseSaleDBB_329213227", table "dbo.Users", column 'Id'.
+   at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryHasMoreRows(Boolean& moreRows)
+   at Microsoft.Data.SqlClient.SqlDataReader.TryReadInternal(Boolean setTimeout, Boolean& more)
+   at Microsoft.Data.SqlClient.SqlDataReader.ReadAsyncExecute(Task task, Object state)
+   at Microsoft.Data.SqlClient.SqlDataReader.InvokeAsyncCall[T](SqlDataReaderBaseAsyncCallContext`1 context)
+--- End of stack trace from previous location ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+ClientConnectionId:8c89d63f-4ca7-4545-b841-4b183d61a16c
+Error Number:547,State:0,Class:16
+   --- End of inner exception stack trace ---
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeResultSetAsync(Int32 startCommandIndex, RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.AffectedCountModificationCommandBatch.ConsumeAsync(RelationalDataReader reader, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.ReaderModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Update.Internal.SqlServerModificationCommandBatch.ExecuteAsync(IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Update.Internal.BatchExecutor.ExecuteAsync(IEnumerable`1 commandBatches, IRelationalConnection connection, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalDatabase.SaveChangesAsync(IList`1 entries, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(IList`1 entriesToSave, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.ChangeTracking.Internal.StateManager.SaveChangesAsync(StateManager stateManager, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal.SqlServerExecutionStrategy.ExecuteAsync[TState,TResult](TState state, Func`4 operation, Func`4 verifySucceeded, CancellationToken cancellationToken)
+   at Microsoft.EntityFrameworkCore.DbContext.SaveChangesAsync(Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken)
+2026-02-11 15:59:32.826 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"a9da4baf-c1e8-40e7-91db-f4ba6302bf63","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EFS6HS70:00000061","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EFS6HS70"}
+2026-02-11 15:59:46.153 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"a9da4baf-c1e8-40e7-91db-f4ba6302bf63","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EFS6HS70:0000007B","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EFS6HS70"}
+2026-02-11 15:59:49.140 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"a9da4baf-c1e8-40e7-91db-f4ba6302bf63","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EFS6HS70:0000007F","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EFS6HS70"}
+2026-02-11 15:59:54.879 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"a9da4baf-c1e8-40e7-91db-f4ba6302bf63","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EFS6HS70:00000089","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EFS6HS70"}
+2026-02-11 16:00:16.177 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"a9da4baf-c1e8-40e7-91db-f4ba6302bf63","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EFS6HS70:00000093","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EFS6HS70"}
+2026-02-11 16:01:48.534 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"a9da4baf-c1e8-40e7-91db-f4ba6302bf63","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EFS6HS75:00000009","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EFS6HS75"}
+2026-02-11 16:01:50.714 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"a9da4baf-c1e8-40e7-91db-f4ba6302bf63","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EFS6HS75:0000000F","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EFS6HS75"}
+2026-02-11 16:05:32.202 +02:00 [WRN] The ASP.NET Core developer certificate is not trusted. For information about trusting the ASP.NET Core developer certificate, see https://aka.ms/aspnet/https-trust-dev-cert. {"EventId":{"Id":8,"Name":"DeveloperCertificateNotTrusted"},"SourceContext":"Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServer"}
+2026-02-11 16:06:56.501 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"1e9a124d-aea1-49e6-9ff6-e9545e367cec","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EQFEMUMI:00000019","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EQFEMUMI"}
+2026-02-11 16:07:12.769 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"1e9a124d-aea1-49e6-9ff6-e9545e367cec","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EQFEMUMI:00000035","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EQFEMUMI"}
+2026-02-11 16:18:49.484 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"1e9a124d-aea1-49e6-9ff6-e9545e367cec","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EQFEMUMQ:00000033","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EQFEMUMQ"}
+2026-02-11 16:19:32.032 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"1e9a124d-aea1-49e6-9ff6-e9545e367cec","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EQFEMUMQ:0000004F","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EQFEMUMQ"}
+2026-02-11 16:19:37.655 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"1e9a124d-aea1-49e6-9ff6-e9545e367cec","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EQFEMUMQ:0000005B","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EQFEMUMQ"}
+2026-02-11 16:19:41.945 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"1e9a124d-aea1-49e6-9ff6-e9545e367cec","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EQFEMUMQ:00000067","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EQFEMUMQ"}
+2026-02-11 16:19:47.667 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"1e9a124d-aea1-49e6-9ff6-e9545e367cec","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EQFEMUMQ:00000073","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EQFEMUMQ"}
+2026-02-11 16:19:55.790 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"1e9a124d-aea1-49e6-9ff6-e9545e367cec","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EQFEMUMQ:0000007F","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EQFEMUMQ"}
+2026-02-11 16:20:01.773 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"1e9a124d-aea1-49e6-9ff6-e9545e367cec","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EQFEMUMQ:0000008B","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EQFEMUMQ"}
+2026-02-11 16:20:25.058 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"1e9a124d-aea1-49e6-9ff6-e9545e367cec","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EQFEMUMQ:000000A3","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EQFEMUMQ"}
+2026-02-11 16:21:18.817 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"1e9a124d-aea1-49e6-9ff6-e9545e367cec","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EQFEMUMQ:000000BF","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EQFEMUMQ"}
+2026-02-11 16:21:26.628 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"1e9a124d-aea1-49e6-9ff6-e9545e367cec","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EQFEMUMQ:000000D7","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EQFEMUMQ"}
+2026-02-11 16:21:52.642 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"1e9a124d-aea1-49e6-9ff6-e9545e367cec","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EQFEMUMQ:000000F3","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EQFEMUMQ"}
+2026-02-11 16:22:07.713 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"1e9a124d-aea1-49e6-9ff6-e9545e367cec","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EQFEMUMQ:000000FF","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EQFEMUMQ"}
+2026-02-11 16:22:15.135 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"1e9a124d-aea1-49e6-9ff6-e9545e367cec","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EQFEMUMQ:00000117","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EQFEMUMQ"}
+2026-02-11 16:25:15.945 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"1e9a124d-aea1-49e6-9ff6-e9545e367cec","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EQFEMUMQ:00000133","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EQFEMUMQ"}
+2026-02-11 16:25:26.596 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"1e9a124d-aea1-49e6-9ff6-e9545e367cec","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EQFEMUMQ:0000013F","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EQFEMUMQ"}
+2026-02-11 16:26:21.736 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"1e9a124d-aea1-49e6-9ff6-e9545e367cec","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EQFEMUMQ:0000014B","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EQFEMUMQ"}
+2026-02-11 16:26:31.501 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"1e9a124d-aea1-49e6-9ff6-e9545e367cec","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EQFEMUMQ:00000163","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EQFEMUMQ"}
+2026-02-11 16:29:16.926 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"1e9a124d-aea1-49e6-9ff6-e9545e367cec","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EQFEMUMQ:0000018B","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EQFEMUMQ"}
+2026-02-11 16:33:33.784 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"1e9a124d-aea1-49e6-9ff6-e9545e367cec","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EQFEMUN4:0000000B","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EQFEMUN4"}
+2026-02-11 16:33:40.702 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"1e9a124d-aea1-49e6-9ff6-e9545e367cec","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EQFEMUN4:00000023","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EQFEMUN4"}
+2026-02-11 16:35:47.948 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"1e9a124d-aea1-49e6-9ff6-e9545e367cec","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EQFEMUN4:0000004B","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EQFEMUN4"}
+2026-02-11 16:37:04.842 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"1e9a124d-aea1-49e6-9ff6-e9545e367cec","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EQFEMUN4:00000067","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EQFEMUN4"}
+2026-02-11 16:37:26.525 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"1e9a124d-aea1-49e6-9ff6-e9545e367cec","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EQFEMUN4:00000073","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EQFEMUN4"}
+2026-02-11 16:39:36.090 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"1e9a124d-aea1-49e6-9ff6-e9545e367cec","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EQFEMUN4:0000007F","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EQFEMUN4"}
+2026-02-11 16:39:37.637 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"1e9a124d-aea1-49e6-9ff6-e9545e367cec","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EQFEMUN4:0000008B","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EQFEMUN4"}
+2026-02-11 16:39:53.502 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"1e9a124d-aea1-49e6-9ff6-e9545e367cec","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EQFEMUN4:000000A3","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EQFEMUN4"}
+2026-02-11 16:43:49.012 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"1e9a124d-aea1-49e6-9ff6-e9545e367cec","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EQFEMUN4:000000CB","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EQFEMUN4"}
+2026-02-11 17:17:55.079 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"1e9a124d-aea1-49e6-9ff6-e9545e367cec","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EQFEMUNB:00000017","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EQFEMUNB"}
+2026-02-11 17:20:59.304 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"1e9a124d-aea1-49e6-9ff6-e9545e367cec","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EQFEMUNB:00000051","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EQFEMUNB"}
+2026-02-11 17:29:22.670 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"1e9a124d-aea1-49e6-9ff6-e9545e367cec","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9EQFEMUNB:0000006F","RequestPath":"/api/Gift","ConnectionId":"0HNJ9EQFEMUNB"}
+2026-02-11 17:37:53.729 +02:00 [WRN] The ASP.NET Core developer certificate is not trusted. For information about trusting the ASP.NET Core developer certificate, see https://aka.ms/aspnet/https-trust-dev-cert. {"EventId":{"Id":8,"Name":"DeveloperCertificateNotTrusted"},"SourceContext":"Microsoft.AspNetCore.Server.Kestrel.Core.KestrelServer"}
+2026-02-11 17:38:18.933 +02:00 [INF] Getting all gifts {"SourceContext":"ChineseSale.Controllers.GiftController","ActionId":"7152a906-0e5e-45af-8a1b-679e4354c77d","ActionName":"ChineseSale.Controllers.GiftController.GetAllGiftAsync (ChineseSale)","RequestId":"0HNJ9GE2USFPH:00000013","RequestPath":"/api/Gift","ConnectionId":"0HNJ9GE2USFPH"}

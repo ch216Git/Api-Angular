@@ -1,0 +1,19 @@
+@font-face {
+  font-family: "almoni";
+  font-weight: 400; /*(regular)*/
+  font-style: normal;
+  src: url("../fonts/almoni-regular-aaa.woff2") format("woff2"), url("../fonts/almoni-regular-aaa.woff") format("woff");
+  font-display: swap;
+}
+@font-face {
+  font-family: "almoni";
+  font-weight: 700; /*(bold)*/
+  font-style: normal;
+  src: url("../fonts/almoni-bold-aaa.woff2") format("woff2"), url("../fonts/almoni-bold-aaa.woff") format("woff");
+  font-display: swap;
+}
+@font-face {
+  font-family: "FtPilKahol";
+  src: url("../fonts/FtPilKahol2.woff2") format("woff"), url("../fonts/FtPilKahol2/FtPilKahol2.ttf") format("truetype");
+  font-display: swap;
+}/*# sourceMappingURL=fonts.css.map */

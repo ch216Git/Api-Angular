@@ -1,6 +1,8 @@
 ﻿using ChineseSale.Dtos;
 using ChineseSale.Models;
 using ChineseSale.Repositories;
+using System.Text;
+using System.IO;
 
 namespace ChineseSale.Services
 {
@@ -30,6 +32,28 @@ namespace ChineseSale.Services
                 prizeDtos.Add(prizeDto);
             }
             return prizeDtos;
+        }
+        public async Task<string> ExportPrizesToCsvAsync()
+        {
+            // קבלת כל המתנות
+            var prizes = await GetAllPrizeAsync();
+
+            // שמירת הנתיב של הקובץ שנוצר (לשנות לפי הצורך)
+            string filePath = Path.Combine(Path.GetTempPath(), "PrizesReport.csv");
+
+            // יצירת תוכן ה־CSV
+            StringBuilder csvContent = new StringBuilder();
+            csvContent.AppendLine("Id,UserId,GiftId"); // כותרות העמודות
+
+            foreach (var prize in prizes)
+            {
+                csvContent.AppendLine($"{prize.Id},{prize.UserId},{prize.GiftId}");
+            }
+
+            // כתיבת התוכן לקובץ
+            await File.WriteAllTextAsync(filePath, csvContent.ToString(), Encoding.UTF8);
+
+            return filePath; // מחזיר את הנתיב של הקובץ שנוצר
         }
         public async Task<GetPrizeDto?> GetPrizeByIdAsync(int Id)
         {

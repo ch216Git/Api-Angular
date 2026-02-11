@@ -1,0 +1,1593 @@
+var cart = {};
+cart.safe = [];
+cart.packages = [];
+cart.prizes = [];
+cart.gifts = [];
+cart.optionalGifts = [];
+
+
+var pkgToDelete = -1;
+function removePackageFromCartApproved() {
+    if (pkgToDelete != -1) {
+        removePackageFromCart(pkgToDelete);
+        setCount(pkgToDelete);
+        updateProductsPage();
+    }
+}
+
+function deletePackageFromCartApproved() {
+    if (pkgToDelete != -1) {
+        deleteAllPackagesByPackageId(pkgToDelete);
+        updateSession();
+        setCount(pkgToDelete);
+    }
+
+}
+
+function cartDecreasePackages(pageId) {
+    removePackageFromCart(pageId);
+    setCount(pageId);
+    updateProductsPage();
+    setTimeout(function () { updateProductsPage(); }, 500);
+    setTimeout(function () { updateProductsPage(); }, 1000);
+}
+function registerEvent() {
+
+    $('.cart-decrease-btn').on('click', function () {
+        var pageId = $(this).attr("pageId");
+
+        var package = cart.packages.find(x => x.pageId == pageId);
+        if (package != null) {
+            if (package.gifts.length > 0 || (getTotalCardsAvailable() - package.numberOfTickets) < getUsedCardsNumber()) {
+                pkgToDelete = pageId;
+                //$("#triggerdeletePackageModal").click();
+                $('#decreasePackageModal').modal('show');
+            }
+            else {
+                cartDecreasePackages(pageId);
+            }
+        }
+
+
+
+
+
+    });
+
+
+    $('.cart-increase-btn').on('click', function () {
+        var pageId = $(this).attr("pageId");
+        increasePackage(pageId, false);
+    });
+
+    $('.cart-safe-decrease-btn:not(.bound)').addClass('bound').on('click', function () {
+        var pageId = $(this).attr("pageId");
+        removePackageFromCart(pageId, true, false);
+    });
+
+    $('.cart-safe-increase-btn:not(.bound)').addClass('bound').on('click', function () {
+        var pageId = $(this).attr("pageId");
+        increasePackage(pageId, true);
+    });
+
+    $('.btn-delete-package').on('click', function () {
+        var pageId = $(this).attr("pageId");
+        pkgToDelete = pageId;
+        //$("#triggerdeletePackageModal").click();
+        $('#deletePackageModal').modal('show');
+
+    });
+
+    $('.btn-safe-delete').on('click', function () {
+        removePackageFromCart(null, true, true);
+        updateSession();
+
+
+        renderCart();
+
+        $("#counterLotteryPage").text(0);
+        $("#modalCounterLotteryPage").text(0);
+        $("#modalSafeItemPrice").text(0);
+    });
+}
+
+async function increasePackage(pageId, safe) {
+
+    //var pkg = $(".item[pageId='" + pageId + "']");
+    //var title = $(pkg).attr("title");
+    //var color = $(pkg).attr("color");
+    //var price = $(pkg).attr("price");
+    //var numberOfTickets = safe ? 1 : content.packages.find(x => x.id == pageId).numberOfTickets;
+
+    id = await addPackageToCart(pageId, safe);
+    $("#nogifts").attr("associatedToPackageInstanceId", id);
+    handleAddPackageGifts(pageId, id);
+    showAlert();
+    gtm_add_to_cart(safe);
+
+}
+
+async function increaseSafesBy(pageId, count) {
+
+    id = await addSafesToCart(count);
+    handleAddPackageGifts(pageId, id)
+    showAlert();
+    gtm_add_to_cart(true);
+
+}
+
+
+var selectedPackage;
+function handleAddPackageGifts(pageId, id) {
+
+    selectedPackage = content.packages.find(x => x.pageId == pageId);//here we need the content object to get optional gifts for rendering.
+    if (selectedPackage == null) return false;
+    $("#packagename").text(selectedPackage.title);
+    var optionalGifts = selectedPackage.optionalGifts;
+    if (optionalGifts != null && optionalGifts.length > 0) {
+        $("#modalGifts").empty();
+        for (i = 0; i < optionalGifts.length; i++) {
+            var og = optionalGifts[i];
+            var item = '<li>' +
+                '<div class="item giftitem">' +
+                '<input onclick="giftToggled(' + pageId + ', this)" associatedToPackageInstanceId="' + id + '" packageid="' + pageId + '" pageid="' + og.id + '" id="sel-' + i + '" class="visually-hidden giftselect" type="checkbox" aria-labelledby="title-' + i + '">' +
+                '<label for="sel-' + i + '" class="product-check" aria-hidden="false" aria-label="' + og.title + '">' +
+                '</label>' +
+                '<figure><img src="' + og.image + '" alt="' + og.title + '"></figure>' +
+                '<h3 id="title-' + i + '" class="title">' +
+                '<div href="item.aspx">' + og.title + '</div>' +
+                '</h3>' +
+                '<div class="sub">' + og.shortTitle + '</div>' +
+                '<!-- Collapsible description -->' +
+                '<div id="desc-' + i + '" class="collapse textCollapse" aria-labelledby="title-' + i + '">' +
+                '<p>' +
+                og.description +
+                '</p>' +
+                '</div>' +
+                '<!-- Arrow toggle button -->' +
+                '<button class="btn btn-toggle collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#desc-' + i + '" aria-expanded="false" aria-controls="desc-' + i + '">' +
+                '<span class="visually-hidden">הצגת פירוט</span>' +
+                '</button>' +
+                '</div>' +
+                '</li > ';
+            $("#modalGifts").append(item);
+        }
+        //$("#triggergifts").click();
+        $('#giftsModal').modal('show');
+        setTimeout(function () { $("#addGiftToCart").prop('disabled', true); }, 200);
+
+    }
+    return true;
+}
+
+async function addNOGiftToCart(associatedToPackageInstanceId) {
+    var gift = { "id": 998, "packageInstanceId": associatedToPackageInstanceId };
+    cart = await c_addNoGiftToPackage(gift);
+    updateSession();
+    renderCart();
+}
+
+async function addGiftToCart() {
+    var associatedToPackageInstanceId = '';
+    var gifts = [];
+    $(".giftselect:checked").each(async function (i, o) {
+        var giftid = $(o).attr("pageid");
+        var packageid = $(o).attr("packageid");
+        associatedToPackageInstanceId = $(o).attr("associatedToPackageInstanceId");
+        gifts.push({ "id": giftid, "packageInstanceId": associatedToPackageInstanceId });
+    });
+    cart = await c_addGiftToPackage(gifts);
+    updateSession();
+    renderCart();
+}
+
+async function addNoGiftToCart(associatedToPackageInstanceId) {    
+   
+}
+
+async function autoselect() {
+    if (!cart || !cart.packages || cart.packages.length == 0) {
+        $("#noPackYetModal").modal('show');
+        return;
+    }
+
+    var count = getUsedCardsNumber();
+    if (count < getTotalCardsAvailable()) {
+
+        cart = await c_autoSelect();
+        updateProgressBar();
+        renderPrizes();
+        updateProductsPage();
+        gtm_choose_prizes_for_me();
+
+        var myDiv = $(".cartBody")[0]
+        $(myDiv).find("div:last")[0].scrollIntoView({ behavior: 'smooth', block: 'end' });
+        showAutoselectAlert();
+        $("#btnautoselect").attr("disabled", "disabled");
+        //displayGiftsModal2();
+    }
+
+
+
+}
+
+function addRandom(prodId) {
+    var count = getUsedCardsNumber();
+    if (count < getTotalCardsAvailable()) {
+        if (cart.prizes.find(x => x.id == prodId)) {
+            cart.prizes.find(x => x.id == prodId).count++;
+        }
+        else {
+            cart.prizes.push({ id: prodId, count: 1 });
+        }
+    }
+}
+
+
+var pendingUpdateItemId = null;
+var pendingUpdateRemainingCards = null;
+async function updateRemainingCards() {
+
+    if (pendingUpdateRemainingCards <= 0) return;
+
+    cart = await c_updatePrize(pendingUpdateItemId, pendingUpdateRemainingCards, false);
+
+    updateProgressBar();
+    renderPrizes();
+    updateProductsPage();
+    setButtonsLocking();
+}
+
+function addNumbers(a, b) {
+    // Convert both inputs to numbers
+    const numA = parseFloat(a);
+    const numB = parseFloat(b);
+
+    // Check if either conversion resulted in "Not a Number"
+    if (isNaN(numA) || isNaN(numB)) {
+        return 0;
+    }
+
+    // Return the sum
+    return numA + numB;
+}
+
+async function addCardsToProductInput(obj) {
+
+    if (!cart || !cart.packages || cart.packages.length == 0) {
+        obj.value = 0;        
+        $("#noPackYetModal").modal('show');
+        return;
+    }
+
+    var addCards = parseInt(obj.value);
+    var pv = $(obj).attr("pv");
+    $(obj).attr("pv", addCards);
+    if (addCards >= 0) {
+        var prodId = $(obj).attr("prodId");
+        var count = getUsedCardsNumber();
+        var cardsAvailable = getTotalCardsAvailable();
+        if (parseInt(count) + (addCards - pv) > cardsAvailable) {
+            var remaining = cardsAvailable - count;
+            pendingUpdateRemainingCards = addNumbers(remaining, pv);
+            pendingUpdateItemId = prodId;
+            
+            $("#cardscounter_" + prodId).val(pv).attr("pv", pv);
+            if (remaining <= 0) {
+                //$("#giftsModal_2").modal('show');
+                displayGiftsModal2();
+            }
+            else {
+                $("#maxselected").modal('show');
+            }
+            return;
+        }
+
+        if (parseInt(count) + (addCards - pv) <= getTotalCardsAvailable()) {            
+            cart = await c_updatePrize(prodId, addCards, false);
+            if (parseInt(count) + (addCards - pv) == getTotalCardsAvailable()) {
+                //$("#giftsModal_2").modal('show');
+                displayGiftsModal2();
+            }
+        }
+        else {
+            $("#maxselected").modal('show');
+        }
+
+        if (cart.prizes && cart.prizes.length > 0) {
+            var item = cart.prizes.find(x => x.id == prodId);
+            if (typeof (item) != "undefined") {
+                var count = item.count;
+                $("#cardscounter_" + prodId).val(count).attr("pv", count);
+            }
+            else {
+                $("#cardscounter_" + prodId).val(0).attr("pv", 0);
+            }
+        }
+
+        if (addCards == 0) {
+            updateProgressBar();            
+        }
+    }
+
+    updateProgressBar();
+    renderPrizes();
+    updateProductsPage();
+    setButtonsLocking();
+}
+
+async function addCardsToProduct(prodId) {
+
+    if (!cart || !cart.packages || cart.packages.length == 0) {
+        $("#noPackYetModal").modal('show');
+        return;
+    }
+
+    var count = getUsedCardsNumber();
+
+    if (count < getTotalCardsAvailable()) {
+        cart = await c_updatePrize(prodId, 1, true);
+        count = getUsedCardsNumber();
+
+        if (parseInt(count) == getTotalCardsAvailable()) {
+            //$("#allCardsUsedModal").modal('show');
+            //$("#giftsModal_2").modal('show');
+            displayGiftsModal2();
+        }
+    }
+    else {
+        $("#maxselectedaddone").modal('show');
+        //$("#giftsModal_2").modal('show');
+        //displayGiftsModal2();
+    }
+
+    if (cart.prizes && cart.prizes.length > 0) {
+        var p = cart.prizes.find(x => x.id == prodId);
+        if (p) {
+            $("#cardscounter_" + prodId).val(p.count).attr("pv", p.count);
+        }
+    }
+
+    updateProgressBar();
+    renderPrizes();
+    setButtonsLocking();
+}
+
+async function subtractCardsFromProduct(prodId) {
+    if (!cart.prizes.find(x => x.id == prodId)) return;
+
+    // 1. Find the item
+    var item = cart.prizes.find(x => x.id == prodId);
+
+    // 2. Safety Check: If item doesn't exist OR count is already 0, stop.
+    // This prevents sending a "-1" command to the server for an empty item.
+    if (!item || item.count <= 0) {
+        return;
+    }
+
+    cart = await c_updatePrize(prodId, -1, true);
+
+    //var count = cart.prizes.find(x => x.id == prodId).count;
+    //if (count > 0) {
+    //count = --cart.prizes.find(x => x.id == prodId).count;
+    //sessionStorage.setItem("cart", JSON.stringify(cart));
+    //}
+
+    if (!cart.prizes.find(x => x.id == prodId)) {
+        $("#cardscounter_" + prodId).val(0).attr("pv", "0");        
+    }
+    else {
+        var count = cart.prizes.find(x => x.id == prodId).count;
+        $("#cardscounter_" + prodId).val(count).attr("pv", count);
+    }
+
+
+
+
+
+
+    updateProgressBar();
+    renderPrizes();
+    setButtonsLocking();
+}
+
+async function deletePrize(prodId) {
+
+    if (!cart.prizes || !cart.prizes.find(x => x.id == prodId)) return;
+
+    cart = await c_deletePrize(prodId);
+
+    updateProgressBar();
+    renderPrizes();
+    updateProductsPage();
+
+    $("#btnautoselect").removeAttr("disabled");
+    if (getTotalCardsAvailable() <= getUsedCardsNumber()) {
+        $("#btnautoselect").attr("disabled", "disabled");
+    }
+}
+
+var footerDiv = document.getElementById('footer');
+var cartDiv = document.getElementById('cartFixed');
+function handleCartHeight() {
+
+
+    if (footerDiv.getBoundingClientRect().y < window.innerHeight && window.innerWidth > 992) {
+        if (footerDiv.getBoundingClientRect().y > 350) {
+            $(cartDiv).css({ height: footerDiv.getBoundingClientRect().y - 140 + "px" });
+        }
+        else {
+            $(cartDiv).css({ height: "97px" });
+            $(".cartHead").css({ display: "none" });
+        }
+
+    }
+    else {
+        $(cartDiv).css({ height: "" });
+    }
+
+}
+$(document).ready(function () {
+
+    footerDiv = document.getElementById('footer');
+    cartDiv = document.getElementById('cartFixed');
+    if (footerDiv != null && cartDiv != null) {
+        $(window).on('scroll', function () { setTimeout(handleCartHeight(), 50) });
+        handleCartHeight();
+    }
+
+
+    //if (myDiv.getBoundingClientRect().y < window.innerHeight)
+    //$('.cartFixed').stop().animate({ height: myDiv.getBoundingClientRect().y - 140 + "px" }, 0);
+
+    $('.addCardsToProduct').on('click', function () {
+        var prodId = $(this).attr("prodid");
+        addCardsToProduct(prodId);
+    });
+
+    $('.subtractCardsFromProduct').on('click', function () {
+
+        var prodId = $(this).attr("prodid");
+        subtractCardsFromProduct(prodId);
+    });
+
+    $(".cardscounter").on("change", function () {
+        addCardsToProductInput(this);
+    })
+
+});
+
+
+
+$(document).ready(function () {
+    loadContent();
+
+    modalScrollFix('giftsModal');
+    modalScrollFix('noPackYetModal');
+    modalScrollFix('allCardsUsedModal');
+    modalScrollFix('joinTheRaffleModal');
+    modalScrollFix('giftsModal_2');
+    modalScrollFix('deletePackageModal');
+    setButtonsLocking();
+
+});
+
+function setButtonsLocking() {
+    if (!cart) return;
+
+    var usedCards = 0;
+    $(cart.prizes).each(function (i, o) {
+        if (o.count) {
+            usedCards += o.count;
+        }
+    });
+
+    var tca = getTotalCardsAvailable();
+    var hasCardsToSelect = tca > 0 && usedCards < tca;
+    $(".cartNoPrizesSelected").css("display", "none");
+    if (cart.packages.length == 0) {
+        $(".cartNoPackagesSelected").css("display", "block");
+    }
+    else if (cart.packages.length > 0 && cart.prizes.length == 0 || hasCardsToSelect) {
+        $(".cartNoPrizesSelected").css("display", "block");
+    }
+
+
+    $("#btnautoselect").removeAttr("disabled");
+    if (getTotalCardsAvailable() <= getUsedCardsNumber()) {
+        $("#btnautoselect").attr("disabled", "disabled");
+    }
+
+
+}
+
+var initdone = false;
+async function init() {
+
+    console.log("start init");
+
+    if (initdone) {
+        console.log("init already done, returning");
+        return;
+    }
+    initdone = true;
+    await loadSession();
+    renderCart();
+
+    if (getTotalCardsAvailable() <= getUsedCardsNumber()) {
+        $("#btnautoselect").attr("disabled", "disabled");
+    }
+
+    if (typeof (getPaymentCart) != 'undefined') {
+        getPaymentCart();
+    }
+
+    updateProductsPage();
+
+    /*
+    $('.cart-decrease-btn').on('click', function () {
+        var pageId = $(this).attr("pageId");
+        var package = cart.packages.find(x => x.pageId == pageId);
+        if (package != null) {
+            if (package.gifts.length > 0 || (getTotalCardsAvailable() - package.numberOfTickets) < getUsedCardsNumber()) {
+                pkgToDelete = pageId;
+                //$("#triggerdeletePackageModal").click();
+                $('#decreasePackageModal').modal('show');
+            }
+            else {
+                cartDecreasePackages(pageId);
+            }
+        }
+    });
+    */
+
+    $('.decrease-btn').on('click', function () {
+        var pageId = $(this).attr("pageId");
+
+        var package = cart.packages.find(x => x.pageId == pageId);
+        if (package != null) {
+            if (package.gifts.length > 0 || (getTotalCardsAvailable() - package.numberOfTickets) < getUsedCardsNumber()) {
+                pkgToDelete = pageId;
+                //$("#triggerdeletePackageModal").click();
+                $('#decreasePackageModal').modal('show');
+            }
+            else {
+                removePackageFromCart(pageId);
+            }
+        }
+
+        //removePackageFromCart(pageId);
+        setCount(pageId);
+    });
+
+    $('.increase-btn').on('click', function () {
+        var pageId = $(this).attr("pageId");
+        increasePackage(pageId, false);
+    });
+
+    $("#addGiftToCart").on('click', function () {
+        giftSelectionTracker = {};
+        addGiftToCart();
+        $("#giftsModal").modal('hide');
+    });
+
+    $("#nogifts").on('click', function () {
+        
+        //close modal without adding to cart
+        const inputs = allItemCheckboxes();
+        if (this.classList.contains('on')) {
+            // Force: uncheck + disable every checkbox (ignore original state)
+            inputs.forEach(cb => {
+                cb.checked = false;
+                cb.disabled = true;
+            });
+        } else {
+            // Just re‑enable all (leave them unchecked)
+            inputs.forEach(cb => {
+                cb.disabled = false;
+            });
+        }
+        var associatedtopackageinstanceid = $(this).attr("associatedtopackageinstanceid");
+        addNOGiftToCart(associatedtopackageinstanceid);
+
+        $("#nogifts").removeClass('on');
+        $("#giftsModal").modal('hide');
+    });
+
+
+
+    $('.decrease-safe-btn').on('click', function () {
+        var pageId = $(this).attr("pageId");
+        removePackageFromCart(pageId, true);
+        $("#counterLotteryPage").text(cart.safe.length);
+        $("#modalCounterLotteryPage").text(cart.safe.length);
+    });
+
+    $('.increase-safe-btn').on('click', function () {
+        var pageId = $(this).attr("pageId");
+        increasePackage(pageId, true);
+    });
+
+    $('.modal-increase-safe-btn').on('click', function () {
+        var pageId = $(this).attr("pageId");
+        modalSafesCounter++;
+        $("#modalCounterLotteryPage").val(modalSafesCounter);
+        $("#modalAddSafes").removeAttr("disabled");
+        $("#modalSafeItemPrice").text((safecost * modalSafesCounter).toLocaleString());
+    });
+
+    $('.modal-decrease-safe-btn').on('click', function () {
+        var pageId = $(this).attr("pageId");
+        if (modalSafesCounter > 0) {
+            modalSafesCounter--;
+            $("#modalAddSafes").removeAttr("disabled");
+        }
+
+        if (modalSafesCounter == 0) {
+            $("#modalAddSafes").attr("disabled", "disabled");
+        }
+
+        $("#modalCounterLotteryPage").val(modalSafesCounter);
+        $("#modalSafeItemPrice").text((safecost * modalSafesCounter).toLocaleString());
+
+    });
+
+
+
+
+
+
+
+    // Set initial button text
+    $('#toggle-cart-btn').text('Show Full Cart');
+}
+
+var modalSafesCounter = 0;
+
+
+async function addPackageToCart(pageId, safe) {
+    //var p = { "title": title, "price": price, "color": color, "pageId": pageId, "count": 1, "id": id, "numberOfTickets": numberOfTickets, "gifts": [], "optionalgifts": [] };
+
+    if (safe) {
+        cart = await c_addSafe();
+    }
+    else {
+        cart = await c_addPackageToCart(pageId);
+    }
+
+    updateSession();
+    renderCart();
+    if (safe) {
+
+    }
+    else {
+        return cart.packages[cart.packages.length - 1].id;
+    }
+
+}
+
+async function setSafesToCart(count) {
+    var msg = "";
+    $("#lotteryerr").hide();
+    var tempcart = await c_setSafes(count, msg);
+
+    if (tempcart != null) {
+        cart = tempcart;
+        updateSession();
+        renderCart();
+        //return cart.packages[cart.packages.length - 1].id;
+    }
+}
+
+async function addSafesToCart(count) {
+    $("#lotteryerr").hide();
+    cart = await c_addSafes(count);
+    updateSession();
+    renderCart();
+    return cart.packages[cart.packages.length - 1].id;
+}
+
+async function deleteAllPackagesByPackageId(pageId) {
+
+
+    cart = await c_removePackagesFromCart(pageId);
+
+    //debugger;
+    //cart.packages = cart.packages.filter(x => x.pageId != pageId);
+    //cart.gifts = cart.gifts.filter(x => x.package != pageId);
+    //cart.optionalGifts = cart.optionalGifts.filter(x => x.package != pageId);
+
+    removeCardsFromPrizes();
+    //sessionStorage.setItem("cart", JSON.stringify(cart));
+    setCount(pageId);
+    updateSession();
+    renderCart();
+    updateProductsPage();
+}
+
+function setCount(pageId) {
+    var count = cart.packages.filter(x => x.pageId == pageId).length;
+    $("#counter_" + pageId).text(count);
+}
+
+async function removePackageFromCart(pageId, safe, all) {
+    if (safe) {
+        if (!all) {
+            cart = await c_removeSafe();
+        }
+        else {
+            cart = await c_emptySafe();
+        }
+    }
+    else {
+        //var idToRemoveFromGifts = cart.packages.findLast(x => x.pageId == pageId).id;
+        //var index = cart.packages.findLastIndex(x => x.pageId == pageId);
+        //cart.packages.splice(index, 1);
+
+
+        cart = await c_removePackageFromCart(pageId);
+
+
+        setCount(pageId);
+
+        
+        //cart.gifts = cart.gifts.filter(x => x.associatedToPackageInstanceId != idToRemoveFromGifts);
+        //cart.optionalGifts = cart.optionalGifts.filter(x => x.associatedToPackageInstanceId != idToRemoveFromGifts);
+        //removeCardsFromPrizes();
+    }
+
+    $("#counterLotteryPage").text(cart.safe.length);
+    $("#modalCounterLotteryPage").text(cart.safe.length);
+
+
+    //updateSession();
+    renderCart();
+
+    gtm_remove_from_cart(pageId);
+}
+
+
+
+async function updateSession() {
+    cart = await getCart();
+    //sessionStorage.setItem("cart", JSON.stringify(cart));
+}
+
+async function loadSession() {
+    cart = await getCart();
+    return cart;
+}
+
+
+
+
+
+
+function renderCart() {
+    $("#lotteryerr").hide();
+    setButtonsLocking();
+    if (!cart) return;
+    if (cart.safe.length == 0 && cart.packages.length == 0 && cart.prizes.length == 0 && cart.optionalGifts.length == 0) {
+        renderEmpty();
+    }
+    else {
+
+        if (cart.packages.length == 0 && cart.safe.length == 0) {
+            $(".ecart").css("display", "flex");
+            $(".necart").css("display", "none");
+        }
+        else {
+            $(".ecart").css("display", "none");
+            $(".necart").css("display", "flex");
+            $("#packagecounter").text(cart.packages.length);
+        }
+
+
+
+        $(".cartBody").empty();
+        renderSafe();
+        renderPackagesList();
+
+        renderGifts();
+        renderPrizes();
+
+        updateProgressBar();
+        updateProductsPage();
+    }
+    setButtonsLocking();
+
+
+    $("#safepagecounter").val(cart.safe.length);
+
+
+}
+
+
+
+function renderSafe() {
+
+    if (cart.safe.length > 0) {
+        var s = cart.safe[0];
+        var item = '';
+        var empty = '';
+        var title = '<div class="cartTitle">הגרלת הכספת</div>';
+        var ip = cart.safe.length * safecost;
+        item = '<div class="cartItem">' +
+            '<figure class="golden">' + s.cartDescription.replace('הגרלה על סך', '') + '</figure>' +
+            '<div class="cartItemInfo">' +
+            '<div class="itemTitle">' + s.cartDescription + '</div>' +
+            '<button class="btn btn-delete btn-safe-delete" type="button" aria-label="מחק פריט"></button>' +
+            '<div class="btn-group" role="group">' +
+            '<button class="btn quantity-btn cart-safe-increase-btn">+</button>' +
+            //            '<input type="text" readonly="" value="' + cart.safe.length + '" class="quantity-input form-control" min="1" name="quantity">' +
+            '<input type="tel" value="' + cart.safe.length + '" class="quantity-input form-control" min="0" name="quantity" inputmode="numeric" pattern="[0-9]*" onfocus="this.select();" oninput="this.value=this.value.replace(/[^0-9]/g, ' + empty + ')" onblur="setSafesToCart(this.value)" > ' +
+            '<button class="btn quantity-btn cart-safe-decrease-btn">-</button>' +
+            '</div>' +
+            '<div class="itemPrice">' + ip.toLocaleString() + ' ₪</div>' +
+            '</div>' +
+            '</div>';
+
+        $(".cartBody").append(title).append(item);
+        registerEvent();
+    }
+    $("#counterLotteryPage").text(cart.safe.length);
+    $("#modalCounterLotteryPage").val(cart.safe.length);
+    $("#safepagecounter").val(cart.safe.length);
+    $("#modalSafeItemPrice").text(cart.safe.length * safecost);
+
+}
+
+
+
+function renderPackagesList() {
+    var temp = [];
+    if (cart.packages.length > 0) {
+        for (i = 0; i < cart.packages.length; i++) {
+            var p1 = Object.create(cart.packages[i]);
+
+            if (temp.find(x => x.pageId == p1.pageId)) {
+                temp.find(x => x.pageId == p1.pageId).count++;
+            }
+            else {
+                temp.push(p1);
+            }
+        }
+        renderPackages(temp);
+    }
+}
+function renderPackages(packages) {
+    if (packages.length > 0) {
+        var item = '';
+        var title = '<div class="cartTitle">חבילות</div>';
+        for (i = 0; i < packages.length; i++) {
+            var p = packages[i];
+            item += '<div class="cartItem">' + // altColorsCart_' + p.pageId + '
+                //'<figure class="' + p.color + '">' + p.title + '</figure>' +
+                '<figure class="' + p.color + ' altColorsCart_' + p.pageId + '"><strong>' + p.numberOfTickets + '</strong> כרטיסים</figure>' +
+                '<div class="cartItemInfo">' +
+                '<div class="itemTitle">חבילת ' + p.title + '</div>' +
+                '<button class="btn btn-delete btn-delete-package" type="button" aria-label="מחק פריט" pageId="' + p.pageId + '"></button>' +
+                '<div class="btn-group" role="group">' +
+                '<button class="btn quantity-btn cart-increase-btn" pageId="' + p.pageId + '">+</button>' +
+                '<input type="text" readonly="" value="' + p.count + '" class="quantity-input form-control" min="1" name="quantity">' +
+                '<button class="btn quantity-btn cart-decrease-btn" pageId="' + p.pageId + '">-</button>' +
+                '</div>' +
+                '<div class="itemPrice">' + (p.price * p.count).toLocaleString() + ' ₪</div>' +
+                '</div>' +
+                '</div>';
+            $("#counter_" + p.pageId).text(p.count);
+        }
+        $(".cartBody").append(title).append(item);
+        registerEvent();
+    }
+}
+
+function renderPrizes() {
+    $(".cartBody div#prizesTitle").remove();
+    $(".cartBody div.prizeItem").remove();
+    if (cart.prizes.length > 0) {
+
+        var item = '';
+        var title = '<div class="cartTitle" id="prizesTitle">פרסים בהגרלות</div>';
+        for (i = 0; i < cart.prizes.length; i++) {
+            var p = content.prizes.find(x => x.id == cart.prizes[i].id);
+
+            item +=
+                '<div class="cartItem prizeItem" prizeid="' + p.id + '" id=prize_"' + p.id + '">' +
+                '<figure class="p-0">' +
+                '<img src="' + p.image + '" width="80" height="70" alt="' + p.title + '" class="cartItem-image">' +
+                '</figure>' +
+                '<div class="cartItemInfo">' +
+                '<div class="itemTitle">' + p.title + '</div>' +
+                '<button class="btn btn-delete cartDeletePrize" type="button" aria-label="מחק פריט"  prizeid="' + p.id + '"></button>' +
+                '<div class="btn-group" role="group">' +
+                '<button class="btn quantity-btn cartAddCardsToProduct"  prizeid="' + p.id + '">+</button>' +
+                '<input id="prizeCounter_' + p.id + '" type="text" readonly="" value="' + cart.prizes[i].count + '" class="quantity-input form-control" min="1" name="quantity">' +
+                '<button class="btn quantity-btn cartDecreaseCardsFromProduct"  prizeid="' + p.id + '">-</button>' +
+                '</div>' +
+                '</div>' +
+                '</div>';
+        }
+        $(".cartBody").append(title).append(item);
+
+        $(".cartAddCardsToProduct").on('click', function () {
+            var pid = $(this).attr("prizeid");
+            addCardsToProduct(pid);
+
+        });
+
+        $(".cartDecreaseCardsFromProduct").on('click', function () {
+            var pid = $(this).attr("prizeid");
+            subtractCardsFromProduct(pid);
+        });
+
+        $(".cartDeletePrize").on('click', function () {
+            var pid = $(this).attr("prizeid");
+            deletePrize(pid);
+        });
+
+    }
+}
+
+var counters = [];
+function renderGifts() {
+    counters = [];
+    var item = '';
+    var title = '<div class="cartTitle">מתנות</div>';
+
+    for (i = 0; i < cart.packages.length; i++) {
+        var p = cart.packages[i];
+
+        for (z = 0; z < p.optionalGifts.length; z++) {
+            var g = p.optionalGifts[z];
+            if (counters.find(x => x.key == g.id)) {
+                counters.find(x => x.key == g.id).value++;
+            }
+            else {
+                item += getGiftHtml(g);
+                counters.push({ key: g.id, value: '1' });
+            }
+
+        }
+
+        for (y = 0; y < p.gifts.length; y++) {
+            var g = p.gifts[y];
+            if (counters.find(x => x.key == g.id)) {
+                counters.find(x => x.key == g.id).value++;
+            }
+            else {
+                item += getGiftHtml(g);
+                counters.push({ key: g.id, value: '1' });
+            }
+        }
+    }
+
+
+
+    if (item != '') {
+        $(".cartBody").append(title).append(item);
+    }
+
+    counters.forEach(function (number, index) {
+        $("#giftunits_" + number.key).text(number.value + " יחידות");
+    });
+}
+
+function getGiftHtml(g) {
+    var item = '';
+    if (g.id != 998) {
+        item = '<div class="cartItem">' +
+            '<figure><img src="' + g.image + '" width="704" height="380" alt="' + g.title + '" class="cartItem-image"></figure>' +
+            '<div class="cartItemInfo">' +
+            '<div class="itemTitle">' + g.title +
+            '<span>' + g.shortTitle + '</span>' +
+            '</div>' +
+            '<div id="gift_' + g.id + '" class="itemAmount"><div id="giftunits_' + g.id + '"></div>' +
+            '<div class="itemPrice">' +
+            '<s>' + g.price.toLocaleString() + ' ₪</s>' +
+            '0 ₪' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '</div> ';
+    }
+    
+    return item;
+}
+
+function renderEmpty() {
+    $(".ecart").css("display", "flex");
+    $(".necart").css("display", "none");
+    var html = '<div class="cartEmpty">' +
+        '<strong>העגלה ריקה</strong> <br>' +
+        '<p>בחר אחת מהחבילות בעמוד</p>' +
+        '<img src="/images/emptyCart.webp" width="140" height="160" alt="">' +
+        '</div>';
+    $(".cartBody").empty();
+    $(".cartBody").html(html);
+}
+
+
+var content;
+function loadContent() {
+
+
+
+
+    if (sessionStorage.getItem("content") != null) {
+        content = JSON.parse(sessionStorage.getItem("content"));
+    }
+    else {
+        $.ajax({
+            url: '/raffle/GetAllProducts',
+            type: 'GET',
+            dataType: 'html',
+            success: function (data) {
+                // Replace cart content with fade effect
+                content = JSON.parse(data);
+                sessionStorage.setItem("content", JSON.stringify(content))
+
+            },
+            error: function (xhr, status, error) {
+
+            },
+            complete: function () {
+
+            }
+        });
+    }
+    init();
+
+
+}
+
+async function pickprizes() {
+    //debugger;
+    var tca = getTotalCardsAvailable();
+    var redirectTo = "";
+    var usedCards = 0;
+    $(cart.prizes).each(function (i, o) {
+        if (o.count) {
+            usedCards += o.count;
+        }
+
+    });
+
+    var hasCardsToSelect = tca > 0 && usedCards < tca;
+
+    if (cart.packages.length > 0 && cart.safe.length > 0) {//user has packages and safe item
+        if (hasCardsToSelect) {
+            //await gtm_begin_checkout();
+            redirectTo = next;
+        }
+        else {
+            if (!displayGiftsModal2()) {
+                redirectTo = '/payment'; //we can transfer to the payment form
+            }            
+        }
+
+    }
+    else if (cart.packages.length == 0 && cart.safe.length > 0) {//no cards are available, user didnt pick any packages, ask if they would like to
+        //$("#btnPrePayModal").click();
+        //$("#prePayModal").modal('show');
+        //$("#giftsModal_2").modal('show');
+        $("#onlyRaffleModal").modal('show');
+        
+
+        /*if (!displayGiftsModal2()) {
+            redirectTo = next;
+        }*/
+
+    }
+    else if (cart.packages.length > 0 && cart.safe.length == 0 && typeof (suggestSafe) != "undefined" && !hasCardsToSelect) {
+
+        //$("#joinTheRaffleModal").modal('show');
+        //await gtm_begin_checkout();
+        //$("#giftsModal_2").modal('show');
+        //$("#btnJoinTheRaffleModal").click();        
+        if (!displayGiftsModal2()) {
+            redirectTo = '/payment'; 
+        }
+    }
+    else if (cart.packages.length > 0) {
+        //await gtm_begin_checkout();
+        redirectTo = next;
+    }
+
+    setButtonsLocking();
+    if (redirectTo != "") {
+
+        if (redirectTo == '/הפרסים') {
+            await gtm_begin_checkout();
+        }
+
+        location.href = redirectTo;
+    }
+
+}
+
+
+function removeCardsFromPrizes() {
+    var totalCards = getTotalCardsAvailable();
+    while (getUsedCardsNumber() > totalCards) {
+        cart.prizes.pop();
+    }
+}
+
+function getTotalCardsAvailable() {
+    var res = 0;
+    cart.packages.forEach(function (i, o) {
+        res += i.numberOfTickets;
+    })
+    return res;
+}
+
+function getUsedCardsNumber() {
+    var res = 0;
+    cart.prizes.forEach(function (i, o) {
+        res += i.count;
+    })
+    return res;
+}
+
+function updateProgressBar() {
+
+    $(".necart button").removeAttr("disabled");
+    var tca = getTotalCardsAvailable();
+    var sum = 0;
+    $(cart.prizes).each(function (i, o) {
+        if (o.count) {
+            sum += o.count;
+        }
+
+    });
+    if (sum != 0 && tca != 0) {
+        var percentage = (sum / tca) * 100;
+        $("#cardsProgressBar").css("width", percentage + "%");
+    }
+    else {
+        if (sum == 0) {
+            $("#cardsProgressBar").css("width", "0%");
+        }
+    }
+
+    if (sum >= tca) {
+        $("#progbarRemining").css("display", "none");
+        $("#progbarAllDone").css("display", "block");
+    }
+    else {
+
+
+        if (typeof (isHP) == "undefined") {
+            $(".necart button").attr("disabled", "disabled");
+        }
+
+        $("#progbarRemining").css("display", "block");
+        $("#progbarAllDone").css("display", "none");
+    }
+
+
+
+
+
+    //$("#cardstotal").text(tca);
+    //$("#cardsremain").text(sum);
+
+    $("#cardstotal").text(tca);
+    $("#cardsremain").text(tca - sum);
+
+
+}
+
+
+function updateProductsPage() {
+    //debugger;
+    if (cart) {
+
+        $(".cardscounter").each(function () {
+            $(this).val(0).attr("pv", "0");
+        })
+
+
+        cart.prizes.forEach(function (i, o) {
+            $("#cardscounter_" + i.id).val(i.count).attr("pv", i.count);;
+        });
+
+
+    }
+
+}
+
+
+
+function getRandomInt(min, max) {
+    min = Math.ceil(min); // Ensure min is an integer
+    max = Math.floor(max); // Ensure max is an integer
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+
+
+function numbersOnlyInput() {
+    try {
+        $(".cardscounter").each(function () {
+
+            var objid = this.id;
+
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                $('#' + objid).on("input", function (e) {
+                    if (String.fromCharCode(e.which).match(/[^0-9]/)) {
+                        var data = $("#" + objid).val();
+                        var dataFull = data.replace(/[^0-9]/gi, '');
+                        $("#" + objid).val(dataFull);
+                    }
+                })
+            }
+            $("#" + objid).numeric();
+            $("#" + objid).bind('paste', function () {
+                setTimeout(function () {
+                    //get the value of the input text
+                    var data = $("#" + objid).val();
+                    //replace the special characters to '' 
+                    var dataFull = data.replace(/[^0-9]/gi, '');
+                    //set the new value of the input text without special characters
+                    $("#" + objid).val(dataFull);
+                });
+            });
+        });
+
+
+    }
+    catch (err) { }
+
+}
+
+
+
+///numberic
+
+/*
+ *
+ * Copyright (c) 2006 Sam Collett (http://www.texotela.co.uk)
+ * Licensed under the MIT License:
+ * http://www.opensource.org/licenses/mit-license.php
+ * 
+ */
+
+/*
+ * Allows only valid characters to be entered into input boxes.
+ * Note: does not validate that the final text is a valid number
+ * (that could be done by another script, or server-side)
+ *
+ * @name     numeric
+ * @param    decimal      Decimal separator (e.g. '.' or ',' - default is '.')
+ * @param    callback     A function that runs if the number is not valid (fires onblur)
+ * @author   Sam Collett (http://www.texotela.co.uk)
+ * @example  $(".numeric").numeric();
+ * @example  $(".numeric").numeric(",");
+ * @example  $(".numeric").numeric(null, callback);
+ *
+ */
+jQuery.fn.numeric = function (decimal, callback) {
+    decimal = decimal || ".";
+    callback = typeof callback == "function" ? callback : function () { };
+    this.keypress(
+        function (e) {
+            var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+            // allow enter/return key (only when in an input box)
+            if (key == 13 && this.nodeName.toLowerCase() == "input") {
+                return true;
+            }
+            else if (key == 13) {
+                return false;
+            }
+            var allow = false;
+            // allow Ctrl+A
+            if ((e.ctrlKey && key == 97 /* firefox */) || (e.ctrlKey && key == 65) /* opera */) return true;
+            // allow Ctrl+X (cut)
+            if ((e.ctrlKey && key == 120 /* firefox */) || (e.ctrlKey && key == 88) /* opera */) return true;
+            // allow Ctrl+C (copy)
+            if ((e.ctrlKey && key == 99 /* firefox */) || (e.ctrlKey && key == 67) /* opera */) return true;
+            // allow Ctrl+Z (undo)
+            if ((e.ctrlKey && key == 122 /* firefox */) || (e.ctrlKey && key == 90) /* opera */) return true;
+            // allow or deny Ctrl+V (paste), Shift+Ins
+            if ((e.ctrlKey && key == 118 /* firefox */) || (e.ctrlKey && key == 86) /* opera */
+                || (e.shiftKey && key == 45)) return true;
+            // if a number was not pressed
+            if (key < 48 || key > 57) {
+                /* '-' only allowed at start */
+                if (key == 45 && this.value.length == 0) return true;
+                /* only one decimal separator allowed */
+                if (key == decimal.charCodeAt(0) && this.value.indexOf(decimal) != -1) {
+                    allow = false;
+                }
+                // check for other keys that have special purposes
+                if (
+                    key != 8 /* backspace */ &&
+                    key != 9 /* tab */ &&
+                    key != 13 /* enter */ &&
+                    key != 35 /* end */ &&
+                    key != 36 /* home */ &&
+                    key != 37 /* left */ &&
+                    key != 39 /* right */ &&
+                    key != 46 /* del */
+                ) {
+                    allow = false;
+                }
+                else {
+                    // for detecting special keys (listed above)
+                    // IE does not support 'charCode' and ignores them in keypress anyway
+                    if (typeof e.charCode != "undefined") {
+                        // special keys have 'keyCode' and 'which' the same (e.g. backspace)
+                        if (e.keyCode == e.which && e.which != 0) {
+                            allow = true;
+                        }
+                        // or keyCode != 0 and 'charCode'/'which' = 0
+                        else if (e.keyCode != 0 && e.charCode == 0 && e.which == 0) {
+                            allow = true;
+                        }
+                    }
+                }
+                // if key pressed is the decimal and it is not already in the field
+                if (key == decimal.charCodeAt(0) && this.value.indexOf(decimal) == -1) {
+                    allow = true;
+                }
+            }
+            else {
+                allow = true;
+            }
+            return allow;
+        }
+    )
+        .blur(
+            function () {
+                var val = jQuery(this).val();
+                if (val != "") {
+                    var re = new RegExp("^\\d+$|\\d*" + decimal + "\\d+");
+                    if (!re.exec(val)) {
+                        callback.apply(this);
+                    }
+                }
+            }
+        )
+    return this;
+}
+
+
+var ALERT_LIFETIME = 5000; // 5 seconds total duration
+var FADE_DURATION = 300;   // 0.3 seconds for fade transition
+
+/**
+ * Shows the success notification using jQuery, delays, and then fades it out.
+ */
+function showAlert() {
+    const $alertContainer = $('#cartFixed');
+
+    // Clear any existing alert to ensure only one is visible at a time
+    //$alertContainer.empty();
+
+    // The user-specified HTML structure, adapted with Tailwind classes for styling
+    // and using a placeholder image URL for the 'approveGreen.svg'
+    const alertHtml = '<div class="alert alert-success" role="alert">חבילה התווספה בהצלחה<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+
+    // 1. Append the new alert to the container
+    const $newAlert = $(alertHtml).prependTo($alertContainer);
+
+    // 2. Fade in the alert
+    $newAlert.fadeIn(FADE_DURATION);
+
+    // 3. Delay, then fade out and remove the element
+    $newAlert.delay(ALERT_LIFETIME - FADE_DURATION) // Wait time before starting the fade
+        .fadeOut(FADE_DURATION, function () {
+            $(this).remove(); // Remove the element from the DOM after fading out
+        });
+}
+
+function showAutoselectAlert() {
+
+    const $alertContainer = $('#cartFixed');
+
+    // Clear any existing alert to ensure only one is visible at a time
+    //$alertContainer.empty();
+
+    // The user-specified HTML structure, adapted with Tailwind classes for styling
+    // and using a placeholder image URL for the 'approveGreen.svg'
+    const alertHtml = '<div class="alert alert-success" role="alert">פרסים נוספו בהצלחה<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+
+    // 1. Append the new alert to the container
+    const $newAlert = $(alertHtml).prependTo($alertContainer);
+
+    // 2. Fade in the alert
+    $newAlert.fadeIn(FADE_DURATION);
+
+    // 3. Delay, then fade out and remove the element
+    $newAlert.delay(ALERT_LIFETIME - FADE_DURATION) // Wait time before starting the fade
+        .fadeOut(FADE_DURATION, function () {
+            $(this).remove(); // Remove the element from the DOM after fading out
+        });
+}
+
+
+function modalScrollFix(modalId) {
+
+    $('#' + modalId).on('hide.bs.modal', function () {
+        const myModalEl = document.getElementById(modalId);
+
+        if (myModalEl) {
+            let scrollPosition = 0;
+
+            // 1. Store scroll position BEFORE the modal is hidden and scrollbars are restored
+            myModalEl.addEventListener('hide.bs.modal', function () {
+                scrollPosition = window.pageYOffset;
+                console.log("Modal Hide: Stored scroll position at " + scrollPosition);
+            });
+
+            // 2. Restore scroll position AFTER the modal is completely hidden
+            myModalEl.addEventListener('hidden.bs.modal', function () {
+                if (scrollPosition !== 0) {
+                    window.scrollTo(0, scrollPosition);
+                    console.log("Modal Hidden: Restored scroll position to " + scrollPosition);
+                    scrollPosition = 0; // Reset for next use
+                }
+            });
+        } else {
+            console.error("Modal element with ID '" + modalId + "' not found.");
+        }
+    });
+
+
+}
+
+
+
+window.addEventListener('pageshow', function (event) {
+    // The 'persisted' property is true if the page was served from bfcache
+    if (event.persisted) {
+        console.log('Page loaded from bfcache - forcing cart re-render.');
+    }
+    // Call the function on both initial load and when coming back from bfcache
+    init();
+});
+
+
+
+
+
+function onClick(e) {
+    e.preventDefault();
+    grecaptcha.ready(function () {
+        grecaptcha.execute('reCAPTCHA_site_key', { action: 'submit' }).then(function (token) {
+            // Add your logic to submit to your backend server here.
+        });
+    });
+}
+
+
+/*function giftToggled(packageId, obj) {
+    $(".product-check").css("cursor", "pointer");
+    if ($(".giftselect:checked").length) {
+        var maximumSelectableGifts = content.packages.find(x => x.pageId == packageId).maximumSelectableGifts;
+        if ($(".giftselect:checked").length > maximumSelectableGifts) {
+            obj.checked = false;
+        }
+        else {
+            $("#addGiftToCart").prop('disabled', false);
+        }
+
+    }
+    else {
+        $("#addGiftToCart").prop('disabled', true);
+    }
+
+    if ($(".giftselect:checked").length >= maximumSelectableGifts) {
+        $(".giftselect").each(function (i, o) {
+            var sel = $(o).attr("id");
+            if (!o.checked) {
+                $("label[for='" + sel + "']").css("cursor", "default");
+            }
+
+        });
+    }
+}*/
+
+// This MUST be defined outside your function, e.g., at the top of your script.
+let giftSelectionTracker = {};
+
+/**
+* Toggles a gift selection for a package.
+* If the maximum number of gifts is exceeded, the first item selected
+* (in "First-In, First-Out" order) will be deselected.
+* * @param {string|number} packageId - The PageId of the package.
+* @param {HTMLElement} obj - The checkbox element that was clicked.
+*/
+function giftToggled(packageId, obj) {
+    const $obj = $(obj);
+    const objId = $obj.attr('id'); // The checkbox MUST have a unique ID for this to work
+
+    // --- 1. Get Selection Data ---
+
+    // Find the package data from your global 'content' object
+    const packageData = content.packages.find(x => x.pageId == packageId);
+    if (!packageData) {
+        console.error("giftToggled: Could not find package data for ID:", packageId);
+        return;
+    }
+    const maximumSelectableGifts = packageData.maximumSelectableGifts;
+
+    // Get the selection-order array for THIS package, or create it if it doesn't exist
+    if (!giftSelectionTracker[packageId]) {
+        giftSelectionTracker[packageId] = [];
+    }
+    let selectionQueue = giftSelectionTracker[packageId];
+
+    // --- 2. Handle Check/Uncheck Logic ---
+
+    if (obj.checked) {
+        // --- A. Item was CHECKED ---
+
+        // Add this item's ID to the end of the selection queue
+        selectionQueue.push(objId);
+
+        // Check if we are now over the limit
+        if (selectionQueue.length > maximumSelectableGifts) {
+
+            // --- B. Limit Exceeded: Deselect Oldest Item ---
+
+            // Get the ID of the *first* item that was selected (FIFO)
+            // .shift() removes and returns the first item from the array.
+            const idToDeselect = selectionQueue.shift();
+
+            // Find that checkbox on the page and uncheck it
+            $("#" + idToDeselect).prop('checked', false);
+        }
+
+    } else {
+        // --- C. Item was UNCHECKED ---
+
+        // The user manually unchecked a box.
+        // Remove its ID from our queue, wherever it is.
+        giftSelectionTracker[packageId] = selectionQueue.filter(id => id !== objId);
+    }
+
+    // --- 3. Update UI State ---
+
+    // This logic from your original function seems to check *all*
+    // gift selects on the page, not just for this package.
+    // We'll keep that behavior.
+    if ($(".giftselect:checked").length > 0) {
+        $("#addGiftToCart").prop('disabled', false);
+    } else {
+        $("#addGiftToCart").prop('disabled', true);
+    }
+
+    // The old logic for disabling cursors is no longer needed,
+    // since any item can be clicked at any time.
+    // We just ensure all cursors remain pointers.
+    $(".product-check, .giftselect, label[for^='" + $obj.attr('name') + "']")
+        .css("cursor", "pointer");
+}
+
+
+
+
+
+/////////////modal popups logic start
+
+function displayGiftsModal2() {    
+    var dfm2Counter = sessionStorage.getItem("dfm2Counter");    
+    if (!dfm2Counter) {        
+        sessionStorage.setItem("dfm2Counter", "1");        
+        if (cart.safe.length == 0) {
+            $("#giftsModal_2").modal('show');
+            return true;
+        }
+        else {
+            $("#allCardsUsedModal").modal('show');
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/////////////modal popups logic end

@@ -78,6 +78,7 @@ namespace ChineseSale.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        
         [HttpGet("Exists/{Name}")]
         public async Task<ActionResult<IEnumerable<GetGiftDto>>> ExistsGiftAsync(string Name)
         {

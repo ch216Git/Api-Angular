@@ -1,0 +1,354 @@
+function gtm_get_is_neeman_login() {
+    try {
+        var t = sessionStorage.getItem('is_neeman_login');        
+        return t || 'no';
+    } catch (e) {        
+        return 'no';
+    }
+}
+
+function gtm_get_is_neeman_chosen() {
+    try {
+        var t = sessionStorage.getItem('is_neeman_chosen');            
+        return t || 'no';
+    } catch (e) {
+        return 'no';
+    }
+}
+
+function gtm_get_neeman_name() {
+    try {        
+        var t = sessionStorage.getItem('neeman_name');
+        return t || '';
+    } catch (e) {
+        return '';
+    }
+}
+
+
+
+function gtm_get_referee() {
+    var val = $("#reffererName").val();    
+    return (val || "").trim();
+}
+
+function gtm_getItemsArray() {    
+    var res = [];
+    try {
+        cart.packages.forEach(function (i, o) {
+            var id = i.pageId;
+            var item = gtm_getItemById(id);
+            res.push(item);
+        });
+    }
+    catch (err) {
+        console.log(err);
+    }
+    
+    return res;
+}
+
+function gtm_getTotal() {
+    var res = 0;
+    try {
+        cart.packages.forEach(function (i, o) {
+            res += i.price;
+        });
+    }
+    catch (err) {
+        console.log(err);
+    }    
+    return res;
+}
+
+function gtm_getItemById(id) {
+    var item;
+    var result;
+    try {
+        item = cart.packages.find(x => x.pageId == id);
+        if (item == null) {
+            item = content.packages.find(x => x.pageId == id);
+        }
+        if (item != null) {
+            result = {
+                item_id: item.pageId,  // במידה ויש מק"ט לכל חבילה – רצוי שיהיה
+                item_name: item.title,  //  שם החבילה לפי הכותרת, לדוג' – חבילה קטנה, חבילה בסיסית, הגרלת כספת וכו'
+                coupon: null,   // שם או מספר הקופון אם קיים
+                discount: 0,  //  סכום ההנחה, במידה וקיימת הנחה כלשהי
+                item_category: item.numberOfTickets,  //  כמות כרטיסים שנוספה באותה הוספה לסל
+                item_category2: null, // null
+                item_category3: null, //  null
+                item_category4: null,  // null
+                item_category5: null,  //  null
+                price: item.price,   //  סכום הכספי של הכרטיסים בחבילה שנוספו
+                quantity: 1   //     כמות החבילות שנוספו, בכל איוונט הוספה לעגלה יש לשלוח כמות 1
+            };
+        }        
+    }
+    catch (err) {
+        console.log(err);
+    }
+    return result;
+}
+
+function gtm_getSafeItem(item) {
+        
+    var result;
+    try {    
+        if (item != null) {
+            result = {
+                item_id: item.id,  // במידה ויש מק"ט לכל חבילה – רצוי שיהיה
+                item_name: item.title,  //  שם החבילה לפי הכותרת, לדוג' – חבילה קטנה, חבילה בסיסית, הגרלת כספת וכו'
+                coupon: null,   // שם או מספר הקופון אם קיים
+                discount: 0,  //  סכום ההנחה, במידה וקיימת הנחה כלשהי
+                item_category: item.numberOfTickets,  //  כמות כרטיסים שנוספה באותה הוספה לסל
+                item_category2: null, // null
+                item_category3: null, //  null
+                item_category4: null,  // null
+                item_category5: null,  //  null
+                price: item.price,   //  סכום הכספי של הכרטיסים בחבילה שנוספו
+                quantity: 1   //     כמות החבילות שנוספו, בכל איוונט הוספה לעגלה יש לשלוח כמות 1
+            };
+        }
+    }
+    catch (err) {
+        console.log(err);
+    }
+    return result;
+}
+function gtm_add_to_cart(issafe) {
+    console.log('gtm_add_to_cart');
+    try {
+        var addedItem = null;
+        if (issafe) {
+            addedItem = cart.safe[cart.safe.length - 1];
+            if (!addedItem) return;
+            var item = gtm_getSafeItem(addedItem);
+            dataLayer.push({ ecommerce: null }); // Clear the previous ecommerce object.
+            dataLayer.push({
+                event: "add_to_cart",
+                ecommerce: {
+                    currency: "ILS",
+                    value: item.price,  // סכום כספי כולל 
+                    step_name: "שלב 1: בחירת כרטיסים",  //  שם ומספר השלב -  ""שלב 1: בחירת כרטיסים
+                    is_neeman_login: gtm_get_is_neeman_login(),  // ברוב המקרים זה לא, רק אם נאמן נכנס מכניסת נאמנים זה כן
+                    items: [item]
+                }
+            });
+        }
+        else {
+            addedItem = cart.packages[cart.packages.length - 1];
+            if (!addedItem) return;
+            var item = gtm_getItemById(addedItem.pageId);
+            dataLayer.push({ ecommerce: null }); // Clear the previous ecommerce object.
+            dataLayer.push({
+                event: "add_to_cart",
+                ecommerce: {
+                    currency: "ILS",
+                    value: item.price,  // סכום כספי כולל 
+                    step_name: "שלב 1: בחירת כרטיסים",  //  שם ומספר השלב -  ""שלב 1: בחירת כרטיסים
+                    is_neeman_login: gtm_get_is_neeman_login(),  // ברוב המקרים זה לא, רק אם נאמן נכנס מכניסת נאמנים זה כן
+                    items: [item]
+                }
+            });
+        }
+        
+        
+        
+    }
+    catch (err) {
+        console.log(err);
+    }    
+}
+
+function gtm_remove_from_cart(pageId) {
+    console.log('gtm_remove_from_cart');
+    var item = gtm_getItemById(pageId);
+    dataLayer.push({ ecommerce: null }); // Clear the previous ecommerce object.
+    dataLayer.push({
+        event: "remove_from_cart",
+        ecommerce: {
+            currency: "ILS",
+            value: gtm_getTotal(),  // סכום כספי כולל 
+            step_name: "שלב 1: בחירת כרטיסים",  //  שם ומספר השלב -  ""שלב 1: בחירת כרטיסים
+            is_neeman_login: gtm_get_is_neeman_login(),// | "no"  // ברוב המקרים זה לא, רק אם נאמן נכנס מכניסת נאמנים זה כן
+            items: [ item ]
+        }
+    });
+}
+
+async function gtm_begin_checkout() {
+    
+    console.log('gtm_begin_checkout');    
+    var itemsArray = gtm_getItemsArray();
+    dataLayer.push({ ecommerce: null }); // Clear the previous ecommerce object.
+    dataLayer.push({
+        event: "begin_checkout",
+        ecommerce: {
+            currency: "ILS",
+            value: gtm_getTotal(),  // סכום כולל 
+            step_name: "סיום שלב 1: בחירת כרטיסים",  //  טקסט סיום שלב 1
+            is_neeman_login: gtm_get_is_neeman_login(),// | "yes",  // ברוב המקרים זה לא, רק אם נאמן נכנס מכניסת נאמנים זה כן
+            items:  itemsArray 
+        }
+    });
+
+}
+
+function gtm_add_shipping_info() {    
+    console.log('gtm_add_shipping_info');
+    var itemsArray = gtm_getItemsArray();
+    dataLayer.push({ ecommerce: null }); // Clear the previous ecommerce object.
+    dataLayer.push({
+        event: "add_shipping_info",
+        ecommerce: {
+            currency: "ILS",
+            value: gtm_getTotal(),  // סכום כולל 
+            step_name: "סיום שלב 2: בחירת הפרסים בהגרלות", //  טקסט סיום שלב 2
+            is_neeman_login: gtm_get_is_neeman_login(),// | "yes",  // ברוב המקרים זה לא, רק אם נאמן נכנס מכניסת נאמנים זה כן
+            items: itemsArray
+        }
+    });
+}
+
+function gtm_choose_prizes_for_me() {
+    console.log('gtm_choose_prizes_for_me');
+    dataLayer.push({
+        event: "choose_prizes_for_me",
+        button_text: "בחרו בשבילי את הפרסים",  // טקסט הכפתור שנלחץ
+        element_name: "בוחרים פרסים לזכייה בהגרלה"    // שם האלמנט המקושר במסך
+    })
+
+}
+
+function gtm_popup_interaction(msg) {
+    console.log('gtm_popup_interaction');
+    dataLayer.push({
+        event: "popup_interaction",
+        button_text: "אני רוצה לבחור חבילה",// | "תנו לי להעיף מבט בפרסים",  //  טקסט הכפתור שהוקלק
+        popup_text: "בחירת כרטיסים תאפשר לך לבחור פרסים",   // טקסט בפופ-אפ
+        element_name: "אופס, טרם בחרת חבילת כרטיסים",    // כותרת הפופ אפ | שם האלמנט
+    });
+}
+
+function gtm_add_payment_info() {
+    console.log('gtm_add_payment_info');
+    var itemsArray = gtm_getItemsArray();
+    dataLayer.push({ ecommerce: null }); // Clear the previous ecommerce object.
+    dataLayer.push({
+        event: "add_payment_info",
+        ecommerce: {
+            currency: "ILS",
+            value: gtm_getTotal(),  // סכום כולל 
+            step_name: "סיום שלב 3: מילוי פרטים ומעבר לתשלום",  //  טקסט סיום שלב 3
+            is_neeman_login: gtm_get_is_neeman_login(), // ברוב המקרים זה לא, רק אם נאמן נכנס מכניסת נאמנים זה כן
+            neeman_chosen: gtm_get_is_neeman_chosen(),    // בחירת היוזר באם הגיע דרך נאמן או לא
+            neeman_name: gtm_get_referee(),   //  שם הנאמן שנבחר במידה ונבחר
+            items: itemsArray
+        }
+    });
+
+}
+
+function gtm_validation_errors(text) {
+    console.log('gtm_validation_errors');
+    dataLayer.push({
+        event: "error_message",
+        button_text: "המשך לתשלום",  // טקסט הכפתור שהוקלק
+        error_text: text,  // כותרת הודעת השגיאה בפופ-אפ
+        element_name: "שלב מילוי פרטים ומעבר לתשלום"    // שם האלמנט המקושר במסך
+    });
+}
+
+
+function gtm_purchase() {
+    console.log('gtm_purchase');
+    cart = ThankYouCart;
+    var itemsArray = gtm_getItemsArray();
+    dataLayer.push({ ecommerce: null }); // Clear the previous ecommerce object.
+    dataLayer.push({
+        event: "purchase",
+        ecommerce: {
+            transaction_id: ThankYouTID,  // מס' מזהה העסקה
+            currency: "ILS",
+            value: ThankYouTotal,  // סכום כולל 
+            payment_type: ThankYouPM,// | "bit" | "other"   // אמצעי התשלום אתו בוצעה העסקה
+            step_name: "סיום שלב 4: התשלום התקבל בהצלחה", //  טקסט סיום שלב 4
+            is_neeman_login: gtm_get_is_neeman_login(),// | "no"  // ברוב המקרים זה לא, רק אם נאמן נכנס מכניסת נאמנים זה כן
+            neeman_chosen: gtm_get_is_neeman_chosen(),// | "no"    // בחירת היוזר באם הגיע דרך נאמן או לא
+            neeman_name: gtm_get_neeman_name(),   //  שם הנאמן שנבחר במידה ונבחר
+            items: itemsArray
+        }
+    });
+
+}
+
+function gtm_purchase_error() {
+    console.log('gtm_purchase_error');
+    dataLayer.push({
+        event: "error_message",
+        button_text: "לאישור התשלום",   //  טקסט הכפתור שהוקלק
+        error_text: "שגיאה ברכיב תשלום",   // כותרת הודעת השגיאה בפופ-אפ
+        element_name: "שלב אישור התשלום"    // שם האלמנט המקושר במסך
+    });
+
+}
+
+
+
+function gtm_main_menu_click(msg) {
+    console.log('gtm_main_menu_click');
+    dataLayer.push({
+        event: "main_menu_click",
+        button_text: msg,    // טקסט הכפתור שנלחץ
+        element_name: ",תפריט ראשי",    // שם האלמנט המקושר במסך
+    });
+
+}
+
+function gtm_footer_menu_click(msg) {
+    console.log('gtm_footer_menu_click');
+    dataLayer.push({
+        event: "footer_menu_click",
+        button_text: msg,    // טקסט הכפתור שנלחץ
+        element_name: ",תפריט פוטר"    // שם האלמנט המקושר במסך
+    });
+}
+
+
+function gtm_contact_us_click(text1, text2)
+{
+    console.log('gtm_contact_us_click');
+    /*
+    טלפון / פקס:
+dataLayer.push({
+  event: "contact_us_click",
+    button_text: "c2c",    // טקסט הכפתור שנלחץ
+    element_name: "טלפון סניף ראשי" | "פקס",    // שם האלמנט המקושר במסך
+})
+
+
+WhatsApp (צ'אט עם נציג בוואטסאפ):
+dataLayer.push({
+  event: "contact_us_click",
+    button_text: "לצ'אט עם נציג",    // טקסט הכפתור שנלחץ
+    element_name: "whatsapp",    // שם האלמנט המקושר במסך
+})
+
+    
+    */ 
+    dataLayer.push({
+        event: "contact_us_click",
+        button_text: text1,    // טקסט הכפתור שנלחץ
+        element_name: text2,    // שם האלמנט המקושר במסך
+    });
+}
+
+function gtm_faq_click(text1, text2) {
+    console.log('gtm_faq_click');
+    dataLayer.push({
+        event: "faq_click",
+        button_text: text1,    // טקסט השאלה שהוקלקה
+        element_name: text2    // שם קטגוריית / אלמנט השאלה
+    })
+}
