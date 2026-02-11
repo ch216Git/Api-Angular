@@ -116,5 +116,60 @@ namespace ChineseSale.Services
             await _donorRepository.DeleteDonorAsync(donor);
             return true;
         }
+        public async Task<IEnumerable<GetDonorDto>> GetSearchByNameDonorAsync(string str)
+        {
+            IEnumerable<Donor> donors = await _donorRepository.GetSearchByNameDonorAsync(str);
+            List<GetDonorDto> donorDtos = new List<GetDonorDto>();
+            foreach (var donor in donors)
+            {
+                GetDonorDto donorDto = new GetDonorDto()
+                {
+                    Id = donor.Id,
+                    Name = donor.Name,
+                    Email = donor.Email,
+                    Phone = donor.Phone
+
+                };
+                donorDtos.Add(donorDto);
+            }
+            return donorDtos;
+        }
+        public async Task<IEnumerable<GetDonorDto>> GetSearchByEmailDonorAsync(string str)
+        {
+            IEnumerable<Donor> donors = await _donorRepository.GetSearchByEmailDonorAsync(str);
+            List<GetDonorDto> donorDtos = new List<GetDonorDto>();
+            foreach (var donor in donors)
+            {
+                GetDonorDto donorDto = new GetDonorDto()
+                {
+                    Id = donor.Id,
+                    Name = donor.Name,
+                    Email = donor.Email,
+                    Phone = donor.Phone
+
+                };
+                donorDtos.Add(donorDto);
+            }
+            return donorDtos;
+        }
+        public async Task<IEnumerable<GetDonorDto>> GetSearchByGiftDonorAsync(string str)
+        {
+            IEnumerable<Donor> donors = await _donorRepository.GetSearchByGiftDonorAsync(str);
+            List<GetDonorDto> donorDtos = new List<GetDonorDto>();
+            foreach (var donor in donors)
+            {
+                GetDonorDto donorDto = new GetDonorDto()
+                {
+                    Id = donor.Id,
+                    Name = donor.Name,
+                    Email = donor.Email,
+                    Phone = donor.Phone
+                };
+                donorDtos.Add(donorDto);
+            }
+            return donorDtos;
+
+
+        }
     }
 }

@@ -9,5 +9,8 @@ namespace ChineseSale.Services
         Task<GetDonorDto> CreateDonorAsync(CreateDonorDto donorDto);
         Task<GetDonorByIdDto> UpdateDonorAsync(UpdateDonorDto donorDto);
         Task<bool> DeleteDonorAsync(int Id);
+        Task<IEnumerable<GetDonorDto>> GetSearchByNameDonorAsync(string str);
+        Task<IEnumerable<GetDonorDto>> GetSearchByEmailDonorAsync(string str);
+        Task<IEnumerable<GetDonorDto>> GetSearchByGiftDonorAsync(string str);
     }
 }

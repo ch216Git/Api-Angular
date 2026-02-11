@@ -18,7 +18,8 @@ export const routes: Routes = [
     { path: 'editGift/:id', component: AddGiftComponent },
     { path: 'package', component: PackageComponent },
     { path: 'donor', component: DonorComponent },
-     { path: 'prize', component: PrizeComponent },
+    { path: 'donor/:id', component: DonorComponent },
+    { path: 'prize', component: PrizeComponent },
     { path: '**', redirectTo: 'package' }
   ];
   

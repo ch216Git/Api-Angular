@@ -14,6 +14,23 @@
     <span>{{ category.name }}</span>
   </button>
 </div>
+<div class="search-filter-panel">
+  <input [value]="nameSignal()" (input)="nameSignal.set($event.target.value)" placeholder="חיפוש" pInputText />
+ 
+   <select (change)="onSearchTypeChange($event)">
+    <option value="searchByGiftName">שם מתנה</option>
+    <option value="searchByDonorName">שם תורם</option>
+    <option value="searchByCustomer">מספר רוכשים</option>
+  </select>
+
+  <select (change)="onChange($event)">
+    <option value="" disabled selected>מיין</option>
+    <option value="noSort">תצוגה רגילה</option>
+    <option value="sortByBuyer">לפי רוכשים</option>
+    <option value="sortByPrice">לפי מחיר</option>
+  </select>
+</div>
+
 
 <div class="gifts-grid" *ngIf="isLoaded">
   <div class="gift-card" *ngFor="let gift of listGifts; let i = index">

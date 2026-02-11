@@ -35,7 +35,21 @@ export class GiftService {
   uploadImage(file: File): Observable<any> {
     const formData = new FormData();
     formData.append('image', file); // שם הפרמטר חייב להיות 'image' כמו ב-C#
-  
     return this.http.post(`${this.BASE_URL_IMAGE}/upload`, formData);
+  }
+  sortGiftsByPrice(): Observable<GetGift[]> {
+    return this.http.get<GetGift[]>(`${this.BASE_URL}/SortByPrice`);
+  }
+  sortGiftsByBuyer(): Observable<GetGift[]> {
+    return this.http.get<GetGift[]>(`${this.BASE_URL}/SortByBuyer`);
+  }
+  existsSumCoustomerGift(sum:number): Observable<GetGift[]> {
+    return this.http.get<GetGift[]>(`${this.BASE_URL}/existsSum/`+sum);
+  }
+  existsDonorName(donorName: string): Observable<GetGift[]> {
+    return this.http.get<GetGift[]>(`${this.BASE_URL}/ExistsDonorName/`+donorName);
+  }
+  exsistsGiftName(giftName: string): Observable<GetGift[]> {
+    return this.http.get<GetGift[]>(`${this.BASE_URL}/Exists/`+giftName);
   }
 }

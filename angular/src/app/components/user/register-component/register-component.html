@@ -1,39 +1,39 @@
 <div class="card drawer-card flex justify-center">
   <p-drawer [(visible)]="visible" [modal]="true" [style]="{ width: '500px' }" header="משתמש חדש">
     <form [formGroup]="fromregister" class="drawer-form">
-      <p-floatlabel variant="on" class="drawer-field">
+      <p-floatLabel variant="on" class="drawer-field">
         <input pInputText id="username" formControlName="username" />
         <label for="username">שם משתמש *</label>
-      </p-floatlabel>
+      </p-floatLabel>
 
-      <p-floatlabel variant="on" class="drawer-field">
+      <p-floatLabel variant="on" class="drawer-field">
         <input pInputText id="password" type="password" formControlName="password" />
         <label for="password">סיסמה *</label>
-      </p-floatlabel>
+      </p-floatLabel>
 
-      <p-floatlabel variant="on" class="drawer-field">
+      <p-floatLabel variant="on" class="drawer-field">
         <input pInputText id="name" formControlName="name" />
         <label for="name">שם *</label>
-      </p-floatlabel>
+      </p-floatLabel>
 
-      <p-floatlabel variant="on" class="drawer-field">
+      <p-floatLabel variant="on" class="drawer-field">
         <input pInputText id="email" formControlName="email" />
         <label for="email">מייל *</label>
-      </p-floatlabel>
+      </p-floatLabel>
 
-      <p-floatlabel variant="on" class="drawer-field">
+      <p-floatLabel variant="on" class="drawer-field">
         <input pInputText id="phone" formControlName="phone" />
         <label for="phone">טלפון *</label>
-      </p-floatlabel>
+      </p-floatLabel>
 
-      <p-floatlabel variant="on" class="drawer-field">
+      <p-floatLabel variant="on" class="drawer-field">
         <input pInputText id="address" formControlName="address" />
         <label for="address">כתובת</label>
-      </p-floatlabel>
+      </p-floatLabel>
 
       <button pButton type="button" label="Register" class="btn-primary" [disabled]="fromregister.invalid" (click)="register()"></button>
     </form>
   </p-drawer>
 
-  <p-button (click)="visible = true" icon="pi pi-arrow-right" />
+  <!-- <p-button (click)="visible = true" icon="pi pi-arrow-right" /> -->
 </div>

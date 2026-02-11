@@ -233,6 +233,71 @@
 .category-chip:hover {
   background: #e8d9cf;
 }
+/* --- סגנון פאנל חיפוש וסינון --- */
+.search-filter-panel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+/* שדה חיפוש */
+.search-filter-panel input[pInputText] {
+  width: 220px;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.search-filter-panel input[pInputText]:focus {
+  border-color: #7a1f2b;
+  box-shadow: 0 0 5px rgba(122, 31, 43, 0.3);
+  outline: none;
+}
+
+/* תפריטי בחירה */
+.search-filter-panel select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.search-filter-panel select:hover {
+  border-color: #7a1f2b;
+}
+
+/* צבע רקע ופוקוס עבור הבחירה */
+.search-filter-panel select:focus {
+  border-color: #7a1f2b;
+  box-shadow: 0 0 5px rgba(122, 31, 43, 0.3);
+  outline: none;
+}
+
+/* אייקונים או טקסטים פנימיים */
+.search-filter-panel .pi {
+  margin-right: 4px;
+}
+
+/* רספונסיבי - מסודר בטלפון */
+@media (max-width: 600px) {
+  .search-filter-panel {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .search-filter-panel input[pInputText],
+  .search-filter-panel select {
+    width: 100%;
+  }
+}
 
 .category-chip.all {
   background: #e3d0c4;

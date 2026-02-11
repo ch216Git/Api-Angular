@@ -1,4 +1,5 @@
 ﻿using ChineseSale.Models;
+using System.Threading.Tasks;
 
 namespace ChineseSale.Repositories
 {
@@ -11,5 +12,9 @@ namespace ChineseSale.Repositories
         Task DeleteDonorAsync(Donor donor);
         Task<Donor?> AddGiftToDonor(Gift gift, Donor donor);
         Task<Donor?> DeleteGiftFromDonor(Gift gift, Donor donor);
+        Task<IEnumerable<Donor?>> GetSearchByEmailDonorAsync(string str);
+        Task<IEnumerable<Donor?>> GetSearchByNameDonorAsync(string str);
+        Task<IEnumerable<Donor?>> GetSearchByGiftDonorAsync(string str);
+
     }
 }

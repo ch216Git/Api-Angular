@@ -58,5 +58,23 @@ namespace ChineseSale.Repositories
             await _context.SaveChangesAsync();
             return donor;
         }
+        public async Task<IEnumerable<Donor?>> GetSearchByNameDonorAsync(string str)
+        {
+            return await _context.Donors
+                .Where(d => d.Name.ToLower().Contains(str.ToLower()))
+                  .ToListAsync();
+        }
+        public async Task<IEnumerable<Donor?>> GetSearchByEmailDonorAsync(string str)
+        {
+            return await _context.Donors
+               .Where(d => d.Email.ToLower().Contains(str.ToLower()))
+                  .ToListAsync();
+        }
+        public async Task<IEnumerable<Donor?>> GetSearchByGiftDonorAsync(string str)
+        {
+            return await _context.Donors
+                .Where(d => d.Gifts.Any(g => g.Name.ToLower().Contains(str.ToLower())))
+                  .ToListAsync();
+        }
     }
 }

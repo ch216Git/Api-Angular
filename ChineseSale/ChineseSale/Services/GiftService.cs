@@ -188,5 +188,106 @@ namespace ChineseSale.Services
             }
             return giftDto1;
         }
+        public async Task<IEnumerable<GetGiftDto>> SortGiftByPriceAsync()
+        {
+            IEnumerable<Gift> gifts = await _giftRepository.SortGiftByPriceAsync();
+            List<GetGiftDto> giftDtos = new List<GetGiftDto>();
+            foreach (var gift in gifts)
+            {
+                GetGiftDto giftDto = new GetGiftDto()
+                {
+                    Id = gift.Id,
+                    Name = gift.Name,
+                    Description = gift.Description,
+                    Image = gift.Image,
+                    Value = gift.Value,
+                    Category = new GetCategoryDto() { Id = gift.Category.Id, Name = gift.Category.Name },
+                    Donor = new GetDonorDto() { Id = gift.Donor.Id, Name = gift.Donor.Name, Email = gift.Donor.Email, Phone = gift.Donor.Phone },
+                    //TypeCard = gift.TypeCard,
+                    SumCustomers = gift.SumCustomers
+                };
+                giftDtos.Add(giftDto);
+            }
+            return giftDtos;
+        }
+        public async Task<IEnumerable<GetGiftDto>> SortGiftByBuyerAsync()
+        {
+            IEnumerable<Gift> gifts = await _giftRepository.SortGiftByBuyerAsync();
+            List<GetGiftDto> giftDtos = new List<GetGiftDto>();
+            foreach (var gift in gifts)
+            {
+                GetGiftDto giftDto = new GetGiftDto()
+                {
+                    Id = gift.Id,
+                    Name = gift.Name,
+                    Description = gift.Description,
+                    Image = gift.Image,
+                    Value = gift.Value,
+                    Category = new GetCategoryDto() { Id = gift.Category.Id, Name = gift.Category.Name },
+                    Donor = new GetDonorDto() { Id = gift.Donor.Id, Name = gift.Donor.Name, Email = gift.Donor.Email, Phone = gift.Donor.Phone },
+                    SumCustomers = gift.SumCustomers
+                };
+                giftDtos.Add(giftDto);
+            }
+            return giftDtos;
+        }
+        public async Task<IEnumerable<GetGiftDto?>> ExistsSumAsync(int sumCostumer)
+        {
+
+            IEnumerable<Gift> gifts = await _giftRepository.ExistsSumAsync(sumCostumer);
+
+            List<GetGiftDto> giftDtos = new List<GetGiftDto>();
+
+            foreach (var gift in gifts)
+            {
+                GetGiftDto getGiftDto = new GetGiftDto()
+                {
+                    Id = gift.Id,
+                    Name = gift.Name,
+                    Description = gift.Description,
+                    Image = gift.Image,
+                    Value = gift.Value,
+                    Category = new GetCategoryDto() { Id = gift.Category.Id, Name = gift.Category.Name },
+                    Donor = new GetDonorDto() { Id = gift.Donor.Id, Name = gift.Donor.Name, Email = gift.Donor.Email, Phone = gift.Donor.Phone },
+                    SumCustomers = gift.SumCustomers
+                };
+
+                giftDtos.Add(getGiftDto);
+            }
+
+            return giftDtos;
+        }
+
+
+
+
+        public async Task<IEnumerable<GetGiftDto?>> ExistsDonorAsync(string donor)
+        {
+
+            IEnumerable<Gift> gifts = await _giftRepository.ExistsDonorAsync(donor);
+
+            List<GetGiftDto> giftDtos = new List<GetGiftDto>();
+
+            foreach (var gift in gifts)
+            {
+                GetGiftDto getGiftDto = new GetGiftDto()
+                {
+                    Id = gift.Id,
+                    Name = gift.Name,
+                    Description = gift.Description,
+                    Image = gift.Image,
+                    Value = gift.Value,
+                    Category = new GetCategoryDto() { Id = gift.Category.Id, Name = gift.Category.Name },
+                    Donor = new GetDonorDto() { Id = gift.Donor.Id, Name = gift.Donor.Name, Email = gift.Donor.Email, Phone = gift.Donor.Phone },
+                    SumCustomers = gift.SumCustomers
+                };
+
+                giftDtos.Add(getGiftDto);
+            }
+
+            return giftDtos;
+        }
+
+
     }
 }

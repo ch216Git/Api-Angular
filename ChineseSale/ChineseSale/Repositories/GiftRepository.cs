@@ -43,7 +43,7 @@ namespace ChineseSale.Repositories
         public async Task<IEnumerable<Gift?>> ExistsGiftAsync(string Name)
         {
             return await _context.Gifts
-                .Where(g => g.Name == Name)
+                .Where(g => g.Name.Trim().Contains(Name.Trim()))
                 .Include(g => g.Category)
                 .Include(g => g.Donor)
                 .ToListAsync();
@@ -55,5 +55,41 @@ namespace ChineseSale.Repositories
             await _context.SaveChangesAsync();
             return gift;
         }
+        public async Task<IEnumerable<Gift>> SortGiftByPriceAsync()
+        {
+            return await _context.Gifts
+                 .Include(g => g.Category)
+                 .Include(g => g.Donor)
+                 .OrderByDescending(g => g.Value)
+                 .ToListAsync();
+        }
+        public async Task<IEnumerable<Gift?>> SortGiftByBuyerAsync()
+        {
+            return await _context.Gifts
+                 .Include(g => g.Category)
+                 .Include(g => g.Donor)
+                 .OrderByDescending(g => g.SumCustomers)
+                 .ToListAsync();
+        }
+
+
+        public async Task<IEnumerable<Gift?>> ExistsDonorAsync(string donor)
+        {
+            return await _context.Gifts
+                 .Where(g => g.Donor.Name.Trim().Contains(donor.Trim()))
+                .Include(g => g.Category)
+                .Include(g => g.Donor)
+                .ToListAsync();
+        }
+        public async Task<IEnumerable<Gift?>> ExistsSumAsync(int sumCustumer)
+        {
+            return await _context.Gifts
+                           .Where(g => g.SumCustomers == sumCustumer)
+                           .Include(g => g.Category)
+                           .Include(g => g.Donor)
+                           .ToListAsync();
+        }
+
+
     }
 }

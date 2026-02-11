@@ -81,5 +81,45 @@ namespace ChineseSale.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet("SearchByName")]
+        public async Task<ActionResult<IEnumerable<GetDonorDto>>> GetSearchByNameDonorAsync(string str)
+        {
+            try
+            {
+                var donors = await _donorService.GetSearchByNameDonorAsync(str);
+                return Ok(donors);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+        [HttpGet("SearchByEmail")]
+        public async Task<ActionResult<IEnumerable<GetDonorDto>>> GetSearchByEmailDonorAsync(string str)
+        {
+            try
+            {
+                var donors = await _donorService.GetSearchByEmailDonorAsync(str);
+                return Ok(donors);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("SearchByGift")]
+        public async Task<ActionResult<IEnumerable<GetDonorDto>>> GetSearchByGiftDonorAsync(string str)
+        {
+            try
+            {
+                var donors = await _donorService.GetSearchByGiftDonorAsync(str);
+                return Ok(donors);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

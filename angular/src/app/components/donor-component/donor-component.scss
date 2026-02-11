@@ -112,3 +112,56 @@
     }
   }
 }
+.donor-detail-page {
+  display: flex;
+  gap: 2rem;
+  padding: 1.5rem;
+}
+
+/* פרטי התורם - תופס רבע מהדף */
+.donor-info-panel {
+  flex: 1 1 25%;
+  background: #f9f5f2;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* מתנות - תופס את השאר */
+.donor-gifts-panel {
+  flex: 1 1 75%;
+}
+
+.gifts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.gift-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 0.5rem;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+
+.gift-card:hover {
+  transform: translateY(-4px);
+}
+
+.gift-image {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.gift-name {
+  margin-top: 0.5rem;
+  font-weight: 600;
+  color: #333;
+}
+

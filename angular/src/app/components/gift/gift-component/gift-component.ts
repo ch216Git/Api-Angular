@@ -1,5 +1,5 @@
 import { GiftService } from '../../../services/gift-service';
-import { Component, OnInit, ViewChild, inject, input, output, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, inject, input, output, ChangeDetectorRef, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GetGift, GiftWithWinner } from '../../../models/gift.model';
 import { AddGiftComponent } from '../add-gift-component/add-gift-component';
@@ -43,6 +43,10 @@ export class GiftComponent {
   isLoaded = false;
   prize:boolean=false;
   listPrize:GetPrize[]=[];
+  selectedValue = signal('');
+  selectedSearcheValue = signal('searchByGiftName');
+  nameSignal = signal('');
+  originalGifts: GiftWithWinner[] = []
   // combinedList: any[] = [];
 
   // selectedGift: GetGift | undefined;
@@ -71,7 +75,84 @@ export class GiftComponent {
 }
 );
 
+}
+onSearchTypeChange(event: Event) {
+  const select = event.target as HTMLSelectElement;
+  this.selectedSearcheValue.set(select.value);
+}
+searchEffect = effect(() => {
+  const searchText = this.nameSignal().trim();
+  const filterType = this.selectedSearcheValue();
+
+  if (!searchText) {
+    this.listGifts = [...this.originalGifts];
+    this.syncListValue();
+    this.matchGiftsWithPrizes();
+    this.cd.markForCheck();
+    return;
   }
+
+  let searchObservable;
+
+  if (filterType === 'searchByGiftName') {
+    searchObservable = this.giftService.exsistsGiftName(searchText);
+  } else if (filterType === 'searchByDonorName') {
+    searchObservable = this.giftService.existsDonorName(searchText);
+  } else if (filterType === 'searchByCustomer') {
+    const num = Number(searchText);
+    if (isNaN(num)) {
+      this.listGifts = [];
+      return;
+    }
+    searchObservable = this.giftService.existsSumCoustomerGift(num);
+  }
+
+  searchObservable?.subscribe({
+    next: data => {
+      this.listGifts = data ?? [];
+      this.syncListValue();
+      this.matchGiftsWithPrizes();
+      this.cd.markForCheck();
+    },
+    error: err => {
+      console.error(err);
+      this.listGifts = [];
+      this.syncListValue();
+      this.matchGiftsWithPrizes();
+      this.cd.markForCheck();
+    }
+  });
+});
+
+
+onChange(event: Event) {
+  const select = event.target as HTMLSelectElement;
+  this.selectedValue.set(select.value);
+  console.log(this.selectedValue());
+  this.runAction();
+}
+runAction() {
+  if (this.selectedValue() === 'sortByPrice') {
+    this.giftService.sortGiftsByPrice().subscribe(data => {
+      this.listGifts = data;
+      this.syncListValue();
+      this.matchGiftsWithPrizes();
+      this.cd.markForCheck();
+    });
+  }
+  else if (this.selectedValue() === 'sortByBuyer') {
+    this.giftService.sortGiftsByBuyer().subscribe(data => {
+      this.listGifts = data;
+      this.syncListValue();
+      this.matchGiftsWithPrizes();
+      this.cd.markForCheck();
+    });
+  }
+  else if (this.selectedValue() === 'noSort') {
+    this.getAllGifts();
+  }
+}
+
 //  matchAllData() {
 //   this.combinedList = [];
 
@@ -165,21 +246,17 @@ export class GiftComponent {
     });
   }
 
-  getAllGifts() {
-    this.isLoaded = false;
-
-    this.giftService.getAllGift().subscribe(data => {
-      this.listGifts = data;
-      console.log('Gifts loaded:');
-
-      console.log(this.listGifts);
-
-      this.syncListValue();
-      this.matchGiftsWithPrizes();
-      this.isLoaded = true;
-      this.cd.markForCheck();
-    });
-  }
+ getAllGifts() {
+  this.isLoaded = false;
+  this.giftService.getAllGift().subscribe(data => {
+    this.originalGifts = data; 
+    this.listGifts = [...this.originalGifts]; 
+    this.syncListValue();
+    this.matchGiftsWithPrizes();
+    this.isLoaded = true;
+    this.cd.markForCheck();
+  });
+}
 
   editGift(id: number) {
     this.router.navigate(['/editGift', id]);

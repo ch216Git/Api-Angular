@@ -6,10 +6,10 @@ namespace ChineseSale.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class GiftController: ControllerBase
+    public class GiftController : ControllerBase
     {
         private readonly IGiftService _giftService;
-        private readonly ILogger<GiftController> _logger;   
+        private readonly ILogger<GiftController> _logger;
         public GiftController(IGiftService giftService, ILogger<GiftController> logger)
         {
             _giftService = giftService;
@@ -31,7 +31,7 @@ namespace ChineseSale.Controllers
                 var gift = await _giftService.GetByIdGiftAsync(Id);
                 return Ok(gift);
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -65,25 +65,52 @@ namespace ChineseSale.Controllers
         [HttpDelete("Delete")]
         public async Task<IActionResult> Delete(int Id)
         {
-           try
+            try
             {
-            bool result = await _giftService.DeleteGiftAsync(Id);
-            if (result)
-                return Ok("gift deleted successfully");
-            else
-                return BadRequest("Failed to delete gift");
+                bool result = await _giftService.DeleteGiftAsync(Id);
+                if (result)
+                    return Ok("gift deleted successfully");
+                else
+                    return BadRequest("Failed to delete gift");
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-}
+        }
         [HttpGet("Exists/{Name}")]
         public async Task<ActionResult<IEnumerable<GetGiftDto>>> ExistsGiftAsync(string Name)
         {
 
-                var gifts = await _giftService.ExistsGiftAsync(Name);
-                return Ok(gifts);
+            var gifts = await _giftService.ExistsGiftAsync(Name);
+            return Ok(gifts);
+        }
+        [HttpGet("SortByPrice")]
+        public async Task<ActionResult<IEnumerable<GetGiftDto>>> SortGiftByPriceAsync()
+        {
+            var gifts = await _giftService.SortGiftByPriceAsync();
+            return Ok(gifts);
+        }
+        [HttpGet("SortByBuyer")]
+        public async Task<ActionResult<IEnumerable<GetGiftDto>>> SortGiftByBuyerAsync()
+        {
+            var gifts = await _giftService.SortGiftByBuyerAsync();
+            return Ok(gifts);
+
+        }
+        [HttpGet("ExistsDonorName/{donor}")]
+        public async Task<ActionResult<GetDonorDto>> ExistsDonorAsync(string donor)
+        {
+            var donors = await _giftService.ExistsDonorAsync(donor);
+            _logger.LogInformation("Getting All Gift");
+            return Ok(donors);
+        }
+        [HttpGet("existsSum/{sum}")]
+        public async Task<ActionResult<GetDonorDto>> sumCostumer(int sum)
+        {
+            var donors = await _giftService.ExistsSumAsync(sum);
+            _logger.LogInformation("Getting All Gift");
+            return Ok(donors);
         }
 
     }
