@@ -3,7 +3,7 @@ import {FormGroup, FormControl,ReactiveFormsModule, Validators} from '@angular/f
 import { createUser, loginUser } from '../../../models/user.model';
 import { UserService } from '../../../services/userService';
 import { BasketService } from '../../../services/basket-service';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-login-component',
   imports: [ReactiveFormsModule],
@@ -11,6 +11,7 @@ import { BasketService } from '../../../services/basket-service';
   styleUrl: './login-component.scss',
 })
 export class LoginComponent { 
+  constructor(private router: Router) {}
   // basketService:  BasketService = inject(UserService);
   userService: UserService = inject(UserService);
   // @Input() userService:UserService | null = null;
@@ -28,6 +29,7 @@ login(){
         localStorage.setItem('token',JSON.stringify(user));
         
         this.fromlogin.reset();
+        this.router.navigate(['/package'])
         // this.basketService.loadBasketForUser(user.id);
       },
       error: (error) => {

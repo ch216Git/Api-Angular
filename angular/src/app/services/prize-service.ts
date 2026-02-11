@@ -17,4 +17,7 @@ BASE_URL = 'https://localhost:7081/api/Prize';
  GetRandomPrize(id:number):Observable<GetPrize>{
     return this.http.post<GetPrize>(this.BASE_URL+'/SelectRandomPrize/'+id,null);
   }
+  ExportPrizesToExcel(): Observable<Blob> {
+    return this.http.get(this.BASE_URL + '/export', { responseType: 'blob' });
+  }
 }

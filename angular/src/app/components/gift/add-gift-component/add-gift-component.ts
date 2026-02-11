@@ -16,15 +16,19 @@ import { CreateDonor, GetDonor } from '../../../models/donor.model';
 import { DonorService } from '../../../services/donor-service';
 import { email } from '@angular/forms/signals';
 
+import { ToastModule } from 'primeng/toast';
 
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-add-gift-component',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, UploadComponent, AvatarModule, ButtonModule, DialogModule, InputTextModule],
+  imports: [ToastModule,ReactiveFormsModule, CommonModule, UploadComponent, AvatarModule, ButtonModule, DialogModule, InputTextModule],
   templateUrl: './add-gift-component.html',
   styleUrl: './add-gift-component.scss',
+  providers: [MessageService]
 })
 export class AddGiftComponent {
+  private messageService = inject(MessageService);
   giftService: GiftService = inject(GiftService);
   categoryService: CategoryService = inject(CategoryService);
   donorService: DonorService = inject(DonorService);
@@ -132,6 +136,11 @@ export class AddGiftComponent {
       this.giftService.createGift(newGift).subscribe({
         next: (gift) => {
           console.log('Add gift successfully:', gift);
+           this.messageService.add({ 
+          severity: 'success', 
+          summary: 'הצלחה', 
+          detail: 'המתנה נוספה בהצלחה!' 
+        });
           this.fromAddGift.reset();
           this.selectedFile = null;
           this.router.navigate(['/gifts']);
@@ -152,9 +161,20 @@ export class AddGiftComponent {
           this.gift.image = fileUrl;
         }
         createGiftWithImage(fileUrl);
+         this.messageService.add({ 
+          severity: 'success', 
+          summary: 'הצלחה', 
+          detail: 'המתנה עודכנה בהצלחה!' 
+        });
       },
-      error: (err: any) =>
-        console.error('Error upload image:', err),
+      error: (err: any) => {
+        this.messageService.add({ 
+          severity: 'error', 
+          summary: 'שגיאה', 
+          detail: 'העלאת התמונה נכשלה!' 
+        });
+        console.error('Error upload image:', err);
+      }
     });
   }
 
@@ -173,12 +193,23 @@ export class AddGiftComponent {
       this.giftService.updateGift(newGift).subscribe({
         next: (gift) => {
           console.log('Update gift successfully:', gift);
+           this.messageService.add({ 
+          severity: 'success', 
+          summary: 'הצלחה', 
+          detail: 'המתנה עודכנה בהצלחה!' 
+        });
           this.fromAddGift.reset();
           this.selectedFile = null;
           this.router.navigate(['/gifts']);
         },
-        error: (error: any) =>
-          console.error('Error update gift:', error),
+        error: (error: any) => {
+          this.messageService.add({ 
+            severity: 'error', 
+            summary: 'שגיאה', 
+            detail: 'עדכון המתנה נכשל!' 
+          });
+          console.error('Error update gift:', error);
+        }
       });
     };
 
@@ -230,6 +261,11 @@ export class AddGiftComponent {
         this.listCategory.push(category);
         this.fromAddGift.get('categoryId')?.setValue(category.id);
         this.newCategoryName.reset();
+         this.messageService.add({ 
+          severity: 'success', 
+          summary: 'הצלחה', 
+          detail: 'הזמנה בוצעה בהצלחה!' 
+        });
       },
       error: (error) => {
         console.error('שגיאה בהוספת קטגוריה:', error);
@@ -261,6 +297,11 @@ export class AddGiftComponent {
     const donorData = this.fromDonor.value;
     this.donorService.createDonor(donorData).subscribe({
       next: (donor) => {
+         this.messageService.add({ 
+          severity: 'success', 
+          summary: 'הצלחה', 
+          detail: 'התורם נוסף בהצלחה!' 
+        });
         console.log('Donor added successfully:', donor);
         this.listDonor.push(donor);
         this.fromAddGift.get('donorId')?.setValue(donor.id);
@@ -268,29 +309,14 @@ export class AddGiftComponent {
       },
       error: (error) => {
         console.error('Error adding donor:', error);
+         this.messageService.add({ 
+          severity: 'error', 
+          summary: 'שגיאה', 
+          detail: 'שגיאה בהוספת התורם!' 
+        });
       }
     });
     this.closeDialog1();
   }
-  // updateGift(id: number) {
-  //   const newGift: UpdateGift = {
-  //     ...this.fromAddGift.value,
-  //     id: id,
-  //     value: Number(this.fromAddGift.value.value),
-  //     priceCard: Number(this.fromAddGift.value.priceCard),
-  //     categoryId: Number(this.fromAddGift.value.categoryId),
-  //     donorId: Number(this.fromAddGift.value.donorId),
-  //     typeCard: this.typeCardMap[this.fromAddGift.value.typeCard as keyof typeof this.typeCardMap]
-
-  //   };
-  //   this.giftService?.updateGift(newGift).subscribe({
-  //     next: (gift) => {
-  //       console.log('Update gift successfully:', gift);
-  //       this.fromAddGift.reset();
-  //     },
-  //     error: (error) => {
-  //       console.error('Error update gift:', error);
-  //     }
-  //   });
-  // }
+  
 }

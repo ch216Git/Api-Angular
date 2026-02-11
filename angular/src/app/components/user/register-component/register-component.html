@@ -1,3 +1,4 @@
+ 
 <div class="card drawer-card flex justify-center">
   <p-drawer [(visible)]="visible" [modal]="true" [style]="{ width: '500px' }" header="משתמש חדש">
     <form [formGroup]="fromregister" class="drawer-form">
@@ -30,7 +31,10 @@
         <input pInputText id="address" formControlName="address" />
         <label for="address">כתובת</label>
       </p-floatLabel>
-
+ <div class="card flex justify-center">
+            <p-toast />
+          
+        </div>
       <button pButton type="button" label="Register" class="btn-primary" [disabled]="fromregister.invalid" (click)="register()"></button>
     </form>
   </p-drawer>

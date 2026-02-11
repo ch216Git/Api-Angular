@@ -8,16 +8,27 @@ import { BasketComponent } from './components/basket/basket-component/basket-com
 import { jwtDecode } from 'jwt-decode';
 import { MyDecodedToken } from './models/basket.model';
 import { BasketService } from './services/basket-service';
+import { Router } from '@angular/router';
+import { ToastModule } from 'primeng/toast';
+
+import { MessageService } from 'primeng/api';
 
 
 @Component({
   selector: 'app-root',
-  imports: [RouterModule,HeaderComponent,BasketComponent],
+  imports: [ToastModule,RouterModule,HeaderComponent,BasketComponent],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrl: './app.scss',
+  providers: [MessageService]
 })
 export class App {
   basketService = inject(BasketService);
+  out() {
+    const a=localStorage.getItem('token');
+    console.log(a);
+    localStorage.removeItem('token');
+    this.basketService.clearBasket();
+  }
 
 ngOnInit() {
   const token = localStorage.getItem('token');
@@ -40,7 +51,7 @@ ngOnInit() {
     localStorage.removeItem('token');
   }
 }
-
+ private messageService = inject(MessageService);
 
   protected readonly title = signal('ChineseSale');
 }

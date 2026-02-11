@@ -6,7 +6,7 @@ import { GiftService } from '../../services/gift-service';
 import { GetGift } from '../../models/gift.model';
 import { GetUser } from '../../models/user.model';
 import { UserService } from '../../services/userService';
-
+import { saveAs } from 'file-saver';
 @Component({
   selector: 'app-prize-component',
   imports: [Button],
@@ -51,6 +51,19 @@ ngOnInit(){
 //     }
 //   });
 // }
+
+
+exportPrizesToExcel() {
+  this.prizeService.ExportPrizesToExcel().subscribe({
+    next: (blob) => {
+     
+      saveAs(blob, 'prizes.xlsx');
+    },
+    error: (error) => {
+      console.error('Error exporting prizes to Excel:', error);
+    }
+  });
+}
 getUserPrize(){
   for(let i=0;i<this.listPrize.length;i++){
     this.userService.getUserById(this.listPrize[i].userId).subscribe({
