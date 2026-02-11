@@ -22,7 +22,7 @@ import { MessageService } from 'primeng/api';
   imports: [ToastModule,CommonModule, DialogModule,FormsModule, ButtonModule, InputTextModule, CardModule],
   templateUrl: './basket-component.html',
   styleUrl: './basket-component.scss',
-  providers: [MessageService]
+ 
 })
 export class BasketComponent {
   basketService: BasketService = inject(BasketService);
@@ -122,8 +122,13 @@ export class BasketComponent {
   saveProfile() {
    
     this.visible=false 
-    this.show();
-    this.show();
+ setTimeout(() => {
+    this.messageService.add({ 
+      severity: 'success', 
+      summary: 'הצלחה', 
+      detail: 'הזמנה בוצעה בהצלחה!' 
+    });
+  }, 100);
     this.basket$.pipe(take(1)).subscribe(basket => {
 
       if (!basket) {
@@ -148,8 +153,18 @@ export class BasketComponent {
         next: () => {
           console.log('Order created and basket deleted safely');
           this.basketService.clearBasket();
+          this.messageService.add({ 
+          severity: 'success', 
+          summary: 'הצלחה', 
+          detail: 'הזמנה בוצעה בהצלחה!' 
+        });
         },
         error: err => {
+          this.messageService.add({ 
+          severity: 'error', 
+          summary: 'שגיאה', 
+          detail: 'ההזמנה לא בוצעה אנו נסו שנית!' 
+        });
           console.error('Error creating order or deleting basket', err);
         }
       });

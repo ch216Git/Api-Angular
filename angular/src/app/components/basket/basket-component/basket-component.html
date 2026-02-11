@@ -1,7 +1,6 @@
-  <div class="card flex justify-center">
-            <p-toast />
-            <p-button (onClick)="show()" label="Show" />
-        </div>
+
+           
+           
 <div *ngIf="(basket$ | async) as basket; else emptyCart" class="basket-container">
 
   <!-- חבילות -->
