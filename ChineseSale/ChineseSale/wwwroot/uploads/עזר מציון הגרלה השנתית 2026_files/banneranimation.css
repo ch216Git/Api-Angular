@@ -1,0 +1,203 @@
+.banneranimationcontainer {
+    container-type: inline-size;
+}
+
+.banneranimation {
+    position: absolute;
+    top: 180px; /* WARNING: This is a "magic number" and may break easily */
+    margin: 0 150px 0 0;
+    color: #36080a;
+    /* CRITICAL: Added container-type for 'cqi' units to work */
+}
+
+@media (width<992px) {
+    .banneranimation {
+        top: 175px;
+        margin: 0 calc(50% - 150px);
+    }
+}
+
+/* Base styles for the animated elements */
+.appear_1,
+.appear_2,
+.appear_3 {
+    padding: 10px;
+    margin: 5px 0;
+    display: grid;
+    /* FIX: Use 'auto' and '1fr' for a responsive grid */
+    grid-template-columns: auto 1fr;
+    opacity: 0; /* Start hidden */
+    animation-duration: 12s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    gap: 15px;
+}
+
+/* Link classes to their animations */
+.appear_1 {
+    animation-name: fadeFirst;
+}
+
+.appear_2 {
+    animation-name: fadeSecond;
+}
+
+.appear_3 {
+    animation-name: fadeThird;
+}
+
+/* --- KEYFRAMES --- */
+@keyframes fadeFirst {
+    0% {
+        opacity: 0;
+    }
+
+    8.33% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeSecond {
+    /* CLEANUP: Combined 0% and 25% */
+    0%, 25% {
+        opacity: 0;
+    }
+
+    33.33% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeThird {
+    /* CLEANUP: Combined 0% and 50% */
+    0%, 50% {
+        opacity: 0;
+    }
+
+    58.33% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+
+/* --- TEXT STYLES --- */
+.banneranimation h1 {
+    font-size: clamp(1.5rem, calc(1.00vw + 1.3rem), 2.5rem); /* 24px -> 40px (320px -> 1920px) */
+    ;
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+}
+
+.banneranimation h2 {
+    font-size: clamp(2.5rem, calc(2.75vw + 1.95rem), 5.25rem); /* 40px -> 84px (320px -> 1920px) */
+    ;
+    font-weight: bold;
+    line-height: 1;
+}
+
+.numbercounter {
+    display: flex;
+    justify-content: center; /* Horizontally center */
+    align-items: center; /* Vertically center */
+}
+
+    .numbercounter div {
+        margin: 0;
+        padding: 10px; /* This padding is added to the width/height */
+        /* FIX: Use 50% for a perfect circle */
+        border-radius: 50%;
+        /* CLEANUP: Removed 'background: red;' */
+        background: #8841e7;
+        font-size: clamp(0.75rem, calc(1.13vw + 0.53rem), 1.88rem); /* 12px -> 30px (320px -> 1920px) */
+        ;
+        font-weight: 600;
+        /* FIX: Equal width and height for a circle */
+        width: 50px;
+        height: 50px;
+        color: white;
+        text-align: center;
+        /* Use flex to center the text ("01") inside the circle */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+    }
+
+.bannert1 {
+    font-size: clamp(1rem, calc(0.88vw + 0.82rem), 1.88rem); /* 16px -> 30px (320px -> 1920px) */
+    font-weight: bold;
+    margin: 0px 0 0;
+    line-height: 1.1;
+}
+
+.bannert2 {
+    font-size: clamp(1rem, calc(0.25vw + 0.95rem), 1.25rem); /* 16px -> 20px (320px -> 1920px) */
+    margin: 0px;
+}
+
+
+
+@media (width<992px) {
+    .banneranimation {
+        top: 80px;
+        margin: 0 calc(50% - 155px);
+    }
+
+    .appear_1,
+    .appear_2,
+    .appear_3 {
+        padding: 0px;
+        margin: 0px 0;
+        display: grid;
+        /* FIX: Use 'auto' and '1fr' for a responsive grid */
+        grid-template-columns: auto 1fr;
+        opacity: 0; /* Start hidden */
+        animation-duration: 12s;
+        animation-iteration-count: 1;
+        animation-fill-mode: forwards;
+        gap: 5px;
+    }
+
+    .numbercounter div {
+        margin: 0;
+        padding: 0px;
+        border-radius: 50%;
+        font-size: clamp(1rem, calc(1.13vw + 0.53rem), 1.88rem); /* 12px -> 30px (320px -> 1920px) */
+        font-weight: 600;
+        /* FIX: Equal width and height for a circle */
+        width: 30px;
+        height: 30px;
+        color: white;
+        text-align: center;
+        /* Use flex to center the text ("01") inside the circle */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+        margin: 0px 0 100%;
+        position: relative;
+        /* top: -8px; */
+    }
+
+    .hpBanner video {
+        height: 70%;
+        min-height: 600px;
+    }
+
+    .banneranimation p {
+        margin: 0px
+    }
+}

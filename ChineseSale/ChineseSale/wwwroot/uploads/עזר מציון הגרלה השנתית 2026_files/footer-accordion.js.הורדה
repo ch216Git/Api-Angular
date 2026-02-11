@@ -1,0 +1,110 @@
+/**
+ * Footer Navigation Accordion
+ * Converts footer navigation to accordion on mobile devices (below 992px)
+ */
+
+class FooterAccordion {
+	constructor() {
+		this.footerNav = document.querySelector('.foot_nav_bottom');
+		this.breakpoint = 992;
+		this.isAccordionActive = false;
+		this.originalContent = null; // Store original content to revert
+
+		this.init();
+	}
+
+	init() {
+		if (!this.footerNav) return;
+
+		this.originalContent = this.footerNav.innerHTML; // Store original
+
+		this.handleResize(); // Check initial size
+		// Ensure 'this' context is preserved for handleResize
+		window.addEventListener('resize', this.handleResize.bind(this));
+	}
+
+	handleResize() {
+		const shouldBeAccordion = window.innerWidth < this.breakpoint;
+
+		if (shouldBeAccordion && !this.isAccordionActive) {
+			this.convertToAccordion();
+		} else if (!shouldBeAccordion && this.isAccordionActive) {
+			this.revertToOriginal();
+		}
+	}
+
+	// Helper to create elements with classes and text
+	_createElement(tag, classes = [], text = '') {
+		const el = document.createElement(tag);
+		if (classes.length) el.className = classes.join(' ');
+		if (text) el.textContent = text;
+		return el;
+	}
+
+	convertToAccordion() {
+		const navColumns = this.footerNav.querySelectorAll('.col_foot_nav');
+		if (navColumns.length === 0) return;
+
+		const accordionContainer = this._createElement('div', ['accordion']);
+		accordionContainer.id = 'footerAccordion';
+
+		navColumns.forEach((column, index) => {
+			const titleEl = column.querySelector('.title');
+			const subMenuEl = column.querySelector('.sub_menu');
+
+			if (!titleEl || !subMenuEl) return;
+
+			const collapseId = `footerCollapse${index}`;
+			const titleText = titleEl.textContent.trim();
+
+			// Accordion Item
+			const item = this._createElement('div', ['accordion-item']);
+
+			// Accordion Header and Button
+			const header = this._createElement('h2', ['accordion-header']);
+			const button = this._createElement('button', ['accordion-button', 'collapsed'], titleText);
+
+			// *** CORRECTED ATTRIBUTE SETTING USING setAttribute ***
+			button.setAttribute('type', 'button');
+			button.setAttribute('data-bs-toggle', 'collapse');
+			button.setAttribute('data-bs-target', `#${collapseId}`);
+			button.setAttribute('aria-expanded', 'false'); // Bootstrap expects 'false' as a string here
+			button.setAttribute('aria-controls', collapseId);
+			// ***************************************************
+
+			header.appendChild(button);
+
+			// Accordion Collapse and Body
+			const collapse = this._createElement('div', ['accordion-collapse', 'collapse']);
+			collapse.id = collapseId;
+			// Use setAttribute for data-bs-parent as well
+			collapse.setAttribute('data-bs-parent', '#footerAccordion');
+
+			const body = this._createElement('div', ['accordion-body']);
+			body.appendChild(subMenuEl.cloneNode(true)); // Clone the submenu
+			collapse.appendChild(body);
+
+			// Assemble
+			item.append(header, collapse); // Use .append() for multiple nodes
+			accordionContainer.appendChild(item);
+		});
+
+		this.footerNav.innerHTML = ''; // Clear original content
+		this.footerNav.appendChild(accordionContainer);
+		this.footerNav.classList.add('foot_nav_accordion');
+		this.isAccordionActive = true;
+	}
+
+	revertToOriginal() {
+		if (!this.originalContent) return;
+
+		this.footerNav.innerHTML = this.originalContent;
+		this.footerNav.classList.remove('foot_nav_accordion');
+		this.isAccordionActive = false;
+	}
+}
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+	new FooterAccordion();
+});
