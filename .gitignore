@@ -1,6 +1,6 @@
 .vs/
 .idea/
-node_modules/
+node_moudles/
 bin/
 obj/
 *.docx
