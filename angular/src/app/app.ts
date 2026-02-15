@@ -12,11 +12,12 @@ import { Router } from '@angular/router';
 import { ToastModule } from 'primeng/toast';
 
 import { MessageService } from 'primeng/api';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
   selector: 'app-root',
-  imports: [ToastModule,RouterModule,HeaderComponent,BasketComponent],
+  imports: [ToastModule,RouterModule,HeaderComponent,BasketComponent,CommonModule],
   templateUrl: './app.html',
   styleUrl: './app.scss',
   providers: [MessageService]
@@ -32,6 +33,7 @@ export class App {
 
 ngOnInit() {
   const token = localStorage.getItem('token');
+  
 
   if (!token) return;
 
@@ -45,6 +47,7 @@ ngOnInit() {
   try {
     const decoded = jwtDecode<MyDecodedToken>(token);
     const userId = Number(decoded.id);
+     console.log(decoded.role);
     this.basketService.loadBasketFromServer(userId);
   } catch (e) {
     console.error('JWT decode failed', e);
@@ -54,4 +57,8 @@ ngOnInit() {
  private messageService = inject(MessageService);
 
   protected readonly title = signal('ChineseSale');
+  constructor(private router: Router) {}
+  isLoginPage(): boolean {
+    return this.router.url === '/login';
+  }
 }

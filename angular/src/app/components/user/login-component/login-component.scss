@@ -1,0 +1,118 @@
+/* קונטיינר שמרכז הכל באמצע המסך */
+.login-container {
+    display: flex;
+    padding-right: 350px;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    direction: rtl;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* הכרטיס הלבן */
+.login-card {
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 25px;
+    box-shadow: 0 15px 35px rgba(238, 185, 178, 0.2);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.login-title {
+    color: #4a322d;
+    font-size: 28px;
+    margin-bottom: 5px;
+}
+
+.login-subtitle {
+    color: #8a6d6a;
+    font-size: 14px;
+    margin-bottom: 30px;
+}
+
+/* עיצוב השדות */
+.form-group {
+    margin-bottom: 20px;
+    text-align: right;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #8a6d6a;
+    font-size: 14px;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-wrapper i {
+    position: absolute;
+    right: 15px;
+    color: #d4a39e;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: 15px 45px 15px 15px;
+    border-radius: 12px;
+    border: 2px solid #f2e1df;
+    font-size: 16px;
+    transition: all 0.3s;
+}
+
+.input-wrapper input:focus {
+    outline: none;
+    border-color: #eeb9b2;
+    box-shadow: 0 0 8px rgba(238, 185, 178, 0.3);
+}
+
+/* כפתור התחברות */
+.btn-login {
+    width: 100%;
+    background: linear-gradient(135deg, #eeb9b2 0%, #d4a39e 100%);
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s;
+    margin-top: 10px;
+}
+
+.btn-login:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(238, 185, 178, 0.4);
+}
+
+.btn-login:disabled {
+    background: #e0e0e0;
+    cursor: not-allowed;
+}
+
+/* פוטר הכרטיס */
+.login-footer {
+    margin-top: 25px;
+    font-size: 14px;
+    color: #8a6d6a;
+}
+
+.login-footer a {
+    color: #d4a39e;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.login-footer a:hover {
+    text-decoration: underline;
+}

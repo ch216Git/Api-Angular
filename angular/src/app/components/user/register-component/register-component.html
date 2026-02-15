@@ -1,7 +1,11 @@
- 
 <div class="card drawer-card flex justify-center">
-  <p-drawer [(visible)]="visible" [modal]="true" [style]="{ width: '500px' }" header="משתמש חדש">
-    <form [formGroup]="fromregister" class="drawer-form">
+  <p-drawer 
+    [(visible)]="visible" 
+    [modal]="true" 
+    [style]="{ width: '450px' }" 
+    header="יצירת חשבון חדש"
+    (onHide)="onDrawerHide()"> <form [formGroup]="fromregister" class="drawer-form">
+      
       <p-floatLabel variant="on" class="drawer-field">
         <input pInputText id="username" formControlName="username" />
         <label for="username">שם משתמש *</label>
@@ -14,30 +18,35 @@
 
       <p-floatLabel variant="on" class="drawer-field">
         <input pInputText id="name" formControlName="name" />
-        <label for="name">שם *</label>
+        <label for="name">שם מלא *</label>
       </p-floatLabel>
 
       <p-floatLabel variant="on" class="drawer-field">
         <input pInputText id="email" formControlName="email" />
-        <label for="email">מייל *</label>
+        <label for="email">כתובת מייל *</label>
       </p-floatLabel>
 
       <p-floatLabel variant="on" class="drawer-field">
         <input pInputText id="phone" formControlName="phone" />
-        <label for="phone">טלפון *</label>
+        <label for="phone">מספר טלפון *</label>
       </p-floatLabel>
 
       <p-floatLabel variant="on" class="drawer-field">
         <input pInputText id="address" formControlName="address" />
-        <label for="address">כתובת</label>
+        <label for="address">כתובת מגורים</label>
       </p-floatLabel>
- <div class="card flex justify-center">
-            <p-toast />
-          
-        </div>
-      <button pButton type="button" label="Register" class="btn-primary" [disabled]="fromregister.invalid" (click)="register()"></button>
+
+      <p-toast />
+
+      <button 
+        pButton 
+        type="button" 
+        label="הרשמה למערכת" 
+        class="btn-register" 
+        [disabled]="fromregister.invalid" 
+        (click)="register()">
+      </button>
+
     </form>
   </p-drawer>
-
-  <!-- <p-button (click)="visible = true" icon="pi pi-arrow-right" /> -->
 </div>

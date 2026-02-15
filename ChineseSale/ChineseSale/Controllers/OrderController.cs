@@ -77,7 +77,15 @@ namespace ChineseSale.Controllers
         [HttpPost("Add")]
         public async Task<ActionResult<GetOrderByIdDto>> CreateOrderAsync(CreatOrdeDto orderDto)
         {
-            var userID = int.Parse(User.Claims.First(c => c.Type == "UserId").Value);
+            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
+                   ?? User.FindFirst("id")?.Value;
+
+            if (userIdClaim == null)
+            {
+                return Unauthorized("User ID not found in token.");
+            }
+
+            var userID = int.Parse(userIdClaim);
             if (userID != orderDto.UserId)
             {
                 return Forbid("You are not authorized to access this order.");

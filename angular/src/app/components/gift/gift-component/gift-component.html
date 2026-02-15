@@ -7,10 +7,11 @@
 
   <button
     class="category-chip"
-    *ngFor="let category of listCategory"
+    *ngFor="let category of listCategoryWithGifts"
     (click)="getCategoryById(category.id)"
   >
     <i class="pi pi-tag"></i>
+    <i class="pi pi-trash delete-icon" *ngIf="category.gifts!.length==0"  (click)="deleteCategory(category.id)"></i>
     <span>{{ category.name }}</span>
   </button>
 </div>

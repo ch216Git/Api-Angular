@@ -5,8 +5,8 @@ namespace ChineseSale.Data
 {
     public class ChineseSaleDbFactory
     {
-        private const string ConnectionString = "Server=CYPY;DataBase=ChineseSaleDBB_329213227;Integrated Security=SSPI;" +
-           "Persist Security Info=False;TrustServerCertificate=true";
+        private const string ConnectionString = "Server=DESKTOP-01CJEFL;DataBase=ChineseSaleContextDB_216242123;Integrated Security=SSPI;" +
+                    "Persist Security Info=False;TrustServerCertificate=true";
 
         public static ChineseSaleContextDB CreateContext()
         {

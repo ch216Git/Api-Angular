@@ -1,15 +1,11 @@
+<p-toast></p-toast>
 
-           
-           
-<div *ngIf="(basket$ | async) as basket; else emptyCart" class="basket-container">
+<div *ngIf="packagesWithCount.length > 0 || giftsWithCount.length > 0; else emptyCart" class="basket-container">
 
-  <!-- חבילות -->
-  <div *ngIf="packagesWithCount.length">
+  <div *ngIf="packagesWithCount.length" class="section-wrapper">
     <h3 class="section-title">החבילות שלך</h3>
-
     <div class="basket-list">
       <div *ngFor="let item of packagesWithCount" class="basket-row">
-
         <div class="item-main">
           <span class="item-name">{{ item.package.name }}</span>
           <span class="item-price">{{ item.package.price }} ₪</span>
@@ -21,30 +17,24 @@
           <button class="btn-qty" (click)="addPackage(item.package.id)">+</button>
         </div>
 
-        <div class="item-total">
-          {{ item.package.price * item.count }} ₪
-        </div>
-
-        <i class="pi pi-trash delete-icon" (click)="removeAllPackage(item.package.id)">
-        </i>
-
+        <div class="item-total">{{ item.package.price * item.count }} ₪</div>
+        <i class="pi pi-trash delete-icon" (click)="removeAllPackage(item.package.id)"></i>
       </div>
     </div>
   </div>
 
-  <!-- מתנות -->
-  <div *ngIf="giftsWithCount.length">
+  <div *ngIf="giftsWithCount.length" class="section-wrapper">
     <h3 class="section-title">המתנות שלך</h3>
-
     <div class="basket-list">
       <div *ngFor="let item of giftsWithCount" class="basket-row">
-
         <img class="item-image" [src]="item.gift.image" alt="{{ item.gift.name }}" />
-
-        <span class="item-name">{{ item.gift.name }}</span>
+        
+        <div class="item-main">
+          <span class="item-name">{{ item.gift.name }}</span>
+        </div>
 
         <div class="quantity-controls">
-          <button (click)="removeGift(item.gift.id)" class="btn-qty">-</button>
+          <button (click)="removeGift(item.gift.id)" class="btn-qty">−</button>
           <span class="qty-value">{{ item.count }}</span>
           <button (click)="addGift(item.gift.id)" class="btn-qty">+</button>
         </div>
@@ -54,40 +44,40 @@
     </div>
   </div>
 
-  <!-- סיכום -->
-  <div class="basket-footer" *ngIf="packagesWithCount.length || giftsWithCount.length">
+  <div class="basket-footer">
     <div class="basket-sum">
-      סה"כ לתשלום: <b>{{ basket.sum }} ₪</b>
+      סה"כ לתשלום: <b>{{ basket?.sum }} ₪</b>
     </div>
-    <button class="checkout-btn" (click)="showDialog()">
-      המשך לתשלום
-    </button>
-
+    <div class="checkout-wrapper">
+      <button class="checkout-btn" (click)="showDialog()">
+        המשך לתשלום
+      </button>
+    </div>
   </div>
 
 </div>
 
-<!-- סל ריק -->
 <ng-template #emptyCart>
   <div class="empty-cart-wrapper">
-    <b>העגלה ריקה</b>
-    <p>בחר אחת מהחבילות בעמוד</p>
-    <img src="https://localhost:7081/uploads/emptyCart.WEBP" alt="emptyCart" class="emptyCart" />
+    <div class="empty-content">
+        <b>העגלה ריקה</b>
+        <p>בחר אחת מהחבילות בעמוד</p>
+        <img src="https://localhost:7081/uploads/emptyCart.WEBP" alt="emptyCart" class="emptyCart-img" />
+    </div>
   </div>
 </ng-template>
 
-<!-- דיאלוג תשלום -->
-<p-dialog header="פרטי תשלום" [(visible)]="visible" [modal]="true" [style]="{ width: '320px' }">
+<p-dialog header="פרטי תשלום" [(visible)]="visible" [modal]="true" [style]="{ width: '350px' }">
   <form #cardForm="ngForm" class="payment-form">
-
-    <input pInputText placeholder="מספר כרטיס" name="card" ngModel required minlength="16" />
-    <div class="row">
-      <input pInputText placeholder="MM/YY" name="exp" ngModel required />
-      <input pInputText placeholder="CVV" name="cvv" ngModel required minlength="3" />
+    <div class="form-field">
+        <input pInputText placeholder="מספר כרטיס" name="card" ngModel required minlength="16" class="w-full" />
     </div>
-
-    <p-button label="אישור" [disabled]="cardForm.invalid" (onClick)="saveProfile()">
-    </p-button>
-
+    <div class="row flex gap-2 mt-3">
+      <input pInputText placeholder="MM/YY" name="exp" ngModel required class="w-half" />
+      <input pInputText placeholder="CVV" name="cvv" ngModel required minlength="3" class="w-half" />
+    </div>
+    <div class="mt-4 flex justify-center">
+        <p-button label="אישור תשלום" [disabled]="cardForm.invalid" (onClick)="saveProfile()"></p-button>
+    </div>
   </form>
 </p-dialog>

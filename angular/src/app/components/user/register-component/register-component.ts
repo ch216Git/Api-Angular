@@ -35,7 +35,10 @@ export class RegisterComponent implements OnInit {
   ngOnInit() {
     this.visible = true;
   }
-  
+  onDrawerHide() {
+  this.visible = false;
+  this.router.navigate(['/']); 
+}
 register(){
     const newUser: createUser = this.fromregister.value as createUser;
     this.userService?.createUser(newUser).subscribe({

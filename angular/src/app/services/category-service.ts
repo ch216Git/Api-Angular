@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CreateCategory, GetCategory, GetCategoryById, UpdateCategory } from '../models/category.model';
@@ -27,7 +27,17 @@ export class CategoryService {
   deleteCategory(id: number): Observable<any>{
     return this.http.delete<any>(`${this.BASE_URL}/Delete?Id=${id}`, { responseType: 'text' as 'json' });
   }
- createCategory(category: CreateCategory): Observable<GetCategory>{
-    return this.http.post<GetCategory>(this.BASE_URL+'/Add', category);
-  }
+createCategory(category: CreateCategory): Observable<GetCategory> {
+    const tokenData = localStorage.getItem('token'); 
+
+    let token = '';
+    if (tokenData) {
+        const parsedData = JSON.parse(tokenData);
+        token = parsedData.token;
+    }
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    return this.http.post<GetCategory>(`${this.BASE_URL}/Add`, category, { headers });
+}
 }

@@ -11,19 +11,7 @@ html, body {
     width: 100%;
   }
   
-  /* סל קניות */
-  .basket {
-    position: fixed;
-    top: 80px;              /* גובה ההדר */
-    left: 0;
-    width: 320px;           /* רוחב קבוע – לא vw */
-    height: calc(100vh - 80px);
-    background: #f7f7f7;
-    border-right: 1px solid #ddd;
-    overflow-y: auto;
-    z-index: 1000;
-  }
-  
+
   /* תוכן האתר */
   .main-content {
     margin-top: 90px;
@@ -31,7 +19,30 @@ html, body {
     flex: 1;                /* מצטמצם אוטומטית */
     min-width: 0;           /* קריטי למניעת overflow */
     // padding: 20px;
+  
   }
+/* הוסף את זה */
+app-basket-component {
+    display: block;
+    height: 100%;
+    background: #f7f7f7; /* אותו צבע כמו הסל */
+}
+
+.basket {
+    position: fixed;
+    top: 80px;
+    left: 0;
+    width: 320px;
+    height: calc(100vh - 80px); 
+    background: #f7f7f7;
+    border-right: 1px solid #ddd;
+    overflow-y: auto;
+    z-index: 1000;
+    
+    /* הוסף את השורה הזו כדי לוודא שכל מה שבפנים נמתח */
+    display: flex;
+    flex-direction: column;
+}
   @media (max-width: 768px) {
 
     .layout {

@@ -1,73 +1,131 @@
-*{
-  direction: rtl;
+/* קונטיינר ראשי */
+.add-gift-container {
+    direction: rtl;
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 30px;
+    background: #fffcfb; /* רקע בהיר מאוד */
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-form {
-    max-width: 420px;
-    margin: 30px auto;
-    padding: 25px;
-    border-radius: 12px;
-    background: #ffffff;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-    font-family: Arial, sans-serif;
-  }
-  
-  legend {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    color: #333;
-  }
-  
-  .form-group {
-    margin-bottom: 15px;
-  }
-  
-  .form-control,
-  select {
-    width: 100%;
-    padding: 10px 12px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 14px;
-    transition: border-color 0.2s, box-shadow 0.2s;
-  }
-  
-  .form-control:focus,
-  select:focus {
-    outline: none;
-    border-color: #0d6efd;
-    box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.15);
-  }
-  
-  label {
-    display: block;
-    margin-bottom: 6px;
-    font-weight: 600;
-    color: #555;
-  }
-  
-  img {
-    display: block;
-    margin: 10px 0;
-    border-radius: 8px;
-    border: 1px solid #e0e0e0;
-  }
-  
-  button.btn {
-    width: 100%;
-    padding: 12px;
-    font-size: 16px;
-    border-radius: 10px;
-    margin-top: 10px;
-  }
-  
-  button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-  
-  p {
+
+.form-title {
     text-align: center;
-    color: #777;
-  }
-  
+    font-size: 24px;
+    font-weight: bold;
+    color: #4a322d;
+    margin-bottom: 30px;
+}
+
+/* סידור השדות ברשת (Grid) */
+.grid-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* שני טורים */
+    gap: 20px;
+}
+
+/* עיצוב השדות */
+.form-group {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.form-control, select {
+    width: 100%;
+    padding: 15px;
+    border-radius: 12px;
+    border: 2px solid #f2e1df; /* צבע גבול עדין מהתמונה */
+    background-color: white;
+    font-size: 16px;
+    color: #333;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.form-control:focus, select:focus {
+    outline: none;
+    border-color: #eeb9b2;
+    box-shadow: 0 0 8px rgba(238, 185, 178, 0.3);
+}
+
+/* עיצוב התווית (Label) מעל השדה */
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #8a6d6a;
+    font-size: 14px;
+}
+
+/* שדה תמונה רחב */
+.full-width {
+    grid-column: span 2;
+}
+
+/* כפתור מעוצב */
+.btn-submit {
+    grid-column: span 2;
+    background: linear-gradient(135deg, #eeb9b2 0%, #d4a39e 100%);
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-top: 10px;
+}
+
+.btn-submit:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(238, 185, 178, 0.4);
+}
+
+.btn-submit:disabled {
+    background: #e0e0e0;
+    cursor: not-allowed;
+}
+
+/* התאמה לדיאלוגים של PrimeNG */
+::ng-deep .p-dialog {
+    border-radius: 15px;
+    overflow: hidden;
+}
+/* עיצוב הכפתור שנמצא בתוך קומפוננטת ההעלאה */
+::ng-deep app-upload-component button, 
+::ng-deep app-upload-component input[type="file"]::file-selector-button {
+    background-color: white !important;
+    color: #8a6d6a !important;
+    border: 2px solid #f2e1df !important;
+    padding: 10px 20px !important;
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    font-family: inherit !important;
+}
+
+/* אפקט מעבר עכבר לכפתור ההעלאה */
+::ng-deep app-upload-component button:hover,
+::ng-deep app-upload-component input[type="file"]::file-selector-button:hover {
+    background-color: #fff0ef !important;
+    border-color: #eeb9b2 !important;
+    color: #4a322d !important;
+}
+
+/* עיצוב הקונטיינר של ההעלאה שיהיה ממורכז ויפה */
+::ng-deep app-upload-component {
+    display: block;
+    padding: 15px;
+    background: #ffffff;
+    border: 2px dashed #f2e1df;
+    border-radius: 15px;
+    text-align: center;
+    transition: background 0.3s;
+}
+
+::ng-deep app-upload-component:hover {
+    background: #fffaf9;
+}

@@ -1,138 +1,109 @@
-<p>add-gift-component works!</p>
-<form [formGroup]="fromAddGift">
-    <legend>
-        add gift:
+<div class="add-gift-container">
+    <h2 class="form-title">פרטי המתנה</h2>
+
+    <form [formGroup]="fromAddGift">
+        <div class="grid-fields">
+            
+            <div class="form-group">
+                <label>שם המתנה*</label>
+                <input placeholder="הכנס שם..." type="text" class="form-control" formControlName="name" />
+            </div>
+
+            <div class="form-group">
+                <label>שווי (בש"ח)*</label>
+                <input placeholder="0.00" type="number" class="form-control" formControlName="value" />
+            </div>
+
+            <div class="form-group full-width">
+                <label>תיאור המתנה</label>
+                <input placeholder="ספר קצת על המתנה..." type="text" class="form-control" formControlName="description" />
+            </div>
+
+            <div class="form-group">
+                <label>קטגוריה*</label>
+                <select formControlName="categoryId" (change)="onCategoryChange($event)">
+                    <option value="" disabled selected>-- בחר קטגוריה --</option>
+                    <option *ngFor="let cat of listCategory" [value]="cat.id">{{ cat.name }}</option>
+                    <option value="add">➕ הוספת קטגוריה חדשה...</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>תורם*</label>
+                <select formControlName="donorId" (change)="onDonorChange($event)">
+                    <option value="" disabled selected>-- בחר תורם --</option>
+                    <option *ngFor="let donor of listDonor" [value]="donor.id">{{ donor.name }}</option>
+                    <option value="add">➕ הוספת תורם חדש...</option>
+                </select>
+            </div>
+
+            <div class="form-group full-width">
+                <label>תמונת המתנה:</label>
+                <div *ngIf="gift?.image" class="image-preview">
+                    <img [src]="gift?.image" alt="gift image" style="max-width: 150px; border-radius: 10px; margin-bottom: 10px;" />
+                </div>
+                <app-upload-component (fileSelected)="onFileSelected($event)"></app-upload-component>
+            </div>
+
+            <button type="button" class="btn-submit" [disabled]="fromAddGift.invalid" (click)="addOrEditGift()">
+                שמור מתנה במערכת
+            </button>
+        </div>
+    </form>
+</div>
+
+<p-dialog [(visible)]="visible" [modal]="true" [style]="{ width: '28rem' }" class="custom-modal">
+    <ng-template pTemplate="header">
+        <div class="modal-header-container">
+            <span class="modal-title">הוספת קטגוריה חדשה</span>
+            <p class="modal-subtitle">הכנס שם עבור הקטגוריה החדשה במערכת</p>
+        </div>
+    </ng-template>
+
+    <div class="modal-body">
+        <div class="form-group no-margin">
+            <label>שם קטגוריה</label>
+            <input pInputText class="form-control" [formControl]="newCategoryName" placeholder="לדוגמה: מוצרי חשמל..." />
+        </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <div class="modal-footer-actions">
+            <button class="btn-cancel" (click)="closeDialog()">ביטול</button>
+            <button class="btn-submit-small" (click)="save()">שמירת קטגוריה</button>
+        </div>
+    </ng-template>
+</p-dialog>
+
+<p-dialog [(visible)]="visible1" [modal]="true" [style]="{ width: '30rem' }" class="custom-modal">
+    <ng-template pTemplate="header">
+        <div class="modal-header-container">
+            <span class="modal-title">הוספת תורם חדש</span>
+            <p class="modal-subtitle">מלא את פרטי התורם ליצירת רשומה חדשה</p>
+        </div>
+    </ng-template>
+
+    <form [formGroup]="fromDonor" class="modal-body">
         <div class="form-group">
-            <div>
-                <input placeholder="name" type="text" class="form-control" formControlName="name" />
+            <label>שם מלא*</label>
+            <input pInputText class="form-control" formControlName="name" placeholder="הכנס שם תורם..." />
+        </div>
+        <div class="grid-fields">
+            <div class="form-group">
+                <label>אימייל</label>
+                <input pInputText class="form-control" formControlName="email" placeholder="mail@example.com" />
+            </div>
+            <div class="form-group">
+                <label>פלאפון</label>
+                <input pInputText class="form-control" formControlName="phone" placeholder="05X-XXXXXXX" />
             </div>
         </div>
-        <div class="form-group">
-            <div>
-                <input placeholder="description" type="text" class="form-control" formControlName="description" />
-            </div>
+    </form>
+
+    <ng-template pTemplate="footer">
+        <div class="modal-footer-actions">
+            <button class="btn-cancel" (click)="closeDialog1()">ביטול</button>
+            <button class="btn-submit-small" [disabled]="fromDonor.invalid" (click)="saveDonor()">שמירת תורם</button>
         </div>
-        <div class="form-group">
-            <label>תמונה:</label>
-            <div *ngIf="gift?.image" class="mb-2">
-                <img 
-                  [src]="gift?.image" 
-                  alt="gift image"
-                  style="max-width: 200px; max-height: 200px; object-fit: contain;"
-                />
-              </div>              
-            <app-upload-component (fileSelected)="onFileSelected($event)"></app-upload-component>
-          </div>
-        <div class="form-group">
-            <div>
-                <input placeholder="value" type="number" class="form-control" formControlName="value" />
-            </div>
-        </div>
-        <!-- <div class="form-group">
-            <div>
-                <input placeholder="priceCard" type="number" class="form-control" formControlName="priceCard" />
-            </div>
-        </div> -->
-        <div class="form-group">
-            <!-- <div>
-                <input placeholder="categoryId" type="number" class="form-control" formControlName="categoryId" />
-            </div> -->
-            <select id="category" formControlName="categoryId"  (change)="onCategoryChange($event)">
-              <option value="" disabled selected>-- בחר קטגוריה --</option>
-              <option *ngFor="let cat of listCategory" [value]="cat.id">
-                {{ cat.name }}
-              </option>
-              <option value="add">➕ הוספת קטגוריה</option>
-            </select>
-            <p-dialog 
-            [(visible)]="visible"
-            [modal]="true"
-            [style]="{ width: '25rem' }"
-          >
-          
-            <!-- HEADER -->
-            <ng-template pTemplate="header">
-              <span class="font-bold">הוספת קטגוריה</span>
-            </ng-template>
-          
-            <!-- BODY -->
-            <div class="flex items-center gap-4 mb-4">
-              <label class="w-24">שם קטגוריה</label>
-              <input pInputText class="flex-auto"   [formControl]="newCategoryName"/>
-            </div>
-          
-            <!-- FOOTER -->
-            <ng-template pTemplate="footer">
-              <p-button
-                label="ביטול"
-                severity="secondary"
-                (onClick)="closeDialog()">
-              </p-button>
-          
-              <p-button
-                label="שמירה"
-                (onClick)="save()">
-              </p-button>
-            </ng-template>
-          
-          </p-dialog>
-            <!-- <div *ngIf="fromAddGift.get('categoryId')?.touched && fromAddGift.get('categoryId')?.invalid">
-              חובה לבחור קטגוריה
-            </div> -->
-        </div>
-        <div class="form-group">
-            <!-- <div>
-                <input placeholder="donorId" type="number" class="form-control" formControlName="donorId" />
-            </div> -->
-            <select id="donor" formControlName="donorId"  (change)="onDonorChange($event)">
-                <option value="" disabled selected>-- בחר תורם --</option>
-                <option *ngFor="let donor of listDonor" [value]="donor.id">
-                  {{ donor.name }}
-                </option>
-                <option value="add">➕ הוספת תורם</option>
-              </select>
-              <p-dialog [(visible)]="visible1" [modal]="true" [style]="{ width: '25rem' }">
-  
-                <!-- HEADER -->
-                <ng-template pTemplate="header">
-                  <span class="font-bold">הוספת תורם</span>
-                </ng-template>
-              
-                <!-- BODY -->
-                <form [formGroup]="fromDonor">
-                  <div class="flex items-center gap-4 mb-4">
-                    <label class="w-24">שם</label>
-                    <input pInputText class="flex-auto" formControlName="name"/>
-                  </div>
-                  <div class="flex items-center gap-4 mb-4">
-                    <label class="w-24">מייל</label>
-                    <input pInputText class="flex-auto" formControlName="email"/>
-                  </div>
-                  <div class="flex items-center gap-4 mb-4">
-                    <label class="w-24">פלאפון</label>
-                    <input pInputText class="flex-auto" formControlName="phone"/>
-                  </div>
-                </form>
-              
-                <!-- FOOTER -->
-                <ng-template pTemplate="footer">
-                  <p-button label="ביטול" severity="secondary" (onClick)="closeDialog1()"></p-button>
-                  <p-button label="שמירה" (onClick)="saveDonor()"></p-button>
-                </ng-template>
-              
-              </p-dialog>              
-              
-        </div>
-        <!-- <div class="form-group">
-            <div>
-                <select formControlName="typeCard">
-                    <option value="Normal">Normal</option>
-                    <option value="Special">Special</option>
-                  </select>                                 
-                  
-            </div>
-        </div> -->
-        <button type="button" class="btn btn-primary" [disabled]="fromAddGift.invalid" (click)="addOrEditGift()">add</button>
-    </legend>
-    <!-- <button class="btn btn-primary" click="updateGift"></button> -->
-</form>
+    </ng-template>
+</p-dialog>

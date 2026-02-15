@@ -38,52 +38,51 @@ export class BasketComponent {
   packagesWithCount: { package: any; count: number }[] = [];
   buyGiftCount: { [id: number]: number } = {};
   giftsWithCount: { gift: any; count: number }[] = [];
+  basket: any = null;
 
-  ngOnInit() {
+ ngOnInit() {
     this.basket$.subscribe(basket => {
       console.log('BASKET:', basket);
+      this.basket = basket; // <--- עדכון המשתנה בכל שינוי של הסל
+
       this.buyPackageCount = {};
       this.packagesWithCount = [];
       this.buyGiftCount = {};
       this.giftsWithCount = [];
-      if (!basket?.packages) return;
+      
+      if (!basket) return;
 
-      basket.packages?.forEach(p => {
-        this.buyPackageCount[p.id] = (this.buyPackageCount[p.id] ?? 0) + 1;
-      });
-      const uniquePackages = new Map<number, GetPackage>();
+      // עיבוד חבילות
+      if (basket.packages) {
+        basket.packages.forEach(p => {
+          this.buyPackageCount[p.id] = (this.buyPackageCount[p.id] ?? 0) + 1;
+        });
+        const uniquePackages = new Map<number, GetPackage>();
+        basket.packages.forEach(p => {
+          if (!uniquePackages.has(p.id)) uniquePackages.set(p.id, p);
+        });
+        this.packagesWithCount = Array.from(uniquePackages.values()).map(p => ({
+          package: p,
+          count: this.buyPackageCount[p.id]
+        }));
+      }
 
-      basket.packages.forEach(p => {
-        if (!uniquePackages.has(p.id)) {
-          uniquePackages.set(p.id, p);
-        }
-      });
+      // עיבוד מתנות
+      if (basket.gifts) {
+        basket.gifts.forEach(g => {
+          this.buyGiftCount[g.id] = (this.buyGiftCount[g.id] ?? 0) + 1;
+        });
+        const uniqueGifts = new Map<number, GetGift>();
+        basket.gifts.forEach(g => {
+          if (!uniqueGifts.has(g.id)) uniqueGifts.set(g.id, g);
+        });
+        this.giftsWithCount = Array.from(uniqueGifts.values()).map(g => ({
+          gift: g,
+          count: this.buyGiftCount[g.id]
+        }));
+      }
 
-      this.packagesWithCount = Array.from(uniquePackages.values()).map(p => ({
-        package: p,
-        count: this.buyPackageCount[p.id]
-      }));
-      if (!basket?.gifts) return;
-
-      basket.gifts?.forEach(g => {
-        this.buyGiftCount[g.id] = (this.buyGiftCount[g.id] ?? 0) + 1;
-      });
-      const uniqueGifts = new Map<number, GetGift>();
-
-      basket.gifts.forEach(g => {
-        if (!uniqueGifts.has(g.id)) {
-          uniqueGifts.set(g.id, g);
-        }
-      });
-
-      this.giftsWithCount = Array.from(uniqueGifts.values()).map(g => ({
-        gift: g,
-        count: this.buyGiftCount[g.id]
-      }));
-
-      // Force change detection after processing the new basket value
       this.cd.markForCheck();
-
     });
   }
 

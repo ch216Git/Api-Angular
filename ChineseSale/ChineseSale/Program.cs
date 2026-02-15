@@ -34,7 +34,7 @@ Log.Logger = new LoggerConfiguration()
 builder.Host.UseSerilog();
 // Add services to the container.
 builder.Services.AddDbContext<ChineseSaleContextDB>(options =>
-        options.UseSqlServer("Server=CYPY;DataBase=ChineseSaleDBB_329213227;Integrated Security=SSPI;Persist Security Info=False;TrustServerCertificate=True;"));
+        options.UseSqlServer("Server=DESKTOP-01CJEFL;DataBase=ChineseSaleContextDB_216242123;Integrated Security=SSPI;Persist Security Info=False;TrustServerCertificate=True;"));
 
 
 builder.Services.AddControllers();

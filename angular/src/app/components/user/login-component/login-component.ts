@@ -37,5 +37,7 @@ login(){
       }
     });
   }
-  
+  goToRegister(){
+    this.router.navigate(['/register']);
+  }
 }
