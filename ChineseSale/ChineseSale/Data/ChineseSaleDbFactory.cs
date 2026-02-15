@@ -8,12 +8,12 @@ namespace ChineseSale.Data
 {
     public static class ChineseSaleDbFactory
     {
+        // זה השם הנכון של המשתנה
         private const string ConnectionString = "Server=DESKTOP-01CJEFL;DataBase=ChineseSaleContextDB_216242123;Integrated Security=SSPI;" +
                     "Persist Security Info=False;TrustServerCertificate=true";
 
         public static ChineseSaleContextDB CreateContext()
         {
-            // Try to read connection string from appsettings.json -> ConnectionStrings:DefaultConnection
             string connectionString = null;
             try
             {
@@ -34,17 +34,15 @@ namespace ChineseSale.Data
                 // ignore and fall back
             }
 
-            // Environment variable override (common in Docker/CI)
             if (string.IsNullOrWhiteSpace(connectionString))
             {
                 connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
                                    ?? Environment.GetEnvironmentVariable("DefaultConnection")
                                    ?? Environment.GetEnvironmentVariable("CONNECTION_STRING");
             }
-
             if (string.IsNullOrWhiteSpace(connectionString))
             {
-                connectionString = FallbackConnectionString;
+                connectionString = ConnectionString;
             }
 
             var optionsBuilder = new DbContextOptionsBuilder<ChineseSaleContextDB>();

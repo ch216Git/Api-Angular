@@ -9,11 +9,15 @@ namespace ChineseSale.Services
         private readonly IGiftRepository _giftRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly IDonorRepository _donorRepository;
-        public GiftService(IGiftRepository giftRepository,ICategoryRepository categoryRepository,IDonorRepository donorRepository)
+        private readonly IBasketRepository _basketRepository;
+        private readonly IOrderRepository _orderRepository;
+        public GiftService(IGiftRepository giftRepository,ICategoryRepository categoryRepository,OrderRepository orderRepository,BasketRepository basketRepository,IDonorRepository donorRepository)
         {
             _giftRepository = giftRepository;
             _categoryRepository = categoryRepository;
             _donorRepository = donorRepository;
+            _basketRepository = basketRepository;
+            _orderRepository = orderRepository;
         }
         public async Task<IEnumerable<GetGiftDto>> GetAllGiftAsync()
         {
@@ -98,11 +102,25 @@ namespace ChineseSale.Services
         public async Task<bool> DeleteGiftAsync(int Id)
         {
             Gift gift = await _giftRepository.GetByIdGiftAsync(Id);
-            if(gift == null)
+            if (gift == null)
                 return false;
+            var allBaskets = await _basketRepository.GetAllBasketAsync();
+            bool existsInBaskets = allBaskets.Any(b => b.GiftsId != null && b.GiftsId.Contains(Id));
+            if (existsInBaskets)
+            {
+                throw new InvalidOperationException("לא ניתן למחוק את המתנה כי היא נמצאת בסל קניות של אחד המשתמשים.");
+            }
+            var allOrders = await _orderRepository.GetAllOrdersAsync();
+            bool existsInOrders = allOrders.Any(o => o.GiftsId != null && o.GiftsId.Contains(Id));
+
+            if (existsInOrders)
+            {
+                throw new InvalidOperationException("לא ניתן למחוק את המתנה כי קיימות הזמנות מאושרות עבורה.");
+            }
             await _giftRepository.DeleteGiftAsync(gift);
             await _categoryRepository.DeleteGiftFromCategory(gift, gift.Category);
             await _donorRepository.DeleteGiftFromDonor(gift, gift.Donor);
+
             return true;
         }
 
