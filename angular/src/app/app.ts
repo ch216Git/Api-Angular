@@ -45,6 +45,7 @@ ngOnInit() {
   try {
     const decoded = jwtDecode<MyDecodedToken>(token);
     const userId = Number(decoded.id);
+    
     this.basketService.loadBasketFromServer(userId);
   } catch (e) {
     console.error('JWT decode failed', e);
