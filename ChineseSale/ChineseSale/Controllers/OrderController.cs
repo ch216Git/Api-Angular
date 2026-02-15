@@ -28,7 +28,7 @@ namespace ChineseSale.Controllers
             return Ok(orders);
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet("{Id}")]
         public async Task<ActionResult<GetOrderByIdDto>> GetOrderByIdAsync(int Id)
         {
@@ -51,7 +51,7 @@ namespace ChineseSale.Controllers
             }
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet("user/{UserId}")]
         public async Task<IActionResult> GetOrderByUserIdAsync(int UserId)
         {
