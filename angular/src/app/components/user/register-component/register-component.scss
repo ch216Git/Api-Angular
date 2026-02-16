@@ -1,8 +1,17 @@
 /* עיצוב כללי למגירה */
 ::ng-deep .p-drawer {
-    background: #fffcfb !important; /* רקע שמנת בהיר מאוד */
+    background: #fffcfb !important;
     border-right: 1px solid #f2e1df !important;
     font-family: 'Segoe UI', sans-serif !important;
+}
+
+/* עיצוב ה-Toast שיהיה במרכז המסך */
+::ng-deep .p-toast {
+    position: fixed;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    z-index: 99999 !important; /* גבוה מאוד */
 }
 
 /* כותרת המגירה */
@@ -17,11 +26,11 @@
 .drawer-form {
     display: flex;
     flex-direction: column;
-    gap: 25px; /* מרווח גדול בין השדות */
+    gap: 25px;
     padding: 1rem 2rem;
 }
 
-/* עיצוב השדות (InputText) */
+/* עיצוב השדות */
 ::ng-deep .drawer-field input {
     width: 100% !important;
     padding: 12px 15px !important;
@@ -41,7 +50,7 @@
 /* עיצוב ה-Float Label */
 ::ng-deep .p-floatlabel label {
     color: #8a6d6a !important;
-    right: 15px !important; /* התאמה ל-RTL */
+    right: 15px !important;
     left: auto !important;
 }
 
@@ -74,4 +83,5 @@
 .btn-register:disabled {
     background: #e0e0e0 !important;
     opacity: 0.7;
+    cursor: not-allowed !important;
 }

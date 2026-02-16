@@ -116,3 +116,12 @@
 .login-footer a:hover {
     text-decoration: underline;
 }
+
+::ng-deep .p-toast {
+    position: fixed;
+    top: 100px !important; /* מרחק מהחלק העליון */
+    right: 20px !important; /* מרחק מצד ימין */
+    left: auto !important; /* ביטול ההגדרה של ה-left הקודם */
+    transform: none !important; /* ביטול ה-transform של המרכז */
+    z-index: 99999 !important; /* גבוה מאוד כדי שיהיה מעל הכל */
+}

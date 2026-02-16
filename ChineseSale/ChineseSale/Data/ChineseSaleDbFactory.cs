@@ -11,6 +11,7 @@ namespace ChineseSale.Data
         // Fallback connection string in case configuration is not available.
         private const string FallbackConnectionString = "Server=DESKTOP-01CJEFL;DataBase=ChineseSaleContextDB_216242123;Integrated Security=SSPI;Persist Security Info=False;TrustServerCertificate=true";
 
+
         public static ChineseSaleContextDB CreateContext()
         {
             // Try to read connection string from appsettings.json -> ConnectionStrings:DefaultConnection

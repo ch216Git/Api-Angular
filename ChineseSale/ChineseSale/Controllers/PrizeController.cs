@@ -29,11 +29,13 @@ namespace ChineseSale.Controllers
         [HttpGet("export")]
         public async Task<IActionResult> ExportPrizes()
         {
-
+            // יוצרים את קובץ ה-CSV
             var filePath = await _prizeService.ExportPrizesToCsvAsync();
 
+            // קוראים את הקובץ לתוך זיכרון
             var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
 
+            // מחזירים את הקובץ כהורדה למשתמש
             return File(fileBytes, "text/csv", "PrizesReport.csv");
         }
         [HttpGet("{Id}")]

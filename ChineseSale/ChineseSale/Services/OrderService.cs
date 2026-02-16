@@ -2,6 +2,7 @@
 using ChineseSale.Models;
 using ChineseSale.Repositories;
 using Org.BouncyCastle.Bcpg;
+using System.Text;
 
 namespace ChineseSale.Services
 {
@@ -146,6 +147,33 @@ namespace ChineseSale.Services
 
             }
             return users;
+        }
+        public async Task<double> SumSale()
+        {
+            double totalSum = 0;
+
+            IEnumerable<GetOrderDto> orders = await GetAllOrderAsync();
+
+
+            foreach (var order in orders)
+            {
+                totalSum += order.Sum;
+            }
+
+            return totalSum;
+        }
+        public async Task<byte[]> ExportSumToCsvAsync()
+        {
+            // קבלת הסכום הכולל
+            var sum = await SumSale();
+
+            // יצירת תוכן ה-CSV בצורה נכונה
+            StringBuilder csvContent = new StringBuilder();
+            csvContent.AppendLine("Sum"); // כותרת העמודה
+            csvContent.AppendLine(sum.ToString()); // הנתון
+
+            // המרת התוכן למערך בייטים
+            return Encoding.UTF8.GetBytes(csvContent.ToString());
         }
     }
 }

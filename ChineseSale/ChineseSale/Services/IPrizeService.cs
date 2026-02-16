@@ -10,6 +10,7 @@ namespace ChineseSale.Services
         Task<GetPrizeDto?> GetPrizeByUserIdAsync(int UserId);
         Task<GetPrizeDto> CreatePrizeAsync(CreatePrizeDto prizeDto);
         Task<GetPrizeDto> SelectRandomPrize(int giftId);
+       
         Task<string> ExportPrizesToCsvAsync();
     }
 }
