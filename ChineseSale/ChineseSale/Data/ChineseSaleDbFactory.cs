@@ -8,14 +8,13 @@ namespace ChineseSale.Data
 {
     public static class ChineseSaleDbFactory
     {
-<<<<<<< HEAD
-        private const string ConnectionString = "Server=CYPY;DataBase=ChineseSaleDBB_329213227;Integrated Security=SSPI;" +
-           "Persist Security Info=False;TrustServerCertificate=true";
-=======
-        // זה השם הנכון של המשתנה
+
+        //private const string ConnectionString = "Server=CYPY;DataBase=ChineseSaleDBB_329213227;Integrated Security=SSPI;" +
+        //   "Persist Security Info=False;TrustServerCertificate=true";
+
         private const string ConnectionString = "Server=DESKTOP-01CJEFL;DataBase=ChineseSaleContextDB_216242123;Integrated Security=SSPI;" +
                     "Persist Security Info=False;TrustServerCertificate=true";
->>>>>>> b0bf302066fd1516797600f2f19cf39a4e8dca93
+
 
         public static ChineseSaleContextDB CreateContext()
         {
