@@ -11,7 +11,7 @@ namespace ChineseSale.Services
         private readonly IDonorRepository _donorRepository;
         private readonly IBasketRepository _basketRepository;
         private readonly IOrderRepository _orderRepository;
-        public GiftService(IGiftRepository giftRepository,ICategoryRepository categoryRepository,OrderRepository orderRepository,BasketRepository basketRepository,IDonorRepository donorRepository)
+        public GiftService(IGiftRepository giftRepository,ICategoryRepository categoryRepository,IOrderRepository orderRepository,IBasketRepository basketRepository,IDonorRepository donorRepository)
         {
             _giftRepository = giftRepository;
             _categoryRepository = categoryRepository;

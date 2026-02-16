@@ -81,7 +81,7 @@ namespace ChineseSale.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpDelete("Delete")]
         public async Task<IActionResult> DeleteBasketAsync(int Id)
         {
             try

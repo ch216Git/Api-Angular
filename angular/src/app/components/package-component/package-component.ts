@@ -9,6 +9,7 @@ import { BasketService } from '../../services/basket-service';
 import { Token } from '@angular/compiler';
 import { AddPackageToBasket, CreateBasket, GetBasketById, MyDecodedToken } from '../../models/basket.model';
 import { jwtDecode } from 'jwt-decode';
+import { PrizeService } from '../../services/prize-service';
 
 
 
@@ -23,6 +24,7 @@ import { jwtDecode } from 'jwt-decode';
 export class PackageComponent {
 
   value1: number = 1;
+  prizeService:PrizeService = inject(PrizeService);
   packageService: PackageService = inject(PackageService);
   basketService: BasketService = inject(BasketService);
   listPackages: PackageVM[] = [];
@@ -49,63 +51,62 @@ export class PackageComponent {
     });
   }  
   
-  addPackage(idPackage: number,index:number) {
-    const token: string | null = localStorage.getItem('token');
-    if (!token) {
-      console.log("אתה צריך להתחבר");
-      return;
-    }
-  
-    const decoded = jwtDecode<MyDecodedToken>(token);
-    const userId = Number(decoded.id);
-  
-    const addToBasket = async(basketId: number) => {
-      for (let i = 0; i < this.listValue[index]; i++) {
-        console.log(i);
-        
-        const addPackage: AddPackageToBasket = { basketId, packageId: idPackage };
-        // מחזיקים index בתוך subscribe כדי לדעת מה המספר
-        await this.basketService.addPackageToBasket(addPackage).toPromise();
-        this.basketService.getBasketById(basketId).subscribe(updatedBasket => {
-          this.basketService.setBasket(updatedBasket);
-          this.listValue[index]=1
-        });
+addPackage(idPackage: number, index: number) {
+  this.prizeService.getAllPrizes().subscribe({
+    next: (prizes) => {
+      if (prizes && prizes.length > 0) {
+        console.log("לא ניתן להוסיף לסל - הסתיימה המכירה!");
+        return;
       }
-    }
-    // const addToBasket = (basketId: number) => {
-    //   for (let i = 0; i < this.listValue[index]; i++) {
-    //     const addPackage: AddPackageToBasket = { basketId, packageId: idPackage };
-    //     // מחזיקים index בתוך subscribe כדי לדעת מה המספר
-    //     this.basketService.addPackageToBasket(addPackage).subscribe({
-    //       next: res => console.log(`הצלחה #${i + 1}`, res),
-    //       error: err => console.error(`כשלון #${i + 1}`, err)
-    //     });
-    //   }
-    // }
-  
-    this.basketService.getBasketByUserId(userId).subscribe({
-      next: basket => {
-        console.log("kpbh");
-        this.basket = basket;
-        addToBasket(this.basket.id);
-      },
-      error: err => {
-        if (err.status === 400) { // אין סל קיים
-     
-          
-          const createBasket: CreateBasket = { userId };
-          this.basketService.createBasket(createBasket).subscribe({
-            next: newBasket => {
-              this.basket = newBasket; // <--- מעדכן את הקומפוננטה
-              addToBasket(newBasket.id);
-            },            
-            error: createErr => console.error("כשלון ביצירת סל", createErr)
-          });
-        } else {
-          console.error("שגיאה בקריאת סל", err);
+      const token: string | null = localStorage.getItem('token');
+      if (!token) {
+        console.log("אתה צריך להתחבר");
+        return;
+      }
+
+      const decoded = jwtDecode<MyDecodedToken>(token);
+      const userId = Number(decoded.id);
+
+      const addToBasket = async (basketId: number) => {
+        for (let i = 0; i < this.listValue[index]; i++) {
+          const addPackage: AddPackageToBasket = { basketId, packageId: idPackage };
+          try {
+            await this.basketService.addPackageToBasket(addPackage).toPromise();
+            this.basketService.getBasketById(basketId).subscribe(updatedBasket => {
+              this.basketService.setBasket(updatedBasket);
+            });
+          } catch (err) {
+            console.error("שגיאה בהוספת חבילה", err);
+          }
         }
-      }
-    });
-  }
-  // deletePackage
+
+        this.listValue[index] = 1;
+      };
+
+      this.basketService.getBasketByUserId(userId).subscribe({
+        next: basket => {
+          this.basket = basket;
+          addToBasket(this.basket.id);
+        },
+        error: err => {
+          if (err.status === 400) {
+            const createBasket: CreateBasket = { userId };
+            this.basketService.createBasket(createBasket).subscribe({
+              next: newBasket => {
+                this.basket = newBasket;
+                addToBasket(newBasket.id);
+              },
+              error: createErr => console.error("כשלון ביצירת סל", createErr)
+            });
+          } else {
+            console.error("שגיאה בקריאת סל", err);
+          }
+        }
+      });
+    },
+    error: (err) => {
+      console.error("שגיאה בבדיקת מצב המכירה", err);
+    }
+  });
+}
 }

@@ -207,16 +207,35 @@ runAction() {
     });
   }
   deleteGift(id: number) {
-    this.giftService.deleteGift(id).subscribe({
-      next: () => {
-        this.listGifts = this.listGifts.filter(g => g.id !== id);
-        this.cd.markForCheck();   
-      },
-      error: err => {
-        console.error("Error deleting gift", err);
-      }
-    });
-  }
+ 
+  this.giftService.deleteGift(id).subscribe({
+    next: () => {
+      // הצלחה: המתנה לא הייתה בסל/הזמנה ונמחקה בשרת
+      this.listGifts = this.listGifts.filter(g => g.id !== id);
+      this.cd.markForCheck();
+      console.log("המתנה נמחקה בהצלחה.");
+    },
+    error: err => {
+      console.error("Error deleting gift", err);
+     const errorMessage = typeof err.error === 'string' 
+        ? err.error 
+        : "לא ניתן למחוק מתנה שנמצאת בסל קניות או בהזמנה של לקוח.";
+      
+      console.log(errorMessage);
+    }
+  });
+}
+  // deleteGift(id: number) {
+  //   this.giftService.deleteGift(id).subscribe({
+  //     next: () => {
+  //       this.listGifts = this.listGifts.filter(g => g.id !== id);
+  //       this.cd.markForCheck();   
+  //     },
+  //     error: err => {
+  //       console.error("Error deleting gift", err);
+  //     }
+  //   });
+  // }
   deleteCategory(id: number) {
     this.categoryService.deleteCategory(id).subscribe({
       next: () => {

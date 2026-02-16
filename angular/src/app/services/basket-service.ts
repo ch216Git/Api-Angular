@@ -33,7 +33,7 @@ export class BasketService {
     this.basketSubject.next(basket);
   }
   
-  getAllGift(): Observable<GetBasket[]>{
+  getAllBasket(): Observable<GetBasket[]>{
     return this.http.get<GetBasket[]>(this.BASE_URL);
   }
   getBasketById(id: number): Observable<GetBasketById>{

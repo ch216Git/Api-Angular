@@ -42,31 +42,27 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IGiftRepository, GiftRepository>();
-builder.Services.AddScoped<IGiftService, GiftService>();
-
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-builder.Services.AddScoped<ICategoryService, CategoryService>();
-
-builder.Services.AddScoped<IDonorRepository, DonorRepository>();
-builder.Services.AddScoped<IDonorService, DonorService>();
-
-builder.Services.AddScoped<IPackageRepository, PackageRepository>();
-builder.Services.AddScoped<IPackageService, PackageService>();
-
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IUserService, UserService>();
-
-builder.Services.AddScoped<IBasketRepository, BasketRepository>();
-builder.Services.AddScoped<IBasketService, BasketService>();
-
-builder.Services.AddScoped<IOrderService, OrderService>();
+// --- Repositories ---
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-
-builder.Services.AddScoped<IPrizeService, PrizeService>();
+builder.Services.AddScoped<IGiftRepository, GiftRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IDonorRepository, DonorRepository>();
+builder.Services.AddScoped<IPackageRepository, PackageRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IBasketRepository, BasketRepository>();
 builder.Services.AddScoped<IPrizeRepository, PrizeRepository>();
 
+// --- Services ---
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IGiftService, GiftService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IDonorService, DonorService>();
+builder.Services.AddScoped<IPackageService, PackageService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IBasketService, BasketService>();
+builder.Services.AddScoped<IPrizeService, PrizeService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c => 
