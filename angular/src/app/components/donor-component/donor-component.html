@@ -1,29 +1,16 @@
-<!-- ---------------------------- -->
-<!-- סינון וחיפוש תורמים -->
-<!-- ---------------------------- -->
+<p-toast></p-toast>
 <div *ngIf="cuurentRoute === '/donor'" class="donor-list" style="direction: rtl">
   <div class="search-panel">
-    <!-- <input
-      [value]="nameSignal()"
-      (input)="nameSignal.set($event.target.value)"
-      placeholder="חפש לפי תורם"
-      pInputText
-    /> -->
     <input [value]="nameSignal()" (input)="nameSignal.set($event.target.value)" placeholder="חפש לפי תורם" pInputText />
-
 
     <select (change)="onChange($event)">
       <option value="sortByName">שם</option>
       <option value="sortByEmail">מייל</option>
       <option value="sortByGiftName">שם מתנה</option>
     </select>
-
-    <!-- <button (click)="runAction()">חפש</button> -->
   </div>
 
-  <!-- רשימת תורמים -->
   <div *ngFor="let donor of allDonorWithGift()" class="donor-row">
-    <!-- פרטי תורם -->
     <div class="donor-info">
       <div class="donor-name" [routerLink]="['/donor', donor.id]">{{ donor.name }}</div>
       <div class="donor-meta">
@@ -32,9 +19,7 @@
       </div>
     </div>
 
-    <!-- פעולות -->
     <div class="donor-actions">
-      <!-- עריכה -->
       <i class="pi pi-pencil action-icon edit" (click)="editDonor(donor)" title="עריכה"></i>
 
       <p-dialog header="עדכון תורם" [modal]="true" [(visible)]="visible"
@@ -62,16 +47,12 @@
         </div>
       </p-dialog>
 
-      <!-- מחיקה -->
       <i *ngIf="donor.gifts?.length === 0" class="pi pi-trash action-icon delete" (click)="deleteDonor(donor.id)"
         title="מחיקה"></i>
     </div>
   </div>
 </div>
 
-<!-- ---------------------------- -->
-<!-- פרטי תורם ספציפי + מתנות -->
-<!-- ---------------------------- -->
 <div *ngIf="cuurentRoute.startsWith('/donor/') && cuurentRoute.length > '/donor/'.length">
   <div class="donor-info-panel">
     <h2>{{ donorById?.name }}</h2>

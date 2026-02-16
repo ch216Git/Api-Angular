@@ -27,4 +27,7 @@ export class OrderServise {
   getBuyers(id:number):Observable<GetUser[]>{
     return this.http.get<GetUser[]>(this.BASE_URL+'/gift/'+id+'/buyers')
   }
+     ExportSumToExcel(): Observable<Blob> {
+    return this.http.get(this.BASE_URL + '/export', { responseType: 'blob' });
+  }
 }

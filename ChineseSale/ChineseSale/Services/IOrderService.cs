@@ -10,6 +10,8 @@ namespace ChineseSale.Services
         Task<GetOrderByIdDto?> GetOrderByUserIdAsync(int UserId);
         Task<GetOrderByIdDto> CreateOrderAsync(CreatOrdeDto orderDto);
         Task<IEnumerable<GetUserDto>> GetBuyerGift(int GiftId);
+        Task<double> SumSale();
+        Task<byte[]> ExportSumToCsvAsync();
 
     }
 }

@@ -1,45 +1,51 @@
-import { ChangeDetectorRef, Component, Input, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, inject, OnInit } from '@angular/core';
 import { OrderServise } from '../../services/order-servise';
 import { GetUser } from '../../models/user.model';
-import { GetOrder } from '../../models/order.model';
-import { GiftService } from '../../services/gift-service';
 import { CommonModule } from '@angular/common';
+// ייבוא MessageService ו-ToastModule
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+
 @Component({
   selector: 'app-order-component',
-  imports: [CommonModule],
+  standalone: true,
+  // הוספת ToastModule לרשימת הייבוא
+  imports: [CommonModule, ToastModule],
   templateUrl: './order-component.html',
   styleUrl: './order-component.scss',
+  // הוספת MessageService ל-providers
+  providers: [MessageService]
 })
-export class OrderComponent {
-orderService:OrderServise=inject(OrderServise);
-listBuyer:GetUser[]=[]
-@Input() giftId: number|undefined;
-// buyers$!: Observable<GetUser[]>;
+export class OrderComponent implements OnInit {
+  orderService: OrderServise = inject(OrderServise);
+  // הזרקת MessageService
+  messageService: MessageService = inject(MessageService);
+  
+  listBuyer: GetUser[] = [];
+  @Input() giftId: number | undefined;
 
-// @Input()
-// set giftId(value: number) {
-//   if (value) {
-//     this.buyers$ = this.orderService.getBuyers(value); // מחזיר Observable<GetUser[]>
-//   }
-// }
- cd: ChangeDetectorRef = inject(ChangeDetectorRef);
-ngOnInit(){
-  if(this.giftId)
-  this.getOrderByGift(this.giftId);
-}
-// ngOnChanges() {
-//   // this.listBuyer=[]
-//   if (this.giftId) {
-//     this.getOrderByGift(this.giftId)
-//   }
-// }
+  cd: ChangeDetectorRef = inject(ChangeDetectorRef);
 
-getOrderByGift(id:number){
-this.orderService.getBuyers(id).subscribe(data=>{
-  this.listBuyer = data;
-   console.log(this.listBuyer+"jhg")
-   this.cd.markForCheck();
-})
-}
+  ngOnInit() {
+    if (this.giftId)
+      this.getOrderByGift(this.giftId);
+  }
 
+  getOrderByGift(id: number) {
+    this.orderService.getBuyers(id).subscribe({
+      next: (data) => {
+        this.listBuyer = data;
+        this.cd.markForCheck();
+      },
+      error: (err) => {
+        // הצגת הודעת שגיאה במקרה של תקלה
+        this.messageService.add({
+          severity: 'error',
+          summary: 'שגיאה',
+          detail: 'לא ניתן לטעון את רשימת הקונים'
+        });
+        console.error(err);
+      }
+    });
+  }
 }

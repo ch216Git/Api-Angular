@@ -1,0 +1,22 @@
+ button {
+    width: 140px;
+    height: 40px;
+    border-radius: 20px;
+    background-color: #f6eee9;
+    border: none;
+    font-size: 13px;
+    font-weight: 500;
+    color: #4a2b1f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+  }
+  .prize-container{
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+  }

@@ -113,6 +113,13 @@ namespace ChineseSale.Controllers
             _logger.LogInformation($"Successfully retrieved buyers for GiftID: {giftId}");
             return Ok(buyers);
         }
+        [HttpGet("sum")]
+        public async Task<IActionResult> sum()
+        {
+            var buyers = await _orderService.SumSale();
+            _logger.LogInformation($"Successfully retrieved buyers for GiftID:");
+            return Ok(buyers);
+        }
 
         private int GetUserIdFromToken()
         {
@@ -121,6 +128,15 @@ namespace ChineseSale.Controllers
                 throw new UnauthorizedAccessException("User ID claim missing");
 
             return int.Parse(userIdClaim.Value);
+        }
+        [HttpGet("export")]
+        public async Task<IActionResult> ExportPrizes()
+        {
+            // ה-Service מחזיר ישירות את הנתונים כבייטים
+            var fileBytes = await _orderService.ExportSumToCsvAsync();
+
+            // מחזירים את הקובץ ישירות לדפדפן
+            return File(fileBytes, "text/csv", "SumReport.csv");
         }
     }
 }

@@ -1,15 +1,13 @@
+<p-toast></p-toast>
 <section style="border-radius: 10px;" class="hero-video">
   <video autoplay muted loop playsinline>
     <source src="https://localhost:7081/uploads/video.mp4" type="video/mp4">
   </video>
   <div class="hero-content">
-    <h1>ההגרלה השנתית של עזר מציון</h1>
+    <h1>ההגרלה השנתית</h1>
     <p></p>
   </div>
 </section>
-<!-- <h1  style="font-size: 50px; direction: rtl;">בוחרים חבילת כרטיסים
-  </h1>
-  <h5 style="font-size: 30px; direction: rtl;">בחרו חבילה אחת או יותר וחלקו את הכרטיסים בין הפרסים שאהבתם</h5> -->
 <div class="spicalCard">
   <div
   class="card"
@@ -17,17 +15,14 @@
   [ngClass]="listColors[i % listColors.length]"
 >
   <div class="up">
-      <!-- כותרת -->
       <h4 class="card-title">{{ pcka.name }}</h4>
       <p style="font-size: xx-large;">
         {{ pcka.countCard === 1 ? 'כרטיס בודד' : pcka.countCard + ' כרטיסים' }}
       </p>
       
-      <!-- מחיר -->
       <p class="card-price">₪{{ pcka.price }}</p>
     </div>
     <div class="counter-row">
-        <!-- input + label יחד -->
         <div class="input-with-label">
           <p-inputnumber
             class="clean-input-number"
@@ -50,17 +45,10 @@
           <span class="counter-label" (click)="addPackage(pcka.id,i)">להוספת חבילה</span>
         </div>
       
-        <!-- תמונה בצד השני -->
-     
         </div>
       
         <div class="image" [style.background-image]="'url(' + pcka.imageUrl + ')'"></div>
-
-      
-    
     </div>
     
   </div>
   <div class="bottom-image"></div>
-
-  

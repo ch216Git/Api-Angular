@@ -14,15 +14,13 @@ import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { CreateDonor, GetDonor } from '../../../models/donor.model';
 import { DonorService } from '../../../services/donor-service';
-import { email } from '@angular/forms/signals';
-
 import { ToastModule } from 'primeng/toast';
-
 import { MessageService } from 'primeng/api';
+
 @Component({
   selector: 'app-add-gift-component',
   standalone: true,
-  imports: [ToastModule,ReactiveFormsModule, CommonModule, UploadComponent, AvatarModule, ButtonModule, DialogModule, InputTextModule],
+  imports: [ToastModule, ReactiveFormsModule, CommonModule, UploadComponent, AvatarModule, ButtonModule, DialogModule, InputTextModule],
   templateUrl: './add-gift-component.html',
   styleUrl: './add-gift-component.scss',
   providers: [MessageService]
@@ -32,29 +30,33 @@ export class AddGiftComponent {
   giftService: GiftService = inject(GiftService);
   categoryService: CategoryService = inject(CategoryService);
   donorService: DonorService = inject(DonorService);
+  
   listCategory: GetCategory[] = [];
   listDonor: GetDonor[] = [];
-  constructor(private route: ActivatedRoute, private router: Router) { }
+  gift?: GetGift;
+  selectedFile: File | null = null;
+  
+  visible = false;
+  visible1 = false;
+  newCategoryName = new FormControl('', Validators.required);
 
   fromAddGift: FormGroup = new FormGroup({
     name: new FormControl('', Validators.required),
     description: new FormControl(''),
     image: new FormControl(''),
-    value: new FormControl('', [Validators.min(0)]),
-    // priceCard: new FormControl('', [Validators.required, Validators.min(0)]),
+    value: new FormControl('', [Validators.required, Validators.min(0)]),
     categoryId: new FormControl(null, Validators.required),
     donorId: new FormControl(null, Validators.required),
-    // typeCard: new FormControl('Normal'),
-  })
-  visible = false;
-  visible1 = false;
-  newCategoryName = new FormControl('', Validators.required);
+  });
+
   fromDonor: FormGroup = new FormGroup({
     name: new FormControl('', Validators.required),
     email: new FormControl('', Validators.email),
     phone: new FormControl('', Validators.pattern('^\\+?[0-9]{10,12}$')),
+  });
 
-  })
+  constructor(private route: ActivatedRoute, private router: Router) { }
+
   ngOnInit() {
     const giftId = this.route.snapshot.paramMap.get('id');
     if (giftId) {
@@ -66,59 +68,31 @@ export class AddGiftComponent {
             description: gift.description,
             image: gift.image,
             value: gift.value,
-            // priceCard: gift.priceCard,
             categoryId: gift.category.id,
             donorId: gift.donor.id,
-            // typeCard: Object.keys(this.typeCardMap).find(
-            //   key => this.typeCardMap[key as keyof typeof this.typeCardMap] === Number(gift.typeCard)
-            // ) || 'Normal'
-
-
           });
         },
-        error: (error) => console.error('Error fetching gift:', error)
+        error: (error) => {
+          console.error('Error fetching gift:', error);
+          this.messageService.add({ severity: 'error', summary: 'שגיאה', detail: 'לא ניתן לטעון את פרטי המתנה' });
+        }
       });
     }
-    this.categoryService.getAllCategory().subscribe(data => {
-      this.listCategory = data;
-      console.log(this.listCategory);
-    });
-    this.donorService.getAllDonor().subscribe(data => {
-      this.listDonor = data;
-      console.log(this.listDonor);
-    })
+
+    this.categoryService.getAllCategory().subscribe(data => this.listCategory = data);
+    this.donorService.getAllDonor().subscribe(data => this.listDonor = data);
   }
-  gift?: GetGift;
-  // typeCardMap = {
-  //   Normal: 0,
-  //   Special: 1
-  // };
-  selectedFile: File | null = null;
 
-  addOrEditGift() {
-
-    if (this.gift) {
-      this.updateGift();
-      console.log("update");
-
-    } else {
-      this.addGift();
-      console.log("add");
-
-    }
-  }
   onFileSelected(file: File) {
     this.selectedFile = file;
+  }
 
-    // const reader = new FileReader();
-    // reader.onload = (e: any) => {
-    //   const dataUrl = e.target.result;
-    //   this.fromAddGift.get('image')?.setValue(dataUrl);
-    //   if (this.gift) {
-    //     this.gift.image = dataUrl;
-    //   }
-    // };
-    // reader.readAsDataURL(file);
+  addOrEditGift() {
+    if (this.gift) {
+      this.updateGift();
+    } else {
+      this.addGift();
+    }
   }
 
   addGift() {
@@ -127,26 +101,19 @@ export class AddGiftComponent {
         ...this.fromAddGift.value,
         image: imageUrl,
         value: Number(this.fromAddGift.value.value),
-        // priceCard: Number(this.fromAddGift.value.priceCard),
         categoryId: Number(this.fromAddGift.value.categoryId),
         donorId: Number(this.fromAddGift.value.donorId),
-        // typeCard: this.typeCardMap[this.fromAddGift.value.typeCard as keyof typeof this.typeCardMap]
       };
 
       this.giftService.createGift(newGift).subscribe({
         next: (gift) => {
-          console.log('Add gift successfully:', gift);
-           this.messageService.add({ 
-          severity: 'success', 
-          summary: 'הצלחה', 
-          detail: 'המתנה נוספה בהצלחה!' 
-        });
-          this.fromAddGift.reset();
-          this.selectedFile = null;
+          this.messageService.add({ severity: 'success', summary: 'הצלחה', detail: 'המתנה נוספה בהצלחה!' });
           this.router.navigate(['/gifts']);
         },
-        error: (error: any) =>
-          console.error('Error add gift:', error),
+        error: (error: any) => {
+          console.error('Error add gift:', error);
+          this.messageService.add({ severity: 'error', summary: 'שגיאה', detail: 'שגיאה בהוספת המתנה' });
+        }
       });
     };
 
@@ -154,25 +121,14 @@ export class AddGiftComponent {
       createGiftWithImage('');
       return;
     }
+
     this.giftService.uploadImage(this.selectedFile).subscribe({
       next: (res: any) => {
         const fileUrl = `https://localhost:7081${res.fileUrl}`;
-        if (this.gift) {
-          this.gift.image = fileUrl;
-        }
         createGiftWithImage(fileUrl);
-         this.messageService.add({ 
-          severity: 'success', 
-          summary: 'הצלחה', 
-          detail: 'המתנה עודכנה בהצלחה!' 
-        });
       },
       error: (err: any) => {
-        this.messageService.add({ 
-          severity: 'error', 
-          summary: 'שגיאה', 
-          detail: 'העלאת התמונה נכשלה!' 
-        });
+        this.messageService.add({ severity: 'error', summary: 'שגיאה', detail: 'העלאת התמונה נכשלה!' });
         console.error('Error upload image:', err);
       }
     });
@@ -180,34 +136,22 @@ export class AddGiftComponent {
 
   updateGift() {
     const updateGiftWithImage = (imageUrl: string) => {
-      const newGift: UpdateGift = {
+      const updatedGift: UpdateGift = {
         ...this.fromAddGift.value,
         id: this.gift?.id,
         image: imageUrl,
         value: Number(this.fromAddGift.value.value),
-        // priceCard: Number(this.fromAddGift.value.priceCard),
         categoryId: Number(this.fromAddGift.value.categoryId),
-        // typeCard: this.typeCardMap[this.fromAddGift.value.typeCard as keyof typeof this.typeCardMap]
+        donorId: Number(this.fromAddGift.value.donorId),
       };
 
-      this.giftService.updateGift(newGift).subscribe({
+      this.giftService.updateGift(updatedGift).subscribe({
         next: (gift) => {
-          console.log('Update gift successfully:', gift);
-           this.messageService.add({ 
-          severity: 'success', 
-          summary: 'הצלחה', 
-          detail: 'המתנה עודכנה בהצלחה!' 
-        });
-          this.fromAddGift.reset();
-          this.selectedFile = null;
+          this.messageService.add({ severity: 'success', summary: 'הצלחה', detail: 'המתנה עודכנה בהצלחה!' });
           this.router.navigate(['/gifts']);
         },
         error: (error: any) => {
-          this.messageService.add({ 
-            severity: 'error', 
-            summary: 'שגיאה', 
-            detail: 'עדכון המתנה נכשל!' 
-          });
+          this.messageService.add({ severity: 'error', summary: 'שגיאה', detail: 'עדכון המתנה נכשל!' });
           console.error('Error update gift:', error);
         }
       });
@@ -217,67 +161,52 @@ export class AddGiftComponent {
       updateGiftWithImage(this.gift?.image ?? '');
       return;
     }
+
     this.giftService.uploadImage(this.selectedFile).subscribe({
       next: (res: any) => {
         const fileUrl = `https://localhost:7081${res.fileUrl}`;
-        if (this.gift) {
-          this.gift.image = fileUrl;
-        }
         updateGiftWithImage(fileUrl);
       },
-      error: (err: any) =>
-        console.error('Error upload image:', err),
+      error: (err: any) => {
+        this.messageService.add({ severity: 'error', summary: 'שגיאה', detail: 'העלאת התמונה נכשלה!' });
+        console.error('Error upload image:', err);
+      }
     });
   }
 
-
   onCategoryChange(event: Event) {
     const value = (event.target as HTMLSelectElement).value;
-
     if (value === 'add') {
       this.visible = true;
       this.fromAddGift.get('categoryId')?.setValue(null);
     }
   }
 
-  addCategory() {
-    console.log('נבחר: הוספת קטגוריה');
-  }
-
   closeDialog() {
     this.visible = false;
+    this.newCategoryName.reset();
   }
 
   save() {
     const name = this.newCategoryName.value;
+    if (!name) return;
 
-    if (!name) {
-      return;
-    }
-    const c: CreateCategory = { name: name };
-    this.categoryService.createCategory(c).subscribe({
+    this.categoryService.createCategory({ name: name }).subscribe({
       next: (category) => {
-        console.log('קטגוריה נוספה בהצלחה:', category);
         this.listCategory.push(category);
         this.fromAddGift.get('categoryId')?.setValue(category.id);
-        this.newCategoryName.reset();
-         this.messageService.add({ 
-          severity: 'success', 
-          summary: 'הצלחה', 
-          detail: 'הזמנה בוצעה בהצלחה!' 
-        });
+        this.messageService.add({ severity: 'success', summary: 'הצלחה', detail: 'קטגוריה נוספה בהצלחה!' });
+        this.closeDialog();
       },
       error: (error) => {
-        console.error('שגיאה בהוספת קטגוריה:', error);
+        this.messageService.add({ severity: 'error', summary: 'שגיאה', detail: 'שגיאה בהוספת הקטגוריה' });
+        console.error('שגיאה:', error);
       }
     });
-    console.log('שם הקטגוריה:', name);
-
-    this.closeDialog();
   }
+
   onDonorChange(event: Event) {
     const value = (event.target as HTMLSelectElement).value;
-
     if (value === 'add') {
       this.visible1 = true;
       this.fromAddGift.get('donorId')?.setValue(null);
@@ -286,37 +215,23 @@ export class AddGiftComponent {
 
   closeDialog1() {
     this.visible1 = false;
+    this.fromDonor.reset();
   }
 
   saveDonor() {
-    const d = this.fromDonor.value;
-
-    if (!this.fromDonor.valid) {
-      return;
-    }
-    const donorData = this.fromDonor.value;
-    this.donorService.createDonor(donorData).subscribe({
+    if (!this.fromDonor.valid) return;
+    
+    this.donorService.createDonor(this.fromDonor.value).subscribe({
       next: (donor) => {
-         this.messageService.add({ 
-          severity: 'success', 
-          summary: 'הצלחה', 
-          detail: 'התורם נוסף בהצלחה!' 
-        });
-        console.log('Donor added successfully:', donor);
         this.listDonor.push(donor);
         this.fromAddGift.get('donorId')?.setValue(donor.id);
-        this.fromDonor.reset();
+        this.messageService.add({ severity: 'success', summary: 'הצלחה', detail: 'התורם נוסף בהצלחה!' });
+        this.closeDialog1();
       },
       error: (error) => {
-        console.error('Error adding donor:', error);
-         this.messageService.add({ 
-          severity: 'error', 
-          summary: 'שגיאה', 
-          detail: 'שגיאה בהוספת התורם!' 
-        });
+        this.messageService.add({ severity: 'error', summary: 'שגיאה', detail: 'שגיאה בהוספת התורם!' });
+        console.error('Error:', error);
       }
     });
-    this.closeDialog1();
   }
-  
 }
