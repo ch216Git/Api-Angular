@@ -2,7 +2,7 @@
 
 <div class="categories-bar">
   <button class="category-chip" 
-          [class.active]="selectedCategoryId() === null"
+          [class.active]="selectedCategoryId === null"
           (click)="getAllGifts()">
     <i class="pi pi-briefcase"></i>
     <span>כל המתנות</span>
@@ -11,70 +11,73 @@
   <button
     class="category-chip"
     *ngFor="let category of listCategoryWithGifts()"
-    [class.active]="selectedCategoryId() === category.id"
+    [class.active]="selectedCategoryId === category.id"
     (click)="getCategoryById(category.id)"
   >
     <i class="pi pi-tag"></i>
-    <i class="pi pi-trash delete-icon" 
-       *ngIf="category.gifts?.length === 0 && role() === 'Manager'" 
-       (click)="deleteCategory(category.id); $event.stopPropagation()"></i>
+    <i class="pi pi-trash delete-icon" *ngIf="category.gifts!.length==0 && role=='Manager'" (click)="deleteCategory(category.id)"></i>
     <span>{{ category.name }}</span>
   </button>
 </div>
 
 <div class="search-filter-panel">
-  <input [value]="nameSearch()" 
-         (input)="onSearchInput($event)" 
-         placeholder="חיפוש..." 
-         pInputText />
- 
-  <select (change)="selectedSearchType.set($any($event.target).value)">
+  <input [value]="nameSignal()" (input)="onSearchChange($any($event.target).value)" placeholder="חיפוש" pInputText />
+  
+   <select (change)="onSearchTypeChange($event)">
     <option value="searchByGiftName">שם מתנה</option>
     <option value="searchByDonorName">שם תורם</option>
     <option value="searchByCustomer">מספר רוכשים</option>
   </select>
 
-  <select (change)="onSortChange($event)">
-    <option value="noSort" selected>מיין</option>
-    <!-- <option value="noSort">תצוגה רגילה</option> -->
+  <select (change)="onChange($event)">
+    <option value="" disabled selected>מיין</option>
+    <option value="noSort">תצוגה רגילה</option>
     <option value="sortByBuyer">לפי רוכשים</option>
     <option value="sortByPrice">לפי מחיר</option>
   </select>
 </div>
 
 <div class="gifts-grid" *ngIf="isLoaded()">
-  <div class="gift-card" *ngFor="let gift of filteredGifts()">
+  <div class="gift-card" *ngFor="let gift of listGifts(); let i = index">
+    
     <div class="image-container">
       <img class="gift-image" [src]="gift.image" [routerLink]="['/gift', gift.id]">
-      
-      <div class="winner-badge" *ngIf="listPrize().length > 0 && gift.winner">
+      <div class="winner-badge" *ngIf="prize() && gift.winner">
         הזוכה: {{ gift.winner.name }}
       </div>
-      <div class="winner-badge no-winner" *ngIf="listPrize().length > 0 && !gift.winner">
-        טרם הוגרל
+      <div class="winner-badge no-winner" *ngIf="prize() && !gift.winner">
+        אין זוכה
       </div>
     </div>
 
     <div class="gift-content">
       <div class="gift-header">
         <h3 class="gift-name">{{ gift.name }}</h3>
+
         <div class="gift-icons">
-          <i class="pi pi-pencil edit-icon" *ngIf="role() === 'Manager'" (click)="editGift(gift.id)"></i>
-          <i class="pi pi-trash delete-icon" *ngIf="role() === 'Manager'" (click)="deleteGift(gift.id)"></i>
+          <i class="pi pi-pencil edit-icon" *ngIf="role=='Manager'"
+             (click)="editGift(gift.id)"></i>
+
+          <i class="pi pi-trash delete-icon" *ngIf="role=='Manager'" (click)="deleteGift(gift.id)"></i>
         </div>
       </div>
 
+      <p class="gift-description" *ngIf="gift.description">
+        {{ gift.description }}
+      </p>
+
       <div class="gift-footer">
         <div class="gift-info">
-          <span class="gift-value" *ngIf="gift.value">₪{{ gift.value }} שווי</span>
+          <span class="gift-value" *ngIf="gift.value">₪{{ gift.value }} שווי המתנה</span>
         </div>
+
         <div class="gift-actions">
-          <button class="qty-btn minus-btn" (click)="decreaseQty(gift.id)">−</button>
+          <button class="qty-btn minus-btn" (click)="decreaseQty(i)">−</button>
           <div class="quantity-box">
-            <input type="text" class="qty-input" [value]="quantities()[gift.id] || 1" readonly>
+            <input type="text" class="qty-input" [value]="listValue()[i]" readonly>
           </div>
-          <button class="qty-btn plus-btn" (click)="increaseQty(gift.id)">+</button>
-          <button class="action-btn add-btn" (click)="addGiftToBasket(gift.id)">הוסף לסל</button>
+          <button class="qty-btn plus-btn" (click)="increaseQty(i)">+</button>
+          <button class="action-btn add-btn" (click)="addGiftToBasket(gift.id, i)">הוסף לסל</button>
         </div>
       </div>
     </div>

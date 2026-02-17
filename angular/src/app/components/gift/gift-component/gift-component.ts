@@ -1,10 +1,10 @@
 import { GiftService } from '../../../services/gift-service';
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, signal, WritableSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GiftWithWinner } from '../../../models/gift.model';
 import { RouterModule, Router } from '@angular/router';
 import { BasketService } from '../../../services/basket-service';
-import { AddGiftToBasket, MyDecodedToken } from '../../../models/basket.model';
+import { AddGiftToBasket, GetBasketById, MyDecodedToken } from '../../../models/basket.model';
 import { jwtDecode } from 'jwt-decode';
 import { CardModule } from 'primeng/card';
 import { FormsModule } from '@angular/forms';
@@ -20,210 +20,277 @@ import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-gift-component',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    CardModule,
-    FormsModule,
-    InputNumberModule,
-    ToastModule 
-  ],
+  imports: [CommonModule, RouterModule, CardModule, FormsModule, InputNumberModule, ToastModule],
   templateUrl: './gift-component.html',
   styleUrl: './gift-component.scss',
-  providers: [MessageService] 
+  providers: [MessageService]
 })
 export class GiftComponent implements OnInit {
-  private router = inject(Router);
-  private messageService = inject(MessageService);
-  private giftService = inject(GiftService);
-  private basketService = inject(BasketService);
-  private prizeService = inject(PrizeService);
-  private userService = inject(UserService);
-  private categoryService = inject(CategoryService);
 
-  // --- Signals (נתוני בסיס) ---
-  allGifts = signal<GiftWithWinner[]>([]); 
+  constructor(private router: Router) { }
+
+  messageService: MessageService = inject(MessageService);
+  giftService: GiftService = inject(GiftService);
+  basketService: BasketService = inject(BasketService);
+  prizeService: PrizeService = inject(PrizeService);
+  userService: UserService = inject(UserService);
+  categoryService: CategoryService = inject(CategoryService);
+
+  // --- Signals (במקום משתנים רגילים) כדי למנוע את הצורך ב-Change Detection ידני ---
+  listGifts = signal<GiftWithWinner[]>([]);
+  listValue = signal<number[]>([]);
+  listCategory = signal<GetCategory[]>([]);
   listCategoryWithGifts = signal<GetCategoryById[]>([]);
-  listPrize = signal<GetPrize[]>([]);
-  
-  // --- Signals (מצב תצוגה) ---
-  selectedCategoryId = signal<number | null>(null);
-  nameSearch = signal('');
-  selectedSearchType = signal('searchByGiftName');
-  selectedSortValue = signal('noSort');
-  role = signal('');
   isLoaded = signal(false);
+  prize = signal(false);
 
-  // --- Computed (הלוגיקה המרכזית) ---
-  // מחשב את רשימת המתנות הסופית לפי סינון קטגוריה וחיפוש טקסטואלי
-  filteredGifts = computed(() => {
-    let gifts = [...this.allGifts()];
+  // משתני עזר ומידע
+  basket!: GetBasketById;
+  listPrize: GetPrize[] = [];
+  originalGifts: GiftWithWinner[] = [];
+  role: string = '';
+  selectedCategoryId: number | null = null;
 
-    // 1. סינון לפי קטגוריה
-    if (this.selectedCategoryId() !== null) {
-      const cat = this.listCategoryWithGifts().find(c => c.id === this.selectedCategoryId());
-      if (cat && cat.gifts) {
-        gifts = cat.gifts as GiftWithWinner[];
-      }
-    }
-
-    // 2. סינון לפי חיפוש טקסטואלי (צד לקוח)
-    const search = this.nameSearch().toLowerCase().trim();
-    if (search) {
-      const type = this.selectedSearchType();
-      if (type === 'searchByGiftName') {
-        gifts = gifts.filter(g => g.name.toLowerCase().includes(search));
-      } else if (type === 'searchByDonorName') {
-        gifts = gifts.filter(g => (g as any).donor?.name?.toLowerCase().includes(search) || (g as any).donorName?.toLowerCase().includes(search));
-      }
-      // הערה: חיפוש לפי מספר רוכשים מתבצע מול השרת בפונקציה ייעודית (ראי למטה)
-    }
-
-    return gifts;
-  });
-
-  // ניהול כמויות לפי מפתח ID של מתנה
-  quantities = signal<Record<number, number>>({});
+  // Signals לחיפוש ומיון
+  selectedValue = signal('');
+  selectedSearcheValue = signal('searchByGiftName');
+  nameSignal = signal('');
 
   ngOnInit() {
     const token = localStorage.getItem('token');
-    if (token) {
-      const decoded = jwtDecode<MyDecodedToken>(token);
-      this.role.set(decoded.role);
-    }
-    this.loadInitialData();
-  }
+    if (!token) return;
+    const decoded = jwtDecode<MyDecodedToken>(token);
+    this.role = decoded.role;
 
-  loadInitialData() {
-    this.isLoaded.set(false);
-    this.giftService.getAllGift().subscribe(data => {
-      this.allGifts.set(data);
-      const qtys: Record<number, number> = {};
-      data.forEach(g => qtys[g.id] = 1);
-      this.quantities.set(qtys);
-      this.isLoaded.set(true);
-      this.loadWinners();
-    });
-
-    this.categoryService.getAllCategory().subscribe(categories => {
-      categories.forEach(cat => {
-        this.categoryService.getCategoryById(cat.id).subscribe(fullCat => {
-          this.listCategoryWithGifts.update(prev => [...prev, fullCat]);
-        });
-      });
-    });
+    this.getAllGifts();
+    this.getAllCategory();
 
     this.prizeService.getAllPrizes().subscribe(prizes => {
-      this.listPrize.set(prizes);
-      this.loadWinners();
+      this.listPrize = prizes;
+      if (this.listPrize.length > 0)
+        this.prize.set(true);
+      this.matchGiftsWithPrizes();
     });
   }
 
-  loadWinners() {
-    const prizes = this.listPrize();
-    const gifts = this.allGifts();
-    gifts.forEach(gift => {
-      const p = prizes.find(prize => prize.giftId === gift.id);
-      if (p && !gift.winner) {
-        this.userService.getUserById(p.userId).subscribe(user => {
-          gift.winner = user;
-          this.allGifts.set([...gifts]);
-        });
-      }
-    });
+  onSearchTypeChange(event: Event) {
+    const select = event.target as HTMLSelectElement;
+    this.selectedSearcheValue.set(select.value);
   }
 
-  // --- פונקציות חיפוש מול שרת ---
-  onSearchInput(event: any) {
-    const val = event.target.value;
-    this.nameSearch.set(val);
-    
-    // אם החיפוש הוא לפי מספר רוכשים, אנחנו צריכים לפנות לשרת
-    if (this.selectedSearchType() === 'searchByCustomer' && val.trim() !== '') {
-      const num = Number(val);
-      if (!isNaN(num)) {
-        this.giftService.existsSumCoustomerGift(num).subscribe(data => {
-          this.allGifts.set(data || []);
-        });
-      }
-    } else if (val.trim() === '') {
-       // אם המשתמש מחק את החיפוש, נטען מחדש הכל
-       this.giftService.getAllGift().subscribe(data => this.allGifts.set(data));
-    }
-  }
-
-  // --- פונקציות מיון ---
-  onSortChange(event: any) {
-    const val = event.target.value;
-    this.selectedSortValue.set(val);
-
-    if (val === 'sortByPrice') {
-      this.giftService.sortGiftsByPrice().subscribe(data => this.allGifts.set(data));
-    } else if (val === 'sortByBuyer') {
-      this.giftService.sortGiftsByBuyer().subscribe(data => this.allGifts.set(data));
-    } else {
-      this.giftService.getAllGift().subscribe(data => this.allGifts.set(data));
-    }
-  }
-
-  getCategoryById(id: number) {
-    this.selectedCategoryId.set(id);
-  }
-
-  getAllGifts() {
-    this.selectedCategoryId.set(null);
-    this.nameSearch.set('');
-  }
-
-  increaseQty(giftId: number) {
-    this.quantities.update(q => ({ ...q, [giftId]: (q[giftId] || 1) + 1 }));
-  }
-
-  decreaseQty(giftId: number) {
-    this.quantities.update(q => ({ ...q, [giftId]: Math.max(1, (q[giftId] || 1) - 1) }));
-  }
-
-  async addGiftToBasket(idGift: number) {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      this.messageService.add({ severity: 'warn', detail: 'עליך להתחבר' });
+  // חיפוש - עדכון ה-Signal של הרשימה מעדכן את ה-UI אוטומטית
+  onSearchChange(value: string) {
+    this.nameSignal.set(value);
+    const searchText = value.trim();
+    if (!searchText) {
+      this.listGifts.set([...this.originalGifts]);
+      this.syncListValue();
+      this.matchGiftsWithPrizes();
       return;
     }
-    const userId = Number(jwtDecode<MyDecodedToken>(token).id);
 
-    this.basketService.getBasketByUserId(userId).subscribe({
-      next: async (basket) => {
-        const zoverPackage = basket.packages?.reduce((sum, p) => sum + p.countCard, 0) || 0;
-        const currentGiftsCount = basket.gifts?.length || 0;
-        const qty = this.quantities()[idGift] || 1;
+    let searchObservable;
+    if (this.selectedSearcheValue() === 'searchByGiftName')
+      searchObservable = this.giftService.exsistsGiftName(searchText);
+    else if (this.selectedSearcheValue() === 'searchByDonorName')
+      searchObservable = this.giftService.existsDonorName(searchText);
+    else if (this.selectedSearcheValue() === 'searchByCustomer')
+      searchObservable = this.giftService.existsSumCoustomerGift(Number(searchText));
 
-        if (zoverPackage > currentGiftsCount) {
-          const canAdd = Math.min(qty, zoverPackage - currentGiftsCount);
-          for (let i = 0; i < canAdd; i++) {
-            await this.basketService.addGiftToBasket({ basketId: basket.id, giftId: idGift }).toPromise();
-          }
-          this.messageService.add({ severity: 'success', detail: 'נוסף לסל' });
-          this.basketService.loadBasketFromServer(userId);
-        } else {
-          this.messageService.add({ severity: 'warn', detail: 'אין יתרה בחבילה' });
-        }
+    searchObservable?.subscribe(data => {
+      this.listGifts.set(data ?? []);
+      this.syncListValue();
+      this.matchGiftsWithPrizes();
+    });
+  }
+
+  onChange(event: Event) {
+    const select = event.target as HTMLSelectElement;
+    this.selectedValue.set(select.value);
+    this.runAction();
+  }
+
+  runAction() {
+    let action;
+    if (this.selectedValue() === 'sortByPrice')
+      action = this.giftService.sortGiftsByPrice();
+    else if (this.selectedValue() === 'sortByBuyer')
+      action = this.giftService.sortGiftsByBuyer();
+    else if (this.selectedValue() === 'noSort') { this.getAllGifts(); return; }
+
+    action?.subscribe(data => {
+      this.listGifts.set(data);
+      this.syncListValue();
+      this.matchGiftsWithPrizes();
+    });
+  }
+
+  private syncListValue() {
+    this.listValue.set(this.listGifts().map(() => 1));
+  }
+
+  private matchGiftsWithPrizes() {
+    const currentGifts = this.listGifts();
+    currentGifts.forEach(gift => {
+      const p = this.listPrize.find(prize => prize.giftId === gift.id);
+      if (p) {
+        this.userService.getUserById(p.userId).subscribe(user => {
+          gift['winner'] = user;
+          this.listGifts.set([...currentGifts]); // עדכון ה-Signal גורם לריענון ה-UI
+        });
+      } else {
+        gift['winner'] = null;
       }
+    });
+  }
+
+  getAllCategory() {
+    this.categoryService.getAllCategory().subscribe(data => {
+      this.listCategory.set(data);
+      this.listCategoryWithGifts.set([]); // איפוס לפני טעינה
+      data.forEach(cat => {
+        this.categoryService.getCategoryById(cat.id).subscribe(c => {
+          this.listCategoryWithGifts.update(list => [...list, c]);
+        });
+      });
     });
   }
 
   deleteGift(id: number) {
-    this.giftService.deleteGift(id).subscribe(() => {
-      this.allGifts.update(list => list.filter(g => g.id !== id));
+    this.giftService.deleteGift(id).subscribe({
+      next: () => {
+        this.listGifts.update(list => list.filter(g => g.id !== id));
+      },
+      error: err => {
+        const errorMessage = typeof err.error === 'string'
+          ? err.error
+          : this.messageService.add({ severity: 'error', summary: 'שגיאה', detail: 'לא ניתן למחוק מתנה שנמצאת בסל קניות או בהזמנה של לקוח.' });
+        this.messageService.add({ severity: 'error', summary: 'שגיאה', detail: errorMessage });
+      }
     });
   }
 
   deleteCategory(id: number) {
     this.categoryService.deleteCategory(id).subscribe(() => {
       this.listCategoryWithGifts.update(list => list.filter(c => c.id !== id));
+      this.messageService.add({ severity: 'success', detail: 'הקטגוריה נמחקה' });
+    });
+  }
+
+  getCategoryById(id: number) {
+    this.selectedCategoryId = id;
+    this.isLoaded.set(false);
+    this.categoryService.getCategoryById(id).subscribe(data => {
+      this.listGifts.set(data.gifts ?? []);
+      this.syncListValue();
+      this.matchGiftsWithPrizes();
+      this.isLoaded.set(true);
+    });
+  }
+
+  getAllGifts() {
+    this.selectedCategoryId = null;
+    this.isLoaded.set(false);
+    this.giftService.getAllGift().subscribe(data => {
+      this.originalGifts = data;
+      this.listGifts.set([...this.originalGifts]);
+      this.syncListValue();
+      this.matchGiftsWithPrizes();
+      this.isLoaded.set(true);
     });
   }
 
   editGift(id: number) {
     this.router.navigate(['/editGift', id]);
+  }
+
+  addGiftToBasket(idGift: number, index: number) {
+  if (this.prize()) {
+    this.messageService.add({ 
+      severity: 'error', 
+      summary: 'הגישה חסומה', 
+      detail: 'לא ניתן להוסיף מתנות לסל לאחר שהתבצעה הגרלה.' 
+    });
+    return;
+  }
+    const token = localStorage.getItem('token');
+    if (!token) {
+      this.messageService.add({ severity: 'warn', summary: 'אזהרה', detail: 'עליך להתחבר כדי להוסיף לסל' });
+      return;
+    }
+    const decoded = jwtDecode<MyDecodedToken>(token);
+    const userId = Number(decoded.id);
+    const addToBasket = async (basketId: number, amountAvailable: number) => {
+      const requestedQty = this.listValue()[index];
+      const timesToAdd = Math.min(requestedQty, amountAvailable);
+
+      for (let i = 0; i < timesToAdd; i++) {
+        const addGift: AddGiftToBasket = { basketId, giftId: idGift };
+        await this.basketService.addGiftToBasket(addGift).toPromise();
+      }
+      if (requestedQty > amountAvailable) {
+        this.messageService.add({ severity: 'warn', summary: 'אזהרה', detail: `הוספו רק ${amountAvailable} מתנות לסל בהתאם לזמינות` });
+      }
+      else {
+      this.messageService.add({ severity: 'success', summary: 'הצלחה', detail: 'המתנה נוספה לסל' });
+      }
+      this.listValue.update(currentArray => {
+        const newArray = [...currentArray]; 
+        newArray[index] = 1;                
+        return newArray;                    
+      })
+      this.basketService.getBasketByUserId(userId).subscribe(updatedBasket => {
+        this.basketService.setBasket(updatedBasket);
+      });
+    };
+
+    // קריאה לשרת לקבלת נתוני הסל הנוכחיים
+    this.basketService.getBasketByUserId(userId).subscribe({
+      next: (basket) => {
+        this.basket = basket;
+        let zoverPackage = 0;
+        if (this.basket.packages) {
+          this.basket.packages.forEach(p => zoverPackage += p.countCard);
+        }
+        const currentGiftsCount = this.basket.gifts?.length || 0;
+        if (currentGiftsCount < zoverPackage) {
+          const availableSlots = zoverPackage - currentGiftsCount;
+          const less = this.listValue()[index] - availableSlots;
+          if (less > 0) {
+            console.log("אתה זקוק לחבילה חדשה בשביל ה" + less + " נוספים");
+
+            this.messageService.add({ severity: 'warn', summary: 'אזהרה', detail: `ניתן להוסיף רק ${availableSlots} מתנות נוס בהתאם לחבילות שבסל` });
+          }
+          addToBasket(this.basket.id, availableSlots);
+        }
+        else if (zoverPackage > 0 && currentGiftsCount === 0) {
+          addToBasket(this.basket.id, zoverPackage);
+        }
+        else {
+          this.messageService.add({ severity: 'warn', summary: 'אזהרה', detail: 'יש לבחור חבילה חדשה' });
+        }
+      },
+      error: (err) => {
+        if (err.status === 400) {
+          this.messageService.add({ severity: 'error', summary: 'שגיאה', detail: 'יש לבחור תחילה חבילה' });
+        } else {
+          console.error("שגיאה", err);
+          this.messageService.add({ severity: 'error', summary: 'שגיאה', detail: 'אירעה שגיאה בחיבור לסל' });
+        }
+      }
+    });
+  }
+  increaseQty(index: number) {
+    this.listValue.update(vals => {
+      vals[index]++;
+      return [...vals];
+    });
+  }
+
+  decreaseQty(index: number) {
+    this.listValue.update(vals => {
+      if (vals[index] > 1) vals[index]--;
+      return [...vals];
+    });
   }
 }

@@ -5,12 +5,60 @@
   padding: 14px 6px;
   border-bottom: 1px solid #e6e0db;
 }
-
+.search-filter-panel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 20px;
+  align-items: center;
+}
 .donor-info {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 4px;
+}
+/* עיצוב ה-Input וה-Select בפאנל החיפוש */
+.search-filter-panel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 20px;
+  align-items: center;
+
+  /* עיצוב אחיד לשניהם */
+  input, select {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    background-color: white; /* מבטיח רקע נקי */
+    color: #444;
+    height: 38px; /* גובה אחיד לשניהם */
+    box-sizing: border-box;
+  }
+
+  /* אפקט פוקוס (כמו שביקשת) */
+  input:focus, select:focus {
+    border-color: #d4a373;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(212, 163, 115, 0.2);
+  }
+
+  /* התאמה ספציפית ל-select כדי שייראה טוב עם החץ */
+  select {
+    cursor: pointer;
+    min-width: 120px;
+    appearance: none; /* מסיר את עיצוב ברירת המחדל של הדפדפן */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: left 0.75rem center; /* חץ בצד שמאל בגלל ה-RTL */
+    background-size: 1em;
+    padding-left: 2.5rem; /* רווח לחץ */
+  }
 }
 
 .donor-name {

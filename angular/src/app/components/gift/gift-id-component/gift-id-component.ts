@@ -13,10 +13,8 @@ import { CommonModule } from '@angular/common';
   styleUrl: './gift-id-component.scss',
 })
 export class GiftIdComponent implements OnInit {
-  private giftService = inject(GiftService);
+  giftService:GiftService = inject(GiftService);
   private route = inject(ActivatedRoute);
-
-  // הגדרת המשתנה כסיגנל
   gift = signal<GetGift | undefined>(undefined);
   
   ngOnInit() {
@@ -27,7 +25,7 @@ export class GiftIdComponent implements OnInit {
 
   getById(id: number) {
     this.giftService.getGiftById(id).subscribe(data => {
-      this.gift.set(data); // עדכון הסיגנל מעדכן את ה-UI אוטומטית
+      this.gift.set(data); 
     });
   }
 }

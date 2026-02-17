@@ -14,17 +14,12 @@ import { ToastModule } from 'primeng/toast';
   providers: [MessageService]
 })
 export class OrderComponent {
-  private orderService = inject(OrderServise);
+  orderService:OrderServise = inject(OrderServise);
   private messageService = inject(MessageService);
-  
-  // 1. הגדרת ה-Input כסיגנל
   giftId = input<number | undefined>();
-
-  // 2. הגדרת רשימת הקונים כסיגנל
   listBuyer = signal<GetUser[]>([]);
 
   constructor() {
-    // 3. אפקט שרץ בכל פעם ש-giftId משתנה
     effect(() => {
       const id = this.giftId();
       if (id) {
@@ -38,7 +33,6 @@ export class OrderComponent {
   getOrderByGift(id: number) {
     this.orderService.getBuyers(id).subscribe({
       next: (data) => {
-        // 4. עדכון הסיגנל - אנגולר כבר ירנדר מה שצריך
         this.listBuyer.set(data);
       },
       error: (err) => {

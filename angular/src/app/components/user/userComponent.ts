@@ -20,12 +20,6 @@ export class User{
 
   ngOnInit() {
      this.getAllUsers()
-
-    // // this.getUserById(1)
-    // this.userService.getAllUser().subscribe(data => {
-    //   this.listUsers = data;
-  
-    // })
   }
   getAllUsers(){
     this.userService.getAllUser().subscribe(data => {

@@ -1,47 +1,55 @@
 <p-toast></p-toast>
 
-<section class="hero-video" style="border-radius: 10px;">
+<section style="border-radius: 10px;" class="hero-video">
   <video autoplay muted loop playsinline>
     <source src="https://localhost:7081/uploads/video.mp4" type="video/mp4">
   </video>
   <div class="hero-content">
     <h1>ההגרלה השנתית</h1>
+    <p></p>
   </div>
 </section>
 
 <div class="spicalCard">
-  @for (pcka of listPackages(); track pcka.id; let i = $index) {
-    <div class="card" [ngClass]="listColors[i % listColors.length]">
-      <div class="up">
-        <h4 class="card-title">{{ pcka.name }}</h4>
-        <p style="font-size: xx-large;">
-          {{ pcka.countCard === 1 ? 'כרטיס בודד' : pcka.countCard + ' כרטיסים' }}
-        </p>
-        <p class="card-price">₪{{ pcka.price }}</p>
-      </div>
-
-      <div class="counter-row">
-        <div class="input-with-label">
-          <p-inputnumber
-            class="clean-input-number"
-            [ngModel]="packageCounts()[pcka.id]"
-            (ngModelChange)="updateCount(pcka.id, $event)"
-            [showButtons]="true"
-            buttonLayout="horizontal"
-            spinnerMode="horizontal"
-            [inputStyle]="{ width: '2rem', height: '2rem' }"
-            [min]="1"
-            style="background-color: white;"
-          >
-            <ng-template #incrementbuttonicon><span class="pi pi-plus"></span></ng-template>
-            <ng-template #decrementbuttonicon><span class="pi pi-minus"></span></ng-template>
-          </p-inputnumber>
-          
-          <span class="counter-label" (click)="addPackage(pcka.id)">להוספת חבילה</span>
-        </div>
-      </div>
-
-      <div class="image" [style.background-image]="'url(' + pcka.imageUrl + ')'"></div>
+  <div
+    class="card"
+    *ngFor="let pcka of listPackages(); let i = index"
+    [ngClass]="listColors[i % listColors.length]"
+  >
+    <div class="up">
+      <h4 class="card-title">{{ pcka.name }}</h4>
+      <p style="font-size: xx-large;">
+        {{ pcka.countCard === 1 ? 'כרטיס בודד' : pcka.countCard + ' כרטיסים' }}
+      </p>
+      <p class="card-price">₪{{ pcka.price }}</p>
     </div>
-  }
+
+    <div class="counter-row">
+      <div class="input-with-label">
+        <p-inputnumber
+          class="clean-input-number"
+          [(ngModel)]="listValue()[i]"
+          [showButtons]="true"
+          buttonLayout="horizontal"
+          spinnerMode="horizontal"
+          [inputStyle]="{ width: '2rem', height: '2rem' }"
+          [min]="1"
+          style="background-color: white;"
+        >
+          <ng-template #incrementbuttonicon>
+            <span class="pi pi-plus"></span>
+          </ng-template>
+          <ng-template #decrementbuttonicon>
+            <span class="pi pi-minus"></span>
+          </ng-template>
+        </p-inputnumber>
+
+        <span class="counter-label" (click)="addPackage(pcka.id, i)">להוספת חבילה</span>
+      </div>
+    </div>
+
+    <div class="image" [style.background-image]="'url(' + pcka.imageUrl + ')'"></div>
+  </div>
 </div>
+
+<div class="bottom-image"></div>

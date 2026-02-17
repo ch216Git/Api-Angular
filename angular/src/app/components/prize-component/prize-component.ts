@@ -20,27 +20,29 @@ import { OrderServise } from '../../services/order-servise';
   providers: [MessageService]
 })
 export class PrizeComponent implements OnInit {
-  private prizeService = inject(PrizeService);
-  private giftService = inject(GiftService);
-  private userService = inject(UserService);
+  // הזרקות
+  prizeService: PrizeService = inject(PrizeService);
+  giftService: GiftService = inject(GiftService);
+  userService: UserService = inject(UserService);
   private messageService = inject(MessageService);
-  private orderService = inject(OrderServise);
-
-  // המרת המערכים לסיגנלים
+   orderService: OrderServise = inject(OrderServise);
+  // הגדרת Signals - המשתנים שמשפיעים על ה-View
   listPrize = signal<GetPrize[]>([]);
   listUser = signal<GetUser[]>([]);
-  
-  // דוגמה ל-computed: האם קיימות הגרלות במערכת?
+  listGift = signal<GetGift[]>([]); // אם תרצה להציג רשימת מתנות
+
+  // פונקציה מחושבת לבדיקה האם יש הגרלות
   hasPrizes = computed(() => this.listPrize().length > 0);
 
   ngOnInit() {
     this.getAllPrize();
   }
 
+  // שמירה על שמות הפונקציות המקוריים שלך
   getAllPrize() {
     this.prizeService.getAllPrizes().subscribe({
       next: (prizes) => {
-        this.listPrize.set(prizes); // עדכון הסיגנל
+        this.listPrize.set(prizes); // עדכון סיגנל
       },
       error: (error) => {
         console.error('Error retrieving prizes:', error);
@@ -50,11 +52,11 @@ export class PrizeComponent implements OnInit {
   }
 
   getUserPrize() {
-    const prizes = this.listPrize();
-    prizes.forEach(prize => {
+    const currentPrizes = this.listPrize(); 
+    
+    currentPrizes.forEach(prize => {
       this.userService.getUserById(prize.userId).subscribe({
         next: (user) => {
-          // עדכון סיגנל של מערך: מוסיפים איבר חדש
           this.listUser.update(users => [...users, user]);
         },
         error: (error) => console.error('Error retrieving user details:', error)
@@ -62,52 +64,53 @@ export class PrizeComponent implements OnInit {
     });
   }
 
-  createRandomPrize() {
-    if (this.hasPrizes()) {
-      this.messageService.add({ severity: 'warn', summary: 'אזהרה', detail: 'הגרלה כבר קיימת' });
-      return;
-    }
-    
-    this.giftService.getAllGift().subscribe({
-      next: (gifts) => {
-        if (gifts.length === 0) {
-          this.messageService.add({ severity: 'info', summary: 'מידע', detail: 'אין מתנות להגרלה' });
-          return;
-        }
-
-        let finished = 0;
-        let errors = 0;
-
-        gifts.forEach(gift => {
-          this.prizeService.GetRandomPrize(gift.id).subscribe({
-            next: (prize) => {
-              this.listPrize.update(prizes => [...prizes, prize]); // עדכון ריאקטיבי
-              finished++;
-              if (finished + errors === gifts.length) {
-                this.getUserPrize();
-                this.messageService.add({ severity: 'success', summary: 'הצלחה', detail: 'ההגרלה בוצעה בהצלחה' });
-              }
-            },
-            error: (error) => {
-              errors++;
-              if (finished + errors === gifts.length) {
-                this.getUserPrize();
-                this.messageService.add({ severity: 'error', summary: 'שגיאה', detail: 'חלק מההגרלות נכשלו' });
-              }
-            }
-          });
-        });
-      }
-    });
+createRandomPrize() {
+  if (this.listPrize().length > 0) {
+    this.messageService.add({ severity: 'warn', summary: 'אזהרה', detail: 'ההגרלה כבר בוצעה' });
+    return;
   }
+  
+  this.giftService.getAllGift().subscribe({
+    next: (gifts) => {
+      if (!gifts || gifts.length === 0) return;
 
+      gifts.forEach(gift => {
+        this.prizeService.GetRandomPrize(gift.id).subscribe({
+          next: (prize) => {
+            if (prize) {
+              // הוספת הפרס לרשימה
+              this.listPrize.update(prizes => [...prizes, prize]);
+              
+              // שליפת פרטי הזוכה ספציפית לפרס הזה
+              this.userService.getUserById(prize.userId).subscribe({
+                next: (user) => {
+                  this.listUser.update(users => [...users, user]);
+                },
+                error: (err) => console.error('Error fetching user:', err)
+              });
+            }
+          },
+          error: (error) => {
+            this.messageService.add({ severity: 'error', summary: 'שגיאה', detail: `לא ניתן לבצע את ההגרלה עבור המתנה ${gift.name}` });
+            console.warn(`דילגתי על מתנה ${gift.id} - כנראה אין לה רוכשים.`);
+          }
+        });
+      });
+
+      this.messageService.add({ severity: 'success', summary: 'פעולה הושלמה', detail: 'ההגרלה הסתיימה עבור המתנות הרלוונטיות' });
+    }
+  });
+}
   exportPrizesToExcel() {
     this.prizeService.ExportPrizesToExcel().subscribe({
       next: (blob) => {
         saveAs(blob, 'prizes.csv');
         this.messageService.add({ severity: 'success', summary: 'הצלחה', detail: 'הקובץ יוצא בהצלחה' });
       },
-      error: () => this.messageService.add({ severity: 'error', summary: 'שגיאה', detail: 'נכשלה יצירת קובץ האקסל' })
+      error: (error) => {
+        console.error('Error exporting prizes:', error);
+        this.messageService.add({ severity: 'error', summary: 'שגיאה', detail: 'נכשלה יצירת קובץ האקסל' });
+      }
     });
   }
 
@@ -117,7 +120,10 @@ export class PrizeComponent implements OnInit {
         saveAs(blob, 'prizes_sum.csv');
         this.messageService.add({ severity: 'success', summary: 'הצלחה', detail: 'הקובץ יוצא בהצלחה' });
       },
-      error: () => this.messageService.add({ severity: 'error', summary: 'שגיאה', detail: 'נכשלה יצירת קובץ האקסל' })
+      error: (error) => {
+        console.error('Error exporting sum:', error);
+        this.messageService.add({ severity: 'error', summary: 'שגיאה', detail: 'נכשלה יצירת קובץ האקסל' });
+      }
     });
   }
 }

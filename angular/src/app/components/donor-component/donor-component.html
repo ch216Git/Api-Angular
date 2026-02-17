@@ -3,20 +3,21 @@
 <!-- רשימה -->
 <div *ngIf="currentRoute === '/donor'" class="donor-list" style="direction: rtl">
 
-  <div class="search-panel">
+<div class="search-filter-panel">
     <input
       [value]="nameSignal()"
       (input)="nameSignal.set($any($event.target).value)"
       placeholder="חפש לפי תורם"
       pInputText
     />
-
+    
     <select (change)="onChange($event)">
+      <option value="" disabled selected>חפש לפי...</option>
       <option value="sortByName">שם</option>
       <option value="sortByEmail">מייל</option>
       <option value="sortByGiftName">שם מתנה</option>
     </select>
-  </div>
+</div>
 
   <div *ngFor="let donor of allDonorWithGift()" class="donor-row">
 
