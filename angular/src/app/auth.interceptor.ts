@@ -1,19 +1,10 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 
-// שים לב למילה export בתחילת השורה - זה מה שמאפשר ל-app.config לייבא אותו
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const tokenData = localStorage.getItem('token');
-  let token = '';
+  // שולפים את הטוקן כמחרוזת פשוטה
+  const token = localStorage.getItem('token');
 
-  if (tokenData) {
-    try {
-      const parsedData = JSON.parse(tokenData);
-      token = parsedData.token;
-    } catch (e) {
-      console.error('Error parsing token from localStorage', e);
-    }
-  }
-
+  // אם הטוקן קיים, מוסיפים אותו ל-Header
   if (token) {
     const cloned = req.clone({
       setHeaders: {
@@ -23,5 +14,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     return next(cloned);
   }
 
+  // אם אין טוקן, ממשיכים בבקשה המקורית
   return next(req);
 };

@@ -1,1 +1,35 @@
-<app-order-component *ngIf="giftId as gift" [giftId]="gift.id"></app-order-component>
+<div class="page-wrapper" *ngIf="gift() as giftData">
+  <div class="gift-detail-card">
+    
+    <div class="image-section">
+      <div class="image-wrapper">
+        <img [src]="giftData.image" [alt]="giftData.name">
+      </div>
+    </div>
+
+    <div class="details-section">
+      <div class="top-meta">
+         <span class="gift-badge">פרס מספר: {{ giftData.id }}</span>
+      </div>
+
+      <div class="header-info">
+        <h1 class="main-title"> {{ giftData.name }}</h1>
+        <h3> שווי המתנה: ₪{{ giftData.value | number }}</h3>
+      </div>
+
+      <div class="description-box" *ngIf="giftData.description">
+        <p>{{ giftData.description }}</p>
+      </div>
+
+      <hr class="separator">
+
+      <div class="buyers-list-section">
+        <h3 class="section-label">רשימת הקונים:</h3>
+        <div class="buyers-wrapper">
+           <app-order-component [giftId]="giftData.id"></app-order-component>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

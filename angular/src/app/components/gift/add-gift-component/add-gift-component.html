@@ -25,7 +25,7 @@
                 <label>קטגוריה*</label>
                 <select formControlName="categoryId" (change)="onCategoryChange($event)">
                     <option value="" disabled selected>-- בחר קטגוריה --</option>
-                    <option *ngFor="let cat of listCategory" [value]="cat.id">{{ cat.name }}</option>
+                    <option *ngFor="let cat of listCategory()" [value]="cat.id">{{ cat.name }}</option>
                     <option value="add">➕ הוספת קטגוריה חדשה...</option>
                 </select>
             </div>
@@ -34,7 +34,7 @@
                 <label>תורם*</label>
                 <select formControlName="donorId" (change)="onDonorChange($event)">
                     <option value="" disabled selected>-- בחר תורם --</option>
-                    <option *ngFor="let donor of listDonor" [value]="donor.id">{{ donor.name }}</option>
+                    <option *ngFor="let donor of listDonor()" [value]="donor.id">{{ donor.name }}</option>
                     <option value="add">➕ הוספת תורם חדש...</option>
                 </select>
             </div>
@@ -54,58 +54,43 @@
     </form>
 </div>
 
-<p-dialog [(visible)]="visible" [modal]="true" [style]="{ width: '28rem' }" class="custom-modal">
+<p-dialog [visible]="visible()" (visibleChange)="visible.set($event)" [modal]="true" [style]="{ width: '28rem' }" class="custom-modal">
     <ng-template pTemplate="header">
         <div class="modal-header-container">
             <span class="modal-title">הוספת קטגוריה חדשה</span>
-            <p class="modal-subtitle">הכנס שם עבור הקטגוריה החדשה במערכת</p>
         </div>
     </ng-template>
-
     <div class="modal-body">
-        <div class="form-group no-margin">
-            <label>שם קטגוריה</label>
-            <input pInputText class="form-control" [formControl]="newCategoryName" placeholder="לדוגמה: מוצרי חשמל..." />
-        </div>
+        <input pInputText class="form-control" [formControl]="newCategoryName" placeholder="שם קטגוריה..." />
     </div>
-
     <ng-template pTemplate="footer">
-        <div class="modal-footer-actions">
-            <button class="btn-cancel" (click)="closeDialog()">ביטול</button>
-            <button class="btn-submit-small" (click)="save()">שמירת קטגוריה</button>
-        </div>
+        <button class="btn-cancel" (click)="closeDialog()">ביטול</button>
+        <button class="btn-submit-small" (click)="save()">שמירה</button>
     </ng-template>
 </p-dialog>
 
-<p-dialog [(visible)]="visible1" [modal]="true" [style]="{ width: '30rem' }" class="custom-modal">
+<p-dialog [visible]="visible1()" (visibleChange)="visible1.set($event)" [modal]="true" [style]="{ width: '30rem' }" class="custom-modal">
     <ng-template pTemplate="header">
         <div class="modal-header-container">
             <span class="modal-title">הוספת תורם חדש</span>
-            <p class="modal-subtitle">מלא את פרטי התורם ליצירת רשומה חדשה</p>
         </div>
     </ng-template>
-
     <form [formGroup]="fromDonor" class="modal-body">
         <div class="form-group">
             <label>שם מלא*</label>
-            <input pInputText class="form-control" formControlName="name" placeholder="הכנס שם תורם..." />
+            <input pInputText class="form-control" formControlName="name" />
         </div>
-        <div class="grid-fields">
-            <div class="form-group">
-                <label>אימייל</label>
-                <input pInputText class="form-control" formControlName="email" placeholder="mail@example.com" />
-            </div>
-            <div class="form-group">
-                <label>פלאפון</label>
-                <input pInputText class="form-control" formControlName="phone" placeholder="05X-XXXXXXX" />
-            </div>
+        <div class="form-group">
+            <label>אימייל</label>
+            <input pInputText class="form-control" formControlName="email" />
+        </div>
+          <div class="form-group">
+            <label>טלפון</label>
+            <input pInputText class="form-control" formControlName="phone" />
         </div>
     </form>
-
     <ng-template pTemplate="footer">
-        <div class="modal-footer-actions">
-            <button class="btn-cancel" (click)="closeDialog1()">ביטול</button>
-            <button class="btn-submit-small" [disabled]="fromDonor.invalid" (click)="saveDonor()">שמירת תורם</button>
-        </div>
+        <button class="btn-cancel" (click)="closeDialog1()">ביטול</button>
+        <button class="btn-submit-small" [disabled]="fromDonor.invalid" (click)="saveDonor()">שמירה</button>
     </ng-template>
 </p-dialog>

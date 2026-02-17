@@ -1,7 +1,6 @@
 <p-toast></p-toast>
 <div class="prize-container">
-  <button (click)="createRandomPrize()">בצע הגרלה</button>
-<button (click)="exportPrizesToExcel()">ייצוא מתנות לאקסל</button>
-
-<button (click)="ExportSumToExcel()">ייצוא סיכום לאקסל</button>
-  </div>
+  <button (click)="createRandomPrize()" [disabled]="hasPrizes()">בצע הגרלה</button>
+  <button (click)="exportPrizesToExcel()">ייצוא מתנות לאקסל</button>
+  <button (click)="ExportSumToExcel()">ייצוא סיכום לאקסל</button>
+</div>

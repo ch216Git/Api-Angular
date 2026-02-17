@@ -17,6 +17,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
+  standalone: true,
   imports: [ToastModule,RouterModule,HeaderComponent,BasketComponent,CommonModule],
   templateUrl: './app.html',
   styleUrl: './app.scss',
@@ -46,8 +47,9 @@ ngOnInit() {
 
   try {
     const decoded = jwtDecode<MyDecodedToken>(token);
+    const role = decoded.role;
     const userId = Number(decoded.id);
-     console.log(decoded.role);
+     console.log(role);
     this.basketService.loadBasketFromServer(userId);
   } catch (e) {
     console.error('JWT decode failed', e);

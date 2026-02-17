@@ -75,7 +75,7 @@ export class RegisterComponent implements OnInit {
         this.messageService.add({ 
             severity: 'error', 
             summary: 'שגיאה', 
-            detail: 'הרשמה נכשלה. נסה שוב.',
+            detail:'המשתמש קיים',
             sticky: true // מחייב לחיצה על ה-X לסגירה
         });
       }

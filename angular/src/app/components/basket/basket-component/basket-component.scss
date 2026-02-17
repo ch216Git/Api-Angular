@@ -171,3 +171,104 @@
 /* התאמות לדיאלוג */
 .w-full { width: 100%; }
 .w-half { width: 48%; }
+/* מיקום סימן השאלה מעל הדיאלוג */
+.question-icon-container {
+    width: 100px;
+    height: 100px;
+    background-color: #0a0c14; /* שחור עמוק כמו בתמונה */
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: -50px; /* חצי מהגובה של עצמו כלפי מעלה */
+    left: 50%;
+    transform: translateX(-50%);
+    border: 8px solid ; /* יוצר את הרווח הלבן סביב העיגול */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* עיצוב כפתור ה-Save */
+// .custom-btn-save {
+//     // background-color: #0a0c14;
+//     // color: white;
+//     padding: 12px 40px;
+//     border-radius: 8px;
+//     font-weight: bold;
+//     border: none;
+//     cursor: pointer;
+//     min-width: 140px;
+//     transition: opacity 0.2s;
+// }
+
+/* עיצוב כפתור ה-Cancel */
+.custom-btn {
+    background-color: white;
+    color: black;
+    padding: 12px 40px;
+    border-radius: 8px;
+    font-weight: bold;
+    border: 1px solid #e5e7eb;
+    cursor: pointer;
+    min-width: 140px;
+}
+
+.custom-btn:hover {
+    opacity: 0.9;
+}
+/* המכולה הלבנה של הדיאלוג */
+.relative {
+  direction: rtl;
+    position: relative;
+    padding-top: 3rem;
+    padding-right: 3rem;
+    padding-bottom: 1rem; /* נותן מקום לעיגול שלא יסתיר את הטקסט */
+}
+
+.question-icon-container {
+    width: 90px;
+    height: 90px;
+    font-size: xx-large;
+    background-color: white;
+    color: black;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    /* הופך את העיגול לצף */
+    position: absolute; 
+    top: -45px; /* חצי מהגובה של העיגול נשלח מחוץ לדיאלוג */
+    left: 50%;
+    transform: translateX(-50%);
+    
+    border: 6px solid #F7F1ED; /* המסגרת הלבנה שרואים בתמונה */
+    // box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    z-index: 10; /* מוודא שהוא תמיד מעל הכל */
+}
+/* מבנה הטופס בדיאלוג */
+.payment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* יוצר רווח קבוע בין כל שדה (form-field) */
+  padding: 10px 0;
+}
+
+.form-field {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  text-align: right; /* יישור הטקסט לימין */
+}
+
+/* מוודא שכל ה-input-ים של PrimeNG ימתחו לכל הרוחב */
+.form-field input {
+  width: 100% !important;
+  box-sizing: border-box;
+}
+
+/* התאמה לכפתור האישור שיהיה רחב ומרכזי */
+::ng-deep .p-button {
+    width: 100%;
+}

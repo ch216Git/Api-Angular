@@ -1,7 +1,15 @@
 <p-toast></p-toast>
-<div *ngIf="cuurentRoute === '/donor'" class="donor-list" style="direction: rtl">
+
+<!-- רשימה -->
+<div *ngIf="currentRoute === '/donor'" class="donor-list" style="direction: rtl">
+
   <div class="search-panel">
-    <input [value]="nameSignal()" (input)="nameSignal.set($event.target.value)" placeholder="חפש לפי תורם" pInputText />
+    <input
+      [value]="nameSignal()"
+      (input)="nameSignal.set($any($event.target).value)"
+      placeholder="חפש לפי תורם"
+      pInputText
+    />
 
     <select (change)="onChange($event)">
       <option value="sortByName">שם</option>
@@ -11,8 +19,13 @@
   </div>
 
   <div *ngFor="let donor of allDonorWithGift()" class="donor-row">
+
     <div class="donor-info">
-      <div class="donor-name" [routerLink]="['/donor', donor.id]">{{ donor.name }}</div>
+      <div class="donor-name"
+           [routerLink]="['/donor', donor.id]">
+        {{ donor.name }}
+      </div>
+
       <div class="donor-meta">
         <span>{{ donor.email }}</span>
         <span>{{ donor.phone }}</span>
@@ -20,53 +33,82 @@
     </div>
 
     <div class="donor-actions">
-      <i class="pi pi-pencil action-icon edit" (click)="editDonor(donor)" title="עריכה"></i>
 
-      <p-dialog header="עדכון תורם" [modal]="true" [(visible)]="visible"
-        [style]="{ width: '28rem', borderRadius: '12px' }">
-        <div class="dialog-content">
-          <div class="form-row">
-            <label for="username">שם</label>
-            <input pInputText id="username" [(ngModel)]="selectedDonor.name" autocomplete="off" />
-          </div>
+      <i class="pi pi-pencil action-icon edit"
+         *ngIf="role === 'Manager'"
+         (click)="editDonor(donor)">
+      </i>
 
-          <div class="form-row">
-            <label for="email">מייל</label>
-            <input pInputText id="email" [(ngModel)]="selectedDonor.email" autocomplete="off" />
-          </div>
+      <i *ngIf="donor.gifts?.length === 0 && role === 'Manager'"
+         class="pi pi-trash action-icon delete"
+         (click)="deleteDonor(donor.id)">
+      </i>
 
-          <div class="form-row">
-            <label for="phone">מספר פלאפון</label>
-            <input pInputText id="phone" [(ngModel)]="selectedDonor.phone" autocomplete="off" />
-          </div>
-
-          <div class="dialog-actions">
-            <p-button label="ביטול" severity="secondary" (click)="visible = false"></p-button>
-            <p-button label="שמור" (click)="saveDonor(selectedDonor.id)"></p-button>
-          </div>
-        </div>
-      </p-dialog>
-
-      <i *ngIf="donor.gifts?.length === 0" class="pi pi-trash action-icon delete" (click)="deleteDonor(donor.id)"
-        title="מחיקה"></i>
     </div>
   </div>
 </div>
 
-<div *ngIf="cuurentRoute.startsWith('/donor/') && cuurentRoute.length > '/donor/'.length">
+<!-- פרטים -->
+<div *ngIf="currentRoute.startsWith('/donor/') && currentRoute.length > '/donor/'.length">
+
   <div class="donor-info-panel">
-    <h2>{{ donorById?.name }}</h2>
-    <p><strong>מייל:</strong> {{ donorById?.email }}</p>
-    <p><strong>טלפון:</strong> {{ donorById?.phone }}</p>
+    <h2>{{ donorById()?.name }}</h2>
+    <p><strong>מייל:</strong> {{ donorById()?.email }}</p>
+    <p><strong>טלפון:</strong> {{ donorById()?.phone }}</p>
   </div>
 
   <div class="donor-gifts-panel">
     <h3>מתנות:</h3>
+
     <div class="gifts-grid">
-      <div *ngFor="let gift of donorById?.gifts" class="gift-card">
-        <img [src]="gift.image" alt="{{ gift.name }}" class="gift-image" />
+      <div *ngFor="let gift of donorById()?.gifts" class="gift-card">
+        <img [src]="gift.image"
+             [alt]="gift.name"
+             class="gift-image" />
         <p class="gift-name">{{ gift.name }}</p>
       </div>
     </div>
   </div>
 </div>
+
+<!-- דיאלוג עריכה -->
+<p-dialog
+  header="עדכון תורם"
+  [modal]="true"
+  [visible]="visible"
+  (visibleChange)="visible = $event"
+  [style]="{ width: '28rem', borderRadius: '12px' }">
+
+  <div class="dialog-content">
+
+    <div class="form-row">
+      <label>שם</label>
+      <input pInputText
+             [(ngModel)]="selectedDonor().name" />
+    </div>
+
+    <div class="form-row">
+      <label>מייל</label>
+      <input pInputText
+             [(ngModel)]="selectedDonor().email" />
+    </div>
+
+    <div class="form-row">
+      <label>מספר פלאפון</label>
+      <input pInputText
+             [(ngModel)]="selectedDonor().phone" />
+    </div>
+
+    <div class="dialog-actions">
+      <p-button label="ביטול"
+                severity="secondary"
+                (click)="visible = false">
+      </p-button>
+
+      <p-button label="שמור"
+                (click)="saveDonor(selectedDonor().id)">
+      </p-button>
+    </div>
+
+  </div>
+</p-dialog>

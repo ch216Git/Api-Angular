@@ -1,44 +1,47 @@
-import { ChangeDetectorRef, Component, Input, inject, OnInit } from '@angular/core';
+import { Component, Input, inject, OnInit, signal, input, effect } from '@angular/core';
 import { OrderServise } from '../../services/order-servise';
 import { GetUser } from '../../models/user.model';
 import { CommonModule } from '@angular/common';
-// ייבוא MessageService ו-ToastModule
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-order-component',
   standalone: true,
-  // הוספת ToastModule לרשימת הייבוא
   imports: [CommonModule, ToastModule],
   templateUrl: './order-component.html',
   styleUrl: './order-component.scss',
-  // הוספת MessageService ל-providers
   providers: [MessageService]
 })
-export class OrderComponent implements OnInit {
-  orderService: OrderServise = inject(OrderServise);
-  // הזרקת MessageService
-  messageService: MessageService = inject(MessageService);
+export class OrderComponent {
+  private orderService = inject(OrderServise);
+  private messageService = inject(MessageService);
   
-  listBuyer: GetUser[] = [];
-  @Input() giftId: number | undefined;
+  // 1. הגדרת ה-Input כסיגנל
+  giftId = input<number | undefined>();
 
-  cd: ChangeDetectorRef = inject(ChangeDetectorRef);
+  // 2. הגדרת רשימת הקונים כסיגנל
+  listBuyer = signal<GetUser[]>([]);
 
-  ngOnInit() {
-    if (this.giftId)
-      this.getOrderByGift(this.giftId);
+  constructor() {
+    // 3. אפקט שרץ בכל פעם ש-giftId משתנה
+    effect(() => {
+      const id = this.giftId();
+      if (id) {
+        this.getOrderByGift(id);
+      } else {
+        this.listBuyer.set([]);
+      }
+    });
   }
 
   getOrderByGift(id: number) {
     this.orderService.getBuyers(id).subscribe({
       next: (data) => {
-        this.listBuyer = data;
-        this.cd.markForCheck();
+        // 4. עדכון הסיגנל - אנגולר כבר ירנדר מה שצריך
+        this.listBuyer.set(data);
       },
       error: (err) => {
-        // הצגת הודעת שגיאה במקרה של תקלה
         this.messageService.add({
           severity: 'error',
           summary: 'שגיאה',

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { GiftService } from '../../../services/gift-service';
 import { GetGift } from '../../../models/gift.model';
 import { ActivatedRoute } from '@angular/router';
@@ -7,24 +7,27 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-gift-id-component',
-  imports: [OrderComponent,CommonModule],
+  standalone: true, // הנחה שהיא Standalone לפי ה-imports
+  imports: [OrderComponent, CommonModule],
   templateUrl: './gift-id-component.html',
   styleUrl: './gift-id-component.scss',
 })
-export class GiftIdComponent {
-  giftService: GiftService=inject(GiftService);
-  constructor(private route: ActivatedRoute){}
-  giftId:GetGift|undefined;
+export class GiftIdComponent implements OnInit {
+  private giftService = inject(GiftService);
+  private route = inject(ActivatedRoute);
+
+  // הגדרת המשתנה כסיגנל
+  gift = signal<GetGift | undefined>(undefined);
   
-  ngOnInit(){
-    const giftId = this.route.snapshot.paramMap.get('id');
-    this.getById(giftId? +giftId : 0);
+  ngOnInit() {
+    const idParam = this.route.snapshot.paramMap.get('id');
+    const id = idParam ? +idParam : 0;
+    this.getById(id);
   }
 
-  getById(id:number){
-    this.giftService.getGiftById(id).subscribe(data=>{
-      this.giftId=data;
-      console.log(this.giftId);
+  getById(id: number) {
+    this.giftService.getGiftById(id).subscribe(data => {
+      this.gift.set(data); // עדכון הסיגנל מעדכן את ה-UI אוטומטית
     });
   }
 }

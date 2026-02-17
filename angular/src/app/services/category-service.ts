@@ -32,8 +32,8 @@ createCategory(category: CreateCategory): Observable<GetCategory> {
 
     let token = '';
     if (tokenData) {
-        const parsedData = JSON.parse(tokenData);
-        token = parsedData.token;
+        const parsedData =tokenData;
+        token = parsedData;
     }
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`

@@ -1,7 +1,9 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { createUser, GetUser, loginUser } from '../models/user.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { jwtDecode } from 'jwt-decode';
+import { MyDecodedToken } from '../models/basket.model';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +12,21 @@ export class UserService {
   BASE_URL = 'https://localhost:7081/api/User';
   http: HttpClient = inject(HttpClient);
 
-  constructor() { }
+  userRole = signal<string>('');
+
+  constructor() {
+    this.refreshRole(); // בדיקה ראשונית בטעינה
+  }
+
+  refreshRole() {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decoded = jwtDecode<MyDecodedToken>(token);
+      this.userRole.set(decoded.role);
+    } else {
+      this.userRole.set('');
+    }
+  }
 
   // קבלת headers עם token אם קיים
   private getAuthHeaders(): HttpHeaders {

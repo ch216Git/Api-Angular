@@ -5,6 +5,9 @@ import { UserService } from '../../../services/userService';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api'; // הוספת שירות ההודעות
 import { ToastModule } from 'primeng/toast'; // הוספת מודול ה-Toast
+import { BasketService } from '../../../services/basket-service';
+import { jwtDecode } from 'jwt-decode';
+import { MyDecodedToken } from '../../../models/basket.model';
 
 @Component({
   selector: 'app-login-component',
@@ -18,6 +21,7 @@ export class LoginComponent {
   constructor(private router: Router, private messageService: MessageService) {}
 
   userService: UserService = inject(UserService);
+  basketService: BasketService = inject(BasketService);
 
   fromlogin: FormGroup = new FormGroup({
     username: new FormControl('', [Validators.required, Validators.minLength(4)]),
@@ -25,14 +29,21 @@ export class LoginComponent {
   });
 
   login() {
+    
     if (this.fromlogin.invalid) return;
 
     const userLoginData: loginUser = this.fromlogin.value as loginUser;
     this.userService.loginUser(userLoginData).subscribe({
       next: (user) => {
+     
         console.log('User login successfully:', user);
-        localStorage.setItem('token', JSON.stringify(user));
-        
+        localStorage.setItem('token', user.token);
+          this.userService.refreshRole();
+      const token = localStorage.getItem('token');
+    if (token) {
+      const decoded = jwtDecode<MyDecodedToken>(token);
+      this.basketService.loadBasketFromServer(Number(decoded.id));
+    }
         // הודעת הצלחה
         this.messageService.add({
           severity: 'success',

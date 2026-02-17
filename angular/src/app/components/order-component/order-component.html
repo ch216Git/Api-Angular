@@ -1,8 +1,15 @@
 <p-toast></p-toast>
 
-<h3>Users who bought gifts:</h3>
-<ul>
-  <li *ngFor="let user of listBuyer">
-     {{ user.name }}
-  </li>
-</ul>
+<div class="orders-list">
+  @if (listBuyer().length > 0) {
+    <ul>
+      @for (user of listBuyer(); track user.id) {
+        <li>
+           {{ user.name }}
+        </li>
+      }
+    </ul>
+  } @else {
+    <p>עדיין אין קונים למתנה זו.</p>
+  }
+</div>
