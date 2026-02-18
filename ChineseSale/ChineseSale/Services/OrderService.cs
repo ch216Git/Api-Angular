@@ -132,17 +132,19 @@ namespace ChineseSale.Services
             return await GetOrderByIdAsync(order.Id);
         }
 
-        public async Task<IEnumerable<GetUserDto>> GetBuyerGift(int GiftId)
+        public async Task<IEnumerable<GetUserDto>> GetBuyerGift(int giftId)
         {
             List<GetUserDto> users = new List<GetUserDto>();
             IEnumerable<Order> result = await _orderRepository.GetAllOrdersAsync();
             List<Order> orders = result.ToList();
             for (int i = 0; i < orders.Count(); i++)
             {
-                if (orders[i].GiftsId.Contains(GiftId))
+                for (int j = 0; j < orders[i].GiftsId.Count(); j++) { 
+                    if (orders[i].GiftsId[j]==giftId)
                 {
                     GetUserDto userDto = await _userService.GetUserByIdAsync(orders[i].UserId);
                     users.Add(userDto);
+                }
                 }
 
             }
