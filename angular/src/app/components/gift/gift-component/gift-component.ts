@@ -57,12 +57,7 @@ export class GiftComponent implements OnInit {
   nameSignal = signal('');
 
   ngOnInit() {
-    const token = localStorage.getItem('token');
-    if (!token) return;
-    const decoded = jwtDecode<MyDecodedToken>(token);
-    this.role = decoded.role;
-
-    this.getAllGifts();
+        this.getAllGifts();
     this.getAllCategory();
 
     this.prizeService.getAllPrizes().subscribe(prizes => {
@@ -71,6 +66,10 @@ export class GiftComponent implements OnInit {
         this.prize.set(true);
       this.matchGiftsWithPrizes();
     });
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    const decoded = jwtDecode<MyDecodedToken>(token);
+    this.role = decoded.role;
   }
 
   onSearchTypeChange(event: Event) {
