@@ -1,0 +1,5 @@
+2026-11-01 12:47:07.920 +02:00 [ERR] An error occurred using the connection to database 'neondb' on server 'tcp://ep-old-hat-b98ozy5t.c-7.eu-central-1.aws.neon.tech:5432'. {"EventId":{"Id":20004,"Name":"Microsoft.EntityFrameworkCore.Database.Connection.ConnectionError"},"SourceContext":"Microsoft.EntityFrameworkCore.Database.Connection"}
+2026-11-01 12:50:58.235 +02:00 [ERR] Failed executing DbCommand (154ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "MigrationId", "ProductVersion"
+FROM "__EFMigrationsHistory"
+ORDER BY "MigrationId"; {"EventId":{"Id":20102,"Name":"Microsoft.EntityFrameworkCore.Database.Command.CommandError"},"SourceContext":"Microsoft.EntityFrameworkCore.Database.Command"}

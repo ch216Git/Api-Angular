@@ -34,8 +34,8 @@ Log.Logger = new LoggerConfiguration()
 builder.Host.UseSerilog();
 // Add services to the container.
 builder.Services.AddDbContext<ChineseSaleContextDB>(options =>
-        options.UseSqlServer("Server=DESKTOP-01CJEFL;DataBase=ChineseSaleContextDB_216242123;Integrated Security=SSPI;Persist Security Info=False;TrustServerCertificate=True;"));
-
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
