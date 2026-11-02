@@ -113,7 +113,7 @@ export class AddGiftComponent implements OnInit {
       createGiftWithImage('');
     } else {
       this.giftService.uploadImage(this.selectedFile).subscribe({
-        next: (res: any) => createGiftWithImage(`https://localhost:7081${res.fileUrl}`)
+        next: (res: any) => createGiftWithImage(`https://chinese-sale.onrender.com${res.fileUrl}`)
       });
     }
   }
@@ -141,7 +141,7 @@ export class AddGiftComponent implements OnInit {
       updateGiftWithImage(this.gift?.image ?? '');
     } else {
       this.giftService.uploadImage(this.selectedFile).subscribe({
-        next: (res: any) => updateGiftWithImage(`https://localhost:7081${res.fileUrl}`)
+        next: (res: any) => updateGiftWithImage(`https://chinese-sale.onrender.com${res.fileUrl}`)
       });
     }
   }

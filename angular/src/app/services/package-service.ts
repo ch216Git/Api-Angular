@@ -8,7 +8,7 @@ import { CreatePackage, GetPackage, UpdatePackage } from '../models/package.mode
   providedIn: 'root',
 })
 export class PackageService {
-  BASE_URL = 'https://localhost:7081/api/Package';
+  BASE_URL = 'https://chinese-sale.onrender.com/api/Package';
   http: HttpClient = inject(HttpClient);
   constructor() { }
 

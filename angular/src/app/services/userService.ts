@@ -9,7 +9,7 @@ import { MyDecodedToken } from '../models/basket.model';
   providedIn: 'root',
 })
 export class UserService {
-  BASE_URL = 'https://localhost:7081/api/User';
+  BASE_URL = 'https://chinese-sale.onrender.com/api/User';
   http: HttpClient = inject(HttpClient);
 
   userRole = signal<string>('');

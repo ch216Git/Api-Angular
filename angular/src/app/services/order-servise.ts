@@ -8,7 +8,7 @@ import { GetUser } from '../models/user.model';
   providedIn: 'root',
 })
 export class OrderServise {
-  BASE_URL = 'https://localhost:7081/api/Order';
+  BASE_URL = 'https://chinese-sale.onrender.com/api/Order';
   http: HttpClient = inject(HttpClient);
   constructor() { }
 

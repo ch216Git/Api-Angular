@@ -7,8 +7,8 @@ import { CreateGift, GetGift, UpdateGift } from '../models/gift.model';
   providedIn: 'root',
 })
 export class GiftService {
-  BASE_URL = 'https://localhost:7081/api/Gift';
-  BASE_URL_IMAGE = 'https://localhost:7081/api/Image';
+  BASE_URL = 'https://chinese-sale.onrender.com/api/Gift';
+  BASE_URL_IMAGE = 'https://chinese-sale.onrender.com/api/Image';
   http: HttpClient = inject(HttpClient);
   constructor() { }
 

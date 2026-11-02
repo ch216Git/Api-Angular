@@ -45,7 +45,7 @@ export class PackageComponent implements OnInit {
       next: (data) => {
         const packages = data.map((p, index) => ({
           ...p,
-          imageUrl: `https://localhost:7081/uploads/gift${index}.png`
+          imageUrl: `https://chinese-sale.onrender.com/uploads/gift${index}.png`
         }));
         this.listPackages.set(packages);
         // אתחול מערך המונים ב-1 לפי כמות החבילות

@@ -7,7 +7,7 @@ import { GetPrize } from '../models/prize.model';
   providedIn: 'root',
 })
 export class PrizeService {
-BASE_URL = 'https://localhost:7081/api/Prize';
+BASE_URL = 'https://chinese-sale.onrender.com/api/Prize';
   http: HttpClient = inject(HttpClient);
   constructor() { }
 

@@ -7,7 +7,7 @@ import { AddGiftToBasket, AddPackageToBasket, CreateBasket, GetBasket, GetBasket
   providedIn: 'root',
 })
 export class BasketService {
-  private readonly BASE_URL = 'https://localhost:7081/api/Basket';
+  private readonly BASE_URL = 'https://chinese-sale.onrender.com/api/Basket';
   private readonly http = inject(HttpClient);
 
   // 1. הגדרת ה-Signal המרכזי של הסל (פרטי)

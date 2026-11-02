@@ -8,7 +8,7 @@ import { CreateBasket } from '../models/basket.model';
   providedIn: 'root',
 })
 export class CategoryService {
-  BASE_URL = 'https://localhost:7081/api/Category';
+  BASE_URL = 'https://chinese-sale.onrender.com/api/Category';
   http: HttpClient = inject(HttpClient);
   constructor() { }
 

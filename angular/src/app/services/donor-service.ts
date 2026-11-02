@@ -7,7 +7,7 @@ import { GetDonor, GetDonorById } from '../models/donor.model';
   providedIn: 'root',
 })
 export class DonorService {
-  BASE_URL = 'https://localhost:7081/api/Donor';
+  BASE_URL = 'https://chinese-sale.onrender.com/api/Donor';
   http: HttpClient = inject(HttpClient);
   constructor() { }
 
