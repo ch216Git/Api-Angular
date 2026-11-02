@@ -8,6 +8,8 @@ using Microsoft.Extensions.Logging;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
+using ChineseSale.Data;
 
 namespace ChineseSale.Controllers
 {
@@ -57,6 +59,38 @@ namespace ChineseSale.Controllers
                 _logger.LogError(ex, "Error logging in user");
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpPost("demo-login")]
+        public async Task<ActionResult<string>> DemoLogin()
+        {
+            // Works only when DEMO_MODE=true is set in the environment
+            var demo = Environment.GetEnvironmentVariable("DEMO_MODE");
+            if (!string.Equals(demo, "true", StringComparison.OrdinalIgnoreCase))
+                return NotFound();
+
+            var db = HttpContext.RequestServices.GetRequiredService<ChineseSaleContextDB>();
+            var users = db.Set<ChineseSale.Models.User>();
+
+            var user = await users.FirstOrDefaultAsync(u => u.UserName == "demo");
+            if (user == null)
+            {
+                user = new ChineseSale.Models.User
+                {
+                    UserName = "demo",
+                    Password = Guid.NewGuid().ToString("N"),
+                    Name = "Demo Manager",
+                    Phone = "0500000000",
+                    Address = "Demo",
+                    Email = "demo@example.com",
+                    Role = ChineseSale.Models.Role.Manager
+                };
+                users.Add(user);
+                await db.SaveChangesAsync();
+            }
+
+            var token = GenerateJwtToken(user);
+            return Ok(new { Token = token });
         }
 
         [Authorize(Roles = "Manager")]
