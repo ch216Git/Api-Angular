@@ -70,4 +70,9 @@ export class UserService {
     const headers = this.getAuthHeaders();
     return this.http.delete<any>(`${this.BASE_URL}/${id}`, { headers });
   }
+
+    // כניסה אוטומטית כמנהל (דמו). עובד רק כש-DEMO_MODE=true בשרת
+  demoLogin(): Observable<any> {
+    return this.http.post<any>(`${this.BASE_URL}/demo-login`, {});
+  }
 }

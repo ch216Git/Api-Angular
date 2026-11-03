@@ -13,6 +13,7 @@ import { ToastModule } from 'primeng/toast';
 
 import { MessageService } from 'primeng/api';
 import { CommonModule } from '@angular/common';
+import { UserService } from './services/userService';
 
 
 @Component({
@@ -25,6 +26,7 @@ import { CommonModule } from '@angular/common';
 })
 export class App {
   basketService = inject(BasketService);
+    userService = inject(UserService);
   out() {
     const a=localStorage.getItem('token');
     console.log(a);
@@ -34,9 +36,22 @@ export class App {
 
 ngOnInit() {
   const token = localStorage.getItem('token');
-  
 
-  if (!token) return;
+  if (!token) {
+    // אין התחברות: כניסה אוטומטית כמנהל דמו
+    this.userService.demoLogin().subscribe({
+      next: (res) => {
+        if (res?.token) {
+          localStorage.setItem('token', res.token);
+          if (localStorage.getItem('token')) {
+            window.location.reload();
+          }
+        }
+      },
+      error: () => {} // מצב דמו כבוי בשרת, ממשיכים כמבקר רגיל
+    });
+    return;
+  }
 
   // בדיקה בסיסית של JWT
   if (token.split('.').length !== 3) {
