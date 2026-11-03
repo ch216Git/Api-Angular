@@ -35,21 +35,24 @@ export class App {
   }
 
 ngOnInit() {
-  const token = localStorage.getItem('token');
+  let token = localStorage.getItem('token');
+
+  // טוקן שפג תוקפו או לא תקין: מוחקים
+  if (token) {
+    try {
+      const exp = jwtDecode<any>(token).exp;
+      if (exp && exp * 1000 < Date.now()) {
+        localStorage.removeItem('token');
+        token = null;
+      }
+    } catch {
+      localStorage.removeItem('token');
+      token = null;
+    }
+  }
 
   if (!token) {
-    // אין התחברות: כניסה אוטומטית כמנהל דמו
-    this.userService.demoLogin().subscribe({
-      next: (res) => {
-        if (res?.token) {
-          localStorage.setItem('token', res.token);
-          if (localStorage.getItem('token')) {
-            window.location.reload();
-          }
-        }
-      },
-      error: () => {} // מצב דמו כבוי בשרת, ממשיכים כמבקר רגיל
-    });
+    this.tryDemoLogin();
     return;
   }
 
@@ -78,4 +81,22 @@ ngOnInit() {
   isLoginPage(): boolean {
     return this.router.url === '/login';
   }
+
+    private tryDemoLogin(attempt = 1) {
+    this.userService.demoLogin().subscribe({
+      next: (res) => {
+        if (res?.token) {
+          localStorage.setItem('token', res.token);
+          window.location.reload();
+        }
+      },
+      error: () => {
+        // השרת אולי עדיין מתעורר: מנסים שוב כל 8 שניות, עד 8 פעמים
+        if (attempt < 8) {
+          setTimeout(() => this.tryDemoLogin(attempt + 1), 8000);
+        }
+      }
+    });
+  }
+  
 }
